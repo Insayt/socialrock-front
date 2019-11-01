@@ -40,6 +40,88 @@
     color: #007BED
   }
 
+  .vc-text-gray-200 {
+    color: #F0F0F0;
+  }
+  .vc-border-gray-700 {
+    border: none;
+  }
+  .vc-bg-gray-900 {
+    background-color: #313033;
+  }
+  /*.vc-bg-orange-500 {*/
+    /*background-color: #ffc107;*/
+    /*opacity: 1;*/
+  /*}*/
+  .vc-text-white {
+    color: #1E1E1E;
+  }
+  .vc-select-none {
+    color: #F0F0F0 !important;
+  }
+
+  .dropdown {
+
+    .btn-link {
+      color: #F0F0F0;
+      font-size: 16px;
+      font-weight: bold;
+
+      i {
+        margin-left: 5px;
+      }
+    }
+
+    .dropdown-menu {
+      min-width: 200px;
+      background-color: #313033;
+      color: #F0F0F0;
+
+      .dropdown-item {
+        color: #F0F0F0;
+        font-weight: bold;
+        padding: 10px 20px;
+        &:hover {
+          background-color: #272729;
+        }
+        i {
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+
+  .modal {
+    .close {
+      color: #F0F0F0;
+      outline: none;
+    }
+    .modal-header, .modal-footer {
+      border-color: #2F2F2F;
+    }
+  }
+
+  .modal-content {
+    background-color: #1E1E1E;
+    color: #F0F0F0;
+  }
+
+  .modal-backdrop {
+    opacity: 0.9;
+  }
+
+  .form-control {
+    background-color: #272628;
+    border-color: #272628;
+    color: #F0F0F0;
+
+    &:focus {
+      background-color: #272628;
+      border-color: #272628;
+      color: #F0F0F0;
+    }
+  }
+
   .btn {
     &:focus {
       box-shadow: none !important;
@@ -58,7 +140,7 @@
   }
 
   #app {
-    padding-left: 250px;
+    padding-left: 260px;
 
     &.sidebar-mini {
       padding-left: 60px;

@@ -4,9 +4,9 @@
       <img src="../assets/img/logo.png">
       <div>SOCIAL<span>ROCK</span></div>
     </div>
-    <div class="sidebar-collapse" @click="$emit('toggle')">
-      <i class="fas fa-chevron-left"></i>
-    </div>
+    <!--<div class="sidebar-collapse" @click="$emit('toggle')">-->
+      <!--<i class="fas fa-chevron-left"></i>-->
+    <!--</div>-->
     <div class="project">
       <div class="project__name-icon" :style="{ background: 'linear-gradient(to left, #3494e6, #ec6ead)' }">
         М
@@ -18,12 +18,12 @@
         <i class="fas fa-chevron-down"></i>
       </div>
     </div>
-    <!--<div class="sidebar-action">-->
-      <!--<b-button class="sidebar-button" variant="warning" block>-->
-        <!--<i class="fas fa-plus"></i>-->
-        <!--<span>Написать пост</span>-->
-      <!--</b-button>-->
-    <!--</div>-->
+    <div class="sidebar-action">
+      <b-button class="sidebar-button" variant="warning" block>
+        <i class="fas fa-plus"></i>
+        <span>Написать пост</span>
+      </b-button>
+    </div>
     <div class="nav">
       <div class="nav-item _active">
         <div class="nav-item__icon">
@@ -65,42 +65,16 @@
           Настройки
         </div>
       </div>
-      <div class="sidebar-bottom">
-        <div class="nav">
-          <div class="nav-item">
-            <div class="nav-item__icon">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="nav-item__title">
-              Профиль
-            </div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-item__icon">
-              <i class="far fa-credit-card"></i>
-            </div>
-            <div class="nav-item__title">
-              Оплата
-            </div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-item__icon">
-              <i class="fas fa-life-ring"></i>
-            </div>
-            <div class="nav-item__title">
-              Помощь
-            </div>
-          </div>
-          <div class="nav-item">
-            <div class="nav-item__icon">
-              <i class="fas fa-power-off"></i>
-            </div>
-            <div class="nav-item__title">
-              Выход
-            </div>
-          </div>
-        </div>
-      </div>
+      <!--<div class="sidebar-bottom">-->
+        <!--<v-date-picker-->
+          <!--mode="range"-->
+          <!--:value="null"-->
+          <!--color="orange"-->
+          <!--is-dark-->
+          <!--is-inline-->
+          <!--is-expanded-->
+        <!--/>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -110,81 +84,8 @@
 </script>
 
 <style lang="scss">
-  .sidebar-mini {
-    color: inherit !important;
-    .sidebar{
-      width: 60px;
-
-      &__logo {
-        padding: 0;
-        height: 60px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        div { display: none }
-        img {
-          margin-right: 0;
-        }
-      }
-
-      .project {
-        padding: 10px;
-      }
-
-      .project__name-icon {
-        margin-right: 0;
-      }
-
-      .project__name, .project__icon {
-        display: none;
-      }
-    }
-
-    .sidebar-action {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .sidebar-button {
-      span { display: none }
-    }
-
-    .btn-warning {
-      height: 40px;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-
-      .fas {
-        margin-right: 0 !important;
-      }
-    }
-    .nav {
-      margin-top: 0;
-    }
-
-    .nav-item {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-    }
-
-    .nav-item__icon {
-      margin-right: 0;
-    }
-    .nav-item__title {
-      display: none;
-    }
-    .sidebar-collapse {
-      transform: rotate(180deg);
-    }
-  }
-
   .sidebar {
-    width: 250px;
+    width: 260px;
     left: 0;
     top: 0;
     bottom: 0;
@@ -201,7 +102,6 @@
       font-size: 26px;
       display: flex;
       align-items: center;
-      text-shadow: 2px 2px 0px black;
       border-bottom: 1px solid #1E1E1E;
 
       img {
