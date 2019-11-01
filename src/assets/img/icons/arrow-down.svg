@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="33px" height="27px" viewBox="0 0 33 27" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-8.6%" y="-2.1%" width="117.2%" height="104.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Сайдбар" transform="translate(-206.000000, -28.000000)" fill="#F0F0F0" fill-rule="nonzero">
+            <g filter="url(#filter-1)" transform="translate(0.000000, -1.000000)" id="fa-angle-down-copy">
+                <g transform="translate(215.000000, 28.000000)">
+                    <g id="Icon" transform="translate(0.000000, 9.375000)">
+                        <path d="M14.8095703,1.40625 C14.8095703,1.53320313 14.7607422,1.64550781 14.6630859,1.74316406 L7.83691406,8.56933594 C7.73925781,8.66699219 7.62695312,8.71582031 7.5,8.71582031 C7.37304687,8.71582031 7.26074219,8.66699219 7.16308594,8.56933594 L0.336914062,1.74316406 C0.239257813,1.64550781 0.190429688,1.53320313 0.190429688,1.40625 C0.190429688,1.27929687 0.239257813,1.16699219 0.336914062,1.06933594 L1.06933594,0.336914062 C1.16699219,0.239257812 1.27929688,0.190429688 1.40625,0.190429688 C1.53320312,0.190429688 1.64550781,0.239257812 1.74316406,0.336914062 L7.5,6.09375 L13.2568359,0.336914062 C13.3544922,0.239257812 13.4667969,0.190429688 13.59375,0.190429688 C13.7207031,0.190429688 13.8330078,0.239257812 13.9306641,0.336914062 L14.6630859,1.06933594 C14.7607422,1.16699219 14.8095703,1.27929687 14.8095703,1.40625 Z" id="Icon-Path"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 59 (86127) - https://sketch.com -->
+    <title>Icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <filter x="-8.6%" y="-2.1%" width="117.2%" height="104.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="1" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0   0 0 0 0 0   0 0 0 0 0  0 0 0 0.5 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Сайдбар" transform="translate(-50.000000, -90.000000)" fill="#1E1E1E" fill-rule="nonzero">
+            <g filter="url(#filter-1)" transform="translate(0.000000, -1.000000)" id="Group">
+                <g transform="translate(55.000000, 95.000000)">
+                    <g id="entypo-plus">
+                        <g id="Icon" transform="translate(4.000000, 4.000000)">
+                            <path d="M12,6 C12,6.553 11.952,7 11.399,7 L7,7 L7,11.399 C7,11.951 6.553,12 6,12 C5.447,12 5,11.951 5,11.399 L5,7 L0.601,7 C0.049,7 0,6.553 0,6 C0,5.447 0.049,5 0.601,5 L5,5 L5,0.601 C5,0.048 5.447,0 6,0 C6.553,0 7,0.048 7,0.601 L7,5 L11.399,5 C11.952,5 12,5.447 12,6 Z" id="Icon-Path"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
