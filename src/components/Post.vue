@@ -17,7 +17,7 @@
       <div class="post__header">
         <div class="post__time-small">
           <img src="../assets/img/icons/clock.svg"> 09:00
-          <i class="fa fa-trash text-danger" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>
+          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>
         </div>
         <div class="post__tags">
           <div class="tag" v-b-tooltip.hover title="Моя рубрика">М</div>
@@ -64,11 +64,12 @@
 </script>
 
 <style lang="scss" scoped>
+  @import '../variables';
+
   .post {
     width: 200px;
     height: 200px;
-    border: 1px dashed #A2A2A2;
-    color: #A2A2A2;
+    background-color: $color-bg-1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -77,9 +78,12 @@
     cursor: pointer;
     transition: all 0.2s;
     margin-right: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
     &:hover {
-      background-color: rgba(#A2A2A2, 0.1);
+      background-color: $color-bg-2;
+      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
     }
 
     &._empty {
@@ -90,9 +94,13 @@
 
     &._full {
       display: block;
-      border: 1px solid #A2A2A2;
-      background-color: #313033;
+      border: 1px solid $color-bg-3;
+      background-color: $color-bg-3;
       font-weight: normal;
+
+      &:hover {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+      }
     }
 
     &__header {
@@ -106,6 +114,7 @@
 
     &__time-small {
       font-size: 14px;
+      //color: lighten($color-primary, 50%);
       img {
         width: 20px;
         margin-right: 5px;
@@ -127,7 +136,7 @@
       height: 20px;
       color: #F0F0F0;
       border-radius: 50%;
-      background: linear-gradient(to top, #da22ff, #9733ee);
+      background: #E040FB;
       font-size: 12px;
       margin-right: 5px;
 
@@ -150,6 +159,7 @@
     }
 
     &__time {
+      color: lighten($color-bg-0, 50%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -172,6 +182,10 @@
     &__footer {
       display: flex;
       padding: 0 10px 0 10px;
+    }
+
+    .fa-trash {
+      color: #FF5252
     }
   }
 

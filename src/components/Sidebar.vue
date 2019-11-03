@@ -4,11 +4,8 @@
       <img src="../assets/img/logo.png">
       <div>SOCIAL<span>ROCK</span></div>
     </div>
-    <!--<div class="sidebar-collapse" @click="$emit('toggle')">-->
-      <!--<i class="fas fa-chevron-left"></i>-->
-    <!--</div>-->
     <div class="project">
-      <div class="project__name-icon" :style="{ background: 'linear-gradient(to left, #3494e6, #ec6ead)' }">
+      <div class="project__name-icon" :style="{ background: '#5C6BC0' }">
         М
       </div>
       <div class="project__name">
@@ -25,56 +22,38 @@
       </b-button>
     </div>
     <div class="nav">
-      <div class="nav-item _active">
+      <router-link to="/calendar" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="far fa-calendar-alt"></i>
         </div>
         <div class="nav-item__title">
           Автопостинг
         </div>
-      </div>
-      <div class="nav-item">
+      </router-link>
+      <router-link to="/analytics" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-chart-bar"></i>
         </div>
         <div class="nav-item__title">
           Аналитика
         </div>
-      </div>
-      <div class="nav-item">
+      </router-link>
+      <router-link to="/editor" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-paint-brush"></i>
         </div>
         <div class="nav-item__title">
           Редактор
         </div>
-      </div>
-      <!--<div class="nav-item">-->
-        <!--<div class="nav-item__icon">-->
-          <!--<i class="fas fa-wrench"></i>-->
-        <!--</div>-->
-        <!--<div class="nav-item__title">-->
-          <!--Инструменты-->
-        <!--</div>-->
-      <!--</div>-->
-      <div class="nav-item">
+      </router-link>
+      <router-link to="/settings" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-cog"></i>
         </div>
         <div class="nav-item__title">
           Настройки
         </div>
-      </div>
-      <!--<div class="sidebar-bottom">-->
-        <!--<v-date-picker-->
-          <!--mode="range"-->
-          <!--:value="null"-->
-          <!--color="orange"-->
-          <!--is-dark-->
-          <!--is-inline-->
-          <!--is-expanded-->
-        <!--/>-->
-      <!--</div>-->
+      </router-link>
     </div>
   </div>
 </template>
@@ -83,15 +62,18 @@
   export default {}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+  @import "../variables.scss";
+
   .sidebar {
-    width: 260px;
+    width: 240px;
     left: 0;
     top: 0;
     bottom: 0;
     position: fixed;
-    background-color: #313033;
-    /*transition: width 0.4s;*/
+    background-color: $color-bg-2;
+    z-index: 2;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
     &__logo {
       padding-left: 20px;
@@ -102,14 +84,14 @@
       font-size: 26px;
       display: flex;
       align-items: center;
-      border-bottom: 1px solid #1E1E1E;
+      color: white;
 
       img {
         width: 25px;
         margin-right: 10px;
       }
       span {
-        color: #ffc107;
+        color: $color-warning;
       }
     }
   }
@@ -130,7 +112,7 @@
     cursor: pointer;
     padding-left: 20px;
     padding-right: 20px;
-    padding-top: 20px;
+    padding-top: 10px;
     font-size: 16px;
     font-weight: bold;
     position: relative;
@@ -149,7 +131,7 @@
     &__icon {
       position: absolute;
       right: 20px;
-      top: 28px;
+      top: 18px;
     }
   }
 
@@ -183,7 +165,7 @@
     }
 
     &._active {
-      background-color: #272729;
+      background-color: $color-bg-7;
     }
   }
 
