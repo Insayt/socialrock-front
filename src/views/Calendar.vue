@@ -137,6 +137,9 @@
                       is-expanded
                     />
                   </b-dropdown-text>
+                  <b-button variant="black" size="sm" block>
+                    Сегодня
+                  </b-button>
                 </b-dropdown>
                 в
                 <b-form-select value="00">
@@ -182,6 +185,9 @@
                       is-expanded
                     />
                   </b-dropdown-text>
+                  <b-button variant="black" size="sm" block>
+                    Сегодня
+                  </b-button>
                 </b-dropdown>
                 в
                 <b-form-select value="00">

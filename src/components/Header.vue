@@ -36,7 +36,7 @@
         <div class="calendar-header__title">Редактор</div>
       </template>
       <template v-if="currentRoute === 'settings'">
-        <div class="calendar-header__title">Настройки</div>
+        <div class="calendar-header__title">Настройки проекта</div>
       </template>
     </div>
     <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
@@ -94,7 +94,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
     &__title {
-      font-size: 24px;
+      font-size: 22px;
     }
 
     &__current {

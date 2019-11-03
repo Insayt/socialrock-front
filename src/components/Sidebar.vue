@@ -30,20 +30,20 @@
           Автопостинг
         </div>
       </router-link>
-      <router-link to="/analytics" tag="div" class="nav-item" active-class="_active">
-        <div class="nav-item__icon">
-          <i class="fas fa-chart-bar"></i>
-        </div>
-        <div class="nav-item__title">
-          Аналитика
-        </div>
-      </router-link>
       <router-link to="/editor" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-paint-brush"></i>
         </div>
         <div class="nav-item__title">
           Редактор
+        </div>
+      </router-link>
+      <router-link to="/analytics" tag="div" class="nav-item" active-class="_active">
+        <div class="nav-item__icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="nav-item__title">
+          Аналитика
         </div>
       </router-link>
       <router-link to="/settings" tag="div" class="nav-item" active-class="_active">
