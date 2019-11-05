@@ -35,6 +35,11 @@
             show: false,
           },
         },
+        dataLabels: {
+          style: {
+            fontSize: '13px',
+          },
+        },
         // tooltip: {
         //   custom: function({series, seriesIndex, dataPointIndex}) {
         //     return '<div class="arrow_box">' +

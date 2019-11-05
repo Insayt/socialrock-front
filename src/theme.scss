@@ -27,6 +27,12 @@ a {
   font-weight: bold;
 }
 
+.badge-warning {
+  background-color: $color-warning;
+  color: $color-bg-0;
+  font-weight: bold;
+}
+
 .apexcharts-canvas.dark {
   background-color: $color-bg-1 !important;
 }
@@ -73,6 +79,8 @@ a {
       color: #F0F0F0;
       font-weight: bold;
       padding: 10px 20px;
+      display: flex;
+      align-items: center;
       &:hover {
         background-color: $color-bg-9;
       }
@@ -112,6 +120,25 @@ a {
   padding: 0;
 }
 
+.auth-tabs {
+  .tab-content {
+    padding: 0 !important;
+    padding-top: 25px !important;
+  }
+  .nav-tabs {
+    padding-left: 0 !important;
+  }
+  .nav-link {
+    font-size: 18px !important;
+    padding: 10px !important;
+    padding-top: 0 !important;
+    text-align: center;
+  }
+  .nav-item {
+    width: 50%;
+  }
+}
+
 .tabs {
   .nav-tabs {
     padding-left: 16px;
@@ -136,16 +163,25 @@ a {
   }
 }
 
+.was-validated .form-control:invalid, .form-control.is-invalid {
+  border-color: $color-danger;
+}
+.invalid-feedback {
+  color: $color-danger;
+}
 
 .form-control {
   background-color: $color-bg-4;
   border-color: $color-bg-4;
   color: $color-font;
+  padding: 10px 15px;
+  height: auto;
 
   &:focus {
     background-color: $color-bg-4;
     border-color: $color-bg-4;
     color: $color-font;
+    box-shadow: none;
   }
 
   &::placeholder {
@@ -219,6 +255,21 @@ a {
   &:hover {
     background-color: darken($color-warning, 10%);
     border-color: darken($color-warning, 10%);
+  }
+}
+
+.btn-success {
+  background-color: $color-success;
+  border-color: $color-success;
+  color: white !important;
+
+  .fas {
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background-color: darken($color-success, 10%);
+    border-color: darken($color-success, 10%);
   }
 }
 

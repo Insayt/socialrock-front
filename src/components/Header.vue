@@ -12,7 +12,7 @@
         <span class="calendar-header__current">23 октября - 30 октября 2019</span>
         <b-dropdown class="dropdown-calendar" size="sm" variant="black" toggle-class="text-decoration-none" no-caret>
           <template v-slot:button-content>
-            Календарь <i class="fas fa-calendar-alt ml-1"></i>
+            Выбрать период <i class="fas fa-calendar-alt ml-1"></i>
           </template>
           <b-dropdown-text>
             <v-date-picker
@@ -43,6 +43,11 @@
       <template v-slot:button-content>
         mr.insayt@gmail.com <i class="fas fa-chevron-down"></i>
       </template>
+      <b-dropdown-item href="#">
+        <i class="fas fa-bell"></i>
+        Уведомления
+        <b-badge class="ml-2" variant="warning">4</b-badge>
+      </b-dropdown-item>
       <b-dropdown-item href="#">
         <i class="fas fa-user"></i>
         Профиль

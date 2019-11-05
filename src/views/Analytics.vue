@@ -58,6 +58,9 @@
       <div class="box-title">
         Динамика числа подписчиков
       </div>
+      <p class="analytics-desc">
+        Отслеживайте как меняется колличество подписчиков ваших страниц со временем
+      </p>
       <subscribers></subscribers>
     </div>
     <div class="box">
@@ -74,9 +77,26 @@
         Активность
       </div>
       <p class="analytics-desc">
-        Переходы по ссылкам, репосты, лайки, сохранения, комментарии по дням
+        Переходы по ссылкам, репосты, лайки, сохранения (для инстаграм), комментарии по дням
       </p>
       <activities></activities>
+    </div>
+    <div class="box">
+      <div class="box-title">
+        Конверсии в Google Analytics и Яндекс метрике
+      </div>
+      <p class="analytics-desc">
+        Какие посты больше всего понравились вашей аудитории
+      </p>
+      <activities></activities>
+    </div>
+    <div class="box">
+      <div class="box-title">
+        Лучшие публикации
+      </div>
+      <p class="analytics-desc">
+        Какие посты больше всего понравились вашей аудитории
+      </p>
     </div>
     <!--<div class="box">-->
       <!--<div class="box-title">-->

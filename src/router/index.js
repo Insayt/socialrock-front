@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import Auth from '../views/Auth';
 import Calendar from '../views/Calendar';
 import Analytics from '../views/Analytics';
 import Settings from '../views/Settings';
@@ -7,6 +8,11 @@ import Settings from '../views/Settings';
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/auth',
+    name: 'auth',
+    component: Auth
+  },
   {
     path: '/calendar',
     name: 'calendar',
@@ -34,6 +40,10 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '*',
+    redirect: '/calendar'
   }
 ]
 

@@ -55,6 +55,18 @@
         </div>
       </router-link>
     </div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-bottom__emoji">
+        💡
+      </div>
+      <div class="sidebar-bottom__text">
+        Подтвердите свой email <br> перейдя по ссылке из письма
+      </div>
+      <div class="sidebar-bottom__btn">
+        Если вы не получили письмо, проверьте спам или нажмите кнопку для заказа нового
+      </div>
+      <b-button  variant="warning" block>Запросить письмо</b-button>
+    </div>
   </div>
 </template>
 
@@ -64,6 +76,35 @@
 
 <style lang="scss" scoped>
   @import "../variables.scss";
+
+  .sidebar-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid rgba($color-warning, 0.2);
+    background-color: rgba($color-warning, 0.1);
+
+    &__emoji {
+      font-size: 70px;
+      position: relative;
+      top: 5px;
+      animation-name: pulse;
+      animation-duration: 1s;
+      animation-iteration-count: infinite;
+    }
+    &__text {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    &__btn {
+      font-size: 13px;
+      margin-bottom: 10px;
+      color: gray;
+    }
+  }
 
   .sidebar {
     width: 240px;
@@ -167,10 +208,5 @@
     &._active {
       background-color: $color-bg-7;
     }
-  }
-
-  .sidebar-bottom {
-    position: absolute;
-    bottom: 0;
   }
 </style>

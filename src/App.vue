@@ -1,12 +1,12 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ fullwidth: $router.currentRoute.name === 'auth' }">
     <!--<div id="nav">-->
       <!--<router-link to="/">Home</router-link> |-->
       <!--<router-link to="/about">About</router-link>-->
     <!--</div>-->
-    <sidebar></sidebar>
+    <sidebar v-if="$router.currentRoute.name !== 'auth'"></sidebar>
     <div class="app-content">
-      <s-header :current-route="$router.currentRoute.name"></s-header>
+      <s-header v-if="$router.currentRoute.name !== 'auth'" :current-route="$router.currentRoute.name"></s-header>
       <router-view/>
     </div>
   </div>
@@ -34,16 +34,23 @@
   @import "variables";
   @import "theme";
 
-  .app-content {
-    padding-top: 60px;
-  }
-
   #app {
     padding-left: 240px;
 
     &.sidebar-mini {
       padding-left: 60px;
     }
+
+    &.fullwidth {
+      padding-left: 0;
+      .app-content {
+        padding-top: 0;
+      }
+    }
+  }
+
+  .app-content {
+    padding-top: 60px;
   }
 
   .dropdown-calendar {
