@@ -5,11 +5,11 @@
       <div>SOCIAL<span>ROCK</span></div>
     </div>
     <div class="project">
-      <div class="project__name-icon" :style="{ background: '#5C6BC0' }">
-        М
+      <div class="project__name-icon" :style="{ background: currentProject.color }">
+        {{ currentProject.name[0] }}
       </div>
       <div class="project__name">
-        Мой проект
+        {{ currentProject.name }}
       </div>
       <div class="project__icon">
         <i class="fas fa-chevron-down"></i>
@@ -22,7 +22,7 @@
       </b-button>
     </div>
     <div class="nav">
-      <router-link to="/calendar" tag="div" class="nav-item" active-class="_active">
+      <router-link :to="{ name: 'calendar', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="far fa-calendar-alt"></i>
         </div>
@@ -30,7 +30,7 @@
           Автопостинг
         </div>
       </router-link>
-      <router-link to="/editor" tag="div" class="nav-item" active-class="_active">
+      <router-link :to="{ name: 'editor', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-paint-brush"></i>
         </div>
@@ -38,7 +38,7 @@
           Редактор
         </div>
       </router-link>
-      <router-link to="/analytics" tag="div" class="nav-item" active-class="_active">
+      <router-link :to="{ name: 'analytics', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-chart-bar"></i>
         </div>
@@ -46,7 +46,7 @@
           Аналитика
         </div>
       </router-link>
-      <router-link to="/settings" tag="div" class="nav-item" active-class="_active">
+      <router-link :to="{ name: 'settings', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-cog"></i>
         </div>
@@ -55,23 +55,35 @@
         </div>
       </router-link>
     </div>
-    <div class="sidebar-bottom">
+    <div class="sidebar-bottom" v-if="!user.email_verify">
       <div class="sidebar-bottom__emoji">
         💡
       </div>
       <div class="sidebar-bottom__text">
-        Подтвердите свой email <br> перейдя по ссылке из письма
+        Подтвердите свой email!
       </div>
       <div class="sidebar-bottom__btn">
-        Если вы не получили письмо, проверьте спам или нажмите кнопку для заказа нового
+        Мы отправили вам письмо с ссылкой для подтверждения. Если вы не получили его, проверьте спам или напишите в чат тех. поддержки
       </div>
-      <b-button  variant="warning" block>Запросить письмо</b-button>
+      <!--<b-button  variant="warning" block>Запросить письмо</b-button>-->
     </div>
   </div>
 </template>
 
 <script>
-  export default {}
+  export default {
+    computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
+      user () {
+        return this.$store.getters['user/user'];
+      },
+    },
+    methods: {
+
+    }
+  }
 </script>
 
 <style lang="scss" scoped>
@@ -82,27 +94,27 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px;
+    padding: 10px;
     text-align: center;
-    border: 1px solid rgba($color-warning, 0.2);
-    background-color: rgba($color-warning, 0.1);
+    border: 1px solid rgba($color-warning, 0.4);
+    background-color: rgba($color-warning, 0.4);
 
     &__emoji {
       font-size: 70px;
       position: relative;
       top: 5px;
-      animation-name: pulse;
+      /*animation-name: pulse;*/
       animation-duration: 1s;
       animation-iteration-count: infinite;
     }
     &__text {
-      font-size: 16px;
-      margin-bottom: 10px;
+      font-size: 17px;
+      margin-bottom: 15px;
     }
     &__btn {
       font-size: 13px;
-      margin-bottom: 10px;
-      color: gray;
+      margin-bottom: 15px;
+      color: lightgray;
     }
   }
 

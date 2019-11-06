@@ -1,54 +1,85 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Auth from '../views/Auth';
+import Project from '../views/Project';
 import Calendar from '../views/Calendar';
 import Analytics from '../views/Analytics';
 import Settings from '../views/Settings';
 
-Vue.use(VueRouter)
+import store from '../store/index';
 
-const routes = [
-  {
-    path: '/auth',
-    name: 'auth',
-    component: Auth
-  },
-  {
-    path: '/calendar',
-    name: 'calendar',
-    component: Calendar
-  },
-  {
-    path: '/analytics',
-    name: 'analytics',
-    component: Analytics
-  },
-  {
-    path: '/editor',
-    name: 'editor',
-    component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue')
-  },
-  {
-    path: '/settings',
-    name: 'settings',
-    component: Settings
-  },
-  {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
-    path: '*',
-    redirect: '/calendar'
-  }
-]
+Vue.use(VueRouter);
 
 const router = new VueRouter({
-  routes
+  routes: [
+    {
+      path: '/auth',
+      name: 'auth',
+      component: Auth
+    },
+    {
+      path: '/p/:projectId',
+      name: 'project',
+      component: Project,
+      children: [
+        {
+          path: 'calendar',
+          name: 'calendar',
+          component: Calendar,
+          meta: {
+            protected: true,
+          },
+        },
+        {
+          path: 'analytics',
+          name: 'analytics',
+          component: Analytics,
+          meta: {
+            protected: true,
+          }
+        },
+        {
+          path: 'editor',
+          name: 'editor',
+          component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue'),
+          meta: {
+            protected: true,
+          }
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: Settings,
+          meta: {
+            protected: true,
+          }
+        },
+
+      ]
+    },
+    // {
+    //   path: '*',
+    //   redirect: '/auth'
+    // }
+  ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.meta && to.meta.protected) {
+    store.commit('user/setLoading', true);
+    store.dispatch('user/current').then(user => {
+      store.commit('user/setLoading', false);
+      if (user) {
+        next();
+      } else {
+        next('/auth');
+      }
+    }).catch(() => {
+      next('/auth');
+    })
+  } else {
+    next();
+  }
 });
 
 export default router

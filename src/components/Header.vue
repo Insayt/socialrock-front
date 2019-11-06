@@ -41,7 +41,7 @@
     </div>
     <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
       <template v-slot:button-content>
-        mr.insayt@gmail.com <i class="fas fa-chevron-down"></i>
+        {{ user.email }} <i class="fas fa-chevron-down"></i>
       </template>
       <b-dropdown-item href="#">
         <i class="fas fa-bell"></i>
@@ -60,7 +60,7 @@
         <i class="fas fa-life-ring"></i>
         Помощь
       </b-dropdown-item>
-      <b-dropdown-item href="#">
+      <b-dropdown-item href="#" @click.prevent="logout()">
         <i class="fas fa-power-off"></i>
         Выход
       </b-dropdown-item>
@@ -75,6 +75,19 @@
         type: String,
         required: true
       }
+    },
+    computed: {
+      user () {
+        return this.$store.getters['user/user'];
+      },
+    },
+    methods: {
+      logout () {
+        this.$store.dispatch('user/logout')
+          .then(() => {
+            this.$router.push({ name: 'auth' });
+          })
+      },
     }
   }
 </script>

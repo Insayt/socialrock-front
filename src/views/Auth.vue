@@ -8,7 +8,7 @@
       <div class="box">
         <b-tabs class="auth-tabs">
           <b-tab title="Вход" active>
-            <b-form class="form-auth__form" @submit.stop.prevent="login">
+            <b-form class="form-auth__form" @submit.prevent="login">
               <div class="auth__form-group">
                 <b-input placeholder="Email" :class="{ 'is-invalid': errors.email }" v-model="email"></b-input>
                 <div class="invalid-feedback">
@@ -25,7 +25,7 @@
             </b-form>
           </b-tab>
           <b-tab title="Регистрация">
-            <b-form class="form-auth__form" @submit.stop.prevent="register">
+            <b-form class="form-auth__form" @submit.prevent="register">
               <div class="auth__form-group">
                 <b-input placeholder="Email" v-model="email" :class="{ 'is-invalid': errors.email }"></b-input>
                 <div class="invalid-feedback">
@@ -66,9 +66,13 @@
       login () {
         this.loading = true;
         this.errors = {};
-        this.$store.dispatch('user/login', {})
+        let data = {
+          email: this.email,
+          password: this.password,
+        };
+        this.$store.dispatch('user/login', data)
           .then(() => {
-            this.$router.push({ name: 'calendar' });
+            this.$router.push({ name: 'calendar', params: { projectId: this.$store.getters['user/currentProject'].short_id } });
           })
           .catch(e => {
             if (e.response && e.response.data.errors) this.errors = e.response.data.errors;
@@ -86,8 +90,8 @@
           repeatPassword: this.repeatPassword
         };
         this.$store.dispatch('user/register', data)
-          .then(() => {
-            this.$router.push({ name: 'calendar' });
+          .then((res) => {
+            this.$router.push({ name: 'calendar', params: { projectId: res.project_id } });
           })
           .catch(e => {
             if (e.response && e.response.data.errors) this.errors = e.response.data.errors;

@@ -1,5 +1,5 @@
 <template>
-  <div id="app" :class="{ fullwidth: $router.currentRoute.name === 'auth' }">
+  <div id="app" :class="{ fullwidth: $router.currentRoute.name === 'auth' }" v-if="!loading">
     <!--<div id="nav">-->
       <!--<router-link to="/">Home</router-link> |-->
       <!--<router-link to="/about">About</router-link>-->
@@ -25,6 +25,11 @@
     data: () => ({
       isSidebarCollapse: false
     }),
+    computed: {
+      loading () {
+        return this.$store.getters['user/loading'];
+      },
+    },
     methods: {}
   }
 </script>

@@ -10,7 +10,7 @@
     },
     data: () => ({
       chartOptions: {
-        colors: ['#5388EA', '#5AA75F', '#D84F42', '#F1BF4F'],
+        colors: ['#5388EA', '#5AA75F', '#D84F42', '#F1BF4F', '#EA80FC', '#78909C'],
         chart: {
           fontFamily: 'Roboto',
           foreColor: '#A2A2A2',
@@ -68,6 +68,9 @@
         data: [21, 7, 25, 13, 22, 8]
       }, {
         name: 'Сохранения',
+        data: [21, 7, 25, 13, 22, 8]
+      }, {
+        name: 'Нажатия кнопок',
         data: [21, 7, 25, 13, 22, 8]
       }]
     })
