@@ -38,6 +38,9 @@
       <template v-if="currentRoute === 'settings'">
         <div class="calendar-header__title">Настройки проекта</div>
       </template>
+      <template v-if="currentRoute === 'projects'">
+        <div class="calendar-header__title">Управление проектами</div>
+      </template>
     </div>
     <b-dropdown size="sm" variant="link" toggle-class="text-decoration-none" no-caret>
       <template v-slot:button-content>

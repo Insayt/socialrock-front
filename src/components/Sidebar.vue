@@ -1,10 +1,29 @@
 <template>
-  <div class="sidebar">
+  <div class="sidebar" :class="{ 'show-project-list': showProjectList }">
+    <div class="projects-list">
+      <div class="projects-list__pd">
+        <b-button class="sidebar-button projects-list__pd" variant="warning" block @click="createProject()">
+          <i class="fas fa-plus"></i>
+          <span>Создать проект</span>
+        </b-button>
+      </div>
+      <div class="projects-list__title projects-list__pd">
+        Ваши проекты:
+      </div>
+      <div class="projects-list__item" v-for="p in projects" :class="{ _active: p.short_id === currentProject.short_id }">
+        <div class="project__name-icon" :style="{ background: currentProject.color }">
+          {{ p.name[0] }}
+        </div>
+        <div class="project__name">
+          {{ p.name }}
+        </div>
+      </div>
+    </div>
     <div class="sidebar__logo">
       <img src="../assets/img/logo.png">
       <div>SOCIAL<span>ROCK</span></div>
     </div>
-    <div class="project">
+    <div class="project" @click="showProjectList = !showProjectList">
       <div class="project__name-icon" :style="{ background: currentProject.color }">
         {{ currentProject.name[0] }}
       </div>
@@ -12,7 +31,8 @@
         {{ currentProject.name }}
       </div>
       <div class="project__icon">
-        <i class="fas fa-chevron-down"></i>
+        <i class="fas fa-chevron-down" v-show="!showProjectList"></i>
+        <i class="fas fa-chevron-up" v-show="showProjectList"></i>
       </div>
     </div>
     <div class="sidebar-action">
@@ -63,15 +83,18 @@
         Подтвердите свой email!
       </div>
       <div class="sidebar-bottom__btn">
-        Мы отправили вам письмо с ссылкой для подтверждения. Если вы не получили его, проверьте спам или напишите в чат тех. поддержки
+        Мы отправили вам письмо с ссылкой для подтверждения. Если вы не получили его, проверьте спам или запросите еще одно
       </div>
-      <!--<b-button  variant="warning" block>Запросить письмо</b-button>-->
+      <b-button  variant="danger" block>Запросить письмо</b-button>
     </div>
   </div>
 </template>
 
 <script>
   export default {
+    data: () => ({
+      showProjectList: false
+    }),
     computed: {
       currentProject () {
         return this.$store.getters['user/currentProject'];
@@ -79,9 +102,14 @@
       user () {
         return this.$store.getters['user/user'];
       },
+      projects () {
+        return this.$store.getters['user/projects'];
+      },
     },
     methods: {
-
+      createProject () {
+        this.$router.push({ name: 'projects' });
+      }
     }
   }
 </script>
@@ -96,8 +124,8 @@
     right: 0;
     padding: 10px;
     text-align: center;
-    border: 1px solid rgba($color-warning, 0.4);
-    background-color: rgba($color-warning, 0.4);
+    border: 1px solid rgba($color-danger, 0.8);
+    background-color: #6A3430;
 
     &__emoji {
       font-size: 70px;
@@ -147,6 +175,57 @@
         color: $color-warning;
       }
     }
+
+    &.show-project-list .projects-list {
+      top: 120px;
+      visibility: visible;
+      opacity: 1;
+    }
+  }
+
+  .projects-list {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $color-bg-2;
+    z-index: 2;
+    padding-top: 10px;
+    visibility: hidden;
+    opacity: 0;
+    overflow-y: auto;
+    transition: all 0.2s ease-in-out;
+    font-weight: bold;
+
+    &__title {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    &__item {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 0 20px;
+      height: 50px;
+
+      &._active {
+        background-color: $color-bg-7;
+      }
+    }
+
+    .projects-list__pd {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .project__name-icon {
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      font-size: 24px;
+    }
   }
 
   .sidebar-collapse {
@@ -169,6 +248,7 @@
     font-size: 16px;
     font-weight: bold;
     position: relative;
+    user-select: none;
 
     &__name-icon {
       width: 40px;

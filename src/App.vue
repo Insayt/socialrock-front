@@ -30,6 +30,11 @@
         return this.$store.getters['user/loading'];
       },
     },
+    mounted () {
+      // this.$bus.$on('test', () => {
+      //   console.log('Test!');
+      // });
+    },
     methods: {}
   }
 </script>

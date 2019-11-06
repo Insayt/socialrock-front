@@ -13,7 +13,16 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(VCalendar);
 
+Object.defineProperty(Vue.prototype,"$bus",{
+  get: function() {
+    return this.$root.bus;
+  }
+});
+
 new Vue({
+  data: {
+    bus: new Vue({})
+  },
   router,
   store,
   render: h => h(App)

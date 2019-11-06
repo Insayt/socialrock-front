@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Auth from '../views/Auth';
-import Project from '../views/Project';
+import ProjectWrapper from '../views/ProjectWrapper';
 import Calendar from '../views/Calendar';
 import Analytics from '../views/Analytics';
 import Settings from '../views/Settings';
+import Projects from '../views/Projects';
 
 import store from '../store/index';
 
@@ -18,9 +19,17 @@ const router = new VueRouter({
       component: Auth
     },
     {
+      path: '/projects',
+      name: 'projects',
+      component: Projects,
+      meta: {
+        protected: true,
+      },
+    },
+    {
       path: '/p/:projectId',
       name: 'project',
-      component: Project,
+      component: ProjectWrapper,
       children: [
         {
           path: 'calendar',
