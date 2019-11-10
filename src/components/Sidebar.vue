@@ -3,16 +3,19 @@
     <div class="projects-list">
       <div class="projects-list__pd">
         <b-button class="sidebar-button projects-list__pd" variant="warning" block @click="createProject()">
-          <i class="fas fa-plus"></i>
-          <span>Создать проект</span>
+          <span>Управление проектами</span>
         </b-button>
       </div>
       <div class="projects-list__title projects-list__pd">
         Ваши проекты:
       </div>
-      <div class="projects-list__item" v-for="p in projects" :class="{ _active: p.short_id === currentProject.short_id }">
-        <div class="project__name-icon" :style="{ background: currentProject.color }">
-          {{ p.name[0] }}
+      <div class="projects-list__item"
+           v-for="p in projects"
+           :class="{ _active: p.short_id === currentProject.short_id }"
+           @click="navigateToProject(p)"
+      >
+        <div class="project__name-icon" :style="{ background: p.color }">
+          {{ p.name[0].toUpperCase() }}
         </div>
         <div class="project__name">
           {{ p.name }}
@@ -25,7 +28,7 @@
     </div>
     <div class="project" @click="showProjectList = !showProjectList">
       <div class="project__name-icon" :style="{ background: currentProject.color }">
-        {{ currentProject.name[0] }}
+        {{ currentProject.name[0].toUpperCase() }}
       </div>
       <div class="project__name">
         {{ currentProject.name }}
@@ -71,22 +74,22 @@
           <i class="fas fa-cog"></i>
         </div>
         <div class="nav-item__title">
-          Настройки
+          Настройки проекта
         </div>
       </router-link>
     </div>
-    <div class="sidebar-bottom" v-if="!user.email_verify">
-      <div class="sidebar-bottom__emoji">
-        💡
-      </div>
-      <div class="sidebar-bottom__text">
-        Подтвердите свой email!
-      </div>
-      <div class="sidebar-bottom__btn">
-        Мы отправили вам письмо с ссылкой для подтверждения. Если вы не получили его, проверьте спам или запросите еще одно
-      </div>
-      <b-button  variant="danger" block>Запросить письмо</b-button>
-    </div>
+    <!--<div class="sidebar-bottom" v-if="!user.email_verify">-->
+      <!--<div class="sidebar-bottom__emoji">-->
+        <!--💡-->
+      <!--</div>-->
+      <!--<div class="sidebar-bottom__text">-->
+        <!--Подтвердите свой email!-->
+      <!--</div>-->
+      <!--<div class="sidebar-bottom__btn">-->
+        <!--Мы отправили вам письмо с ссылкой для подтверждения. Если вы не получили его, проверьте спам или запросите еще одно-->
+      <!--</div>-->
+      <!--<b-button  variant="danger" block>Запросить письмо</b-button>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -95,6 +98,12 @@
     data: () => ({
       showProjectList: false
     }),
+    created () {
+      // this.$router.beforeEach((to, from, next) => {
+      //   console.log(1);
+      //   next();
+      // })
+    },
     computed: {
       currentProject () {
         return this.$store.getters['user/currentProject'];
@@ -109,6 +118,10 @@
     methods: {
       createProject () {
         this.$router.push({ name: 'projects' });
+      },
+      navigateToProject (project) {
+        this.$router.push({ name: this.$router.currentRoute.name, params: { projectId: project.short_id } });
+        this.$store.commit('user/setCurrentProject', project.short_id);
       }
     }
   }
@@ -201,6 +214,7 @@
     &__title {
       margin-top: 20px;
       margin-bottom: 20px;
+      padding-left: 20px !important;
     }
 
     &__item {
@@ -209,6 +223,7 @@
       cursor: pointer;
       padding: 0 20px;
       height: 50px;
+      margin-bottom: 5px;
 
       &._active {
         background-color: $color-bg-7;
@@ -216,13 +231,19 @@
     }
 
     .projects-list__pd {
-      padding-left: 20px;
-      padding-right: 20px;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .project__name {
+      width: 170px;
     }
 
     .project__name-icon {
       width: 30px;
       height: 30px;
+      min-width: 30px;
+      min-height: 30px;
       line-height: 30px;
       font-size: 24px;
     }
@@ -243,12 +264,18 @@
     align-items: center;
     cursor: pointer;
     padding-left: 20px;
-    padding-right: 20px;
     padding-top: 10px;
     font-size: 16px;
     font-weight: bold;
     position: relative;
     user-select: none;
+
+    &__name {
+      white-space: nowrap;
+      overflow: hidden;
+      width: 140px;
+      text-overflow: ellipsis;
+    }
 
     &__name-icon {
       width: 40px;
@@ -258,7 +285,7 @@
       font-size: 32px;
       font-weight: bold;
       border-radius: 5px;
-      margin-right: 15px;
+      margin-right: 10px;
     }
 
     &__icon {

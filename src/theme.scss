@@ -25,6 +25,20 @@ a {
 .box-title {
   font-size: 18px;
   font-weight: bold;
+  margin-bottom: 14px;
+}
+
+.row-title {
+  font-weight: bold;
+  color: $color-font;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.row-subtitle {
+  color: $color-font-gray;
+  font-size: 15px;
+  margin-bottom: 20px;
 }
 
 .badge-warning {
@@ -118,6 +132,84 @@ a {
 
 .modal-body {
   padding: 0;
+}
+
+.swal2-container.swal2-shown {
+  background-color: rgba(#000, 0.9);
+}
+
+.swal2-popup {
+  width: 30rem;
+  background-color: $color-bg-1;
+  color: $color-font;
+  border-radius: 5px;
+}
+
+.swal2-title {
+  color: $color-font;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.swal2-content {
+  color: $color-font;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.swal2-icon {
+  align-items: center;
+}
+
+.swal2-styled {
+  font-weight: bold !important;
+  padding: 0.5rem 1.5rem;
+  &:focus {
+    box-shadow: none !important;
+  }
+
+  &:hover {
+    box-shadow: $box-shadow-button;
+  }
+}
+
+.swal2-styled.swal2-cancel {
+  color: $color-font;
+  font-weight: inherit;
+  background-color: $color-bg-6;
+
+  &:hover {
+    color: $color-font;
+    background-color: $color-bg-9;
+  }
+}
+
+.swal2-styled.swal2-confirm {
+  background-color: $color-primary;
+  border-color:  $color-primary;
+  color: white;
+
+  &:hover {
+    background-color: $color-primary-hover;
+    border-color: $color-primary-hover;
+  }
+}
+
+.swal2-icon {
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: 20px;
+  margin-top: 20px;
+}
+
+body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .swal2-container.swal2-top-right {
+  padding: 15px;
+}
+
+.swal2-popup.swal2-toast {
+  background-color: $color-bg-9;
+  //box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 }
 
 .auth-tabs {

@@ -31,6 +31,7 @@ export default {
     },
     setCurrentProject (state, projectId) {
       Vue.set(state, 'currentProject', projectId);
+      localStorage.setItem('currentProject', projectId);
     },
   },
   actions: {
@@ -41,8 +42,10 @@ export default {
         return axios.post(`${config.apiUrl}/user/current`)
           .then(res => {
             commit('setUserData', res.data);
-            if (res.data.projects && res.data.projects.length) {
+            if (!localStorage.getItem('currentProject')) {
               commit('setCurrentProject', res.data.projects[0].short_id);
+            } else {
+              commit('setCurrentProject', localStorage.getItem('currentProject'));
             }
             return res.data;
           }).catch(() => {
@@ -71,6 +74,20 @@ export default {
       return axios.post(`${config.apiUrl}/user/register`, { email, password, repeatPassword })
         .then(res => {
           // commit('setUserData', res.data);
+          return res.data;
+        })
+    },
+    createProject ({commit}, { name }) {
+      return axios.post(`${config.apiUrl}/project/create`, { name })
+        .then(res => {
+          commit('setUserData', res.data);
+          return res.data;
+        })
+    },
+    deleteProject ({commit}, { id }) {
+      return axios.post(`${config.apiUrl}/project/delete/${id}`)
+        .then(res => {
+          commit('setUserData', res.data);
           return res.data;
         })
     },
