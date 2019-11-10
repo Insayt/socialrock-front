@@ -101,6 +101,11 @@ a {
       i {
         margin-right: 10px;
       }
+
+      &[size="sm"] {
+        padding: 5px 15px;
+        font-size: 14px;
+      }
     }
   }
   .b-dropdown-text {

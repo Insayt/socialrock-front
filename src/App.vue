@@ -9,6 +9,8 @@
       <s-header v-if="$router.currentRoute.name !== 'auth'" :current-route="$router.currentRoute.name"></s-header>
       <router-view/>
     </div>
+    <modal-settings></modal-settings>
+    <modal-add-account></modal-add-account>
   </div>
 </template>
 
@@ -16,11 +18,15 @@
   // @ is an alias to /src
   import sHeader from '@/components/Header';
   import Sidebar from '@/components/Sidebar';
+  import ModalSettings from '@/components/modals/Settings';
+  import ModalAddAccount from '@/components/modals/AddAccount';
 
   export default {
     components: {
       Sidebar,
-      sHeader
+      sHeader,
+      ModalSettings,
+      ModalAddAccount
     },
     data: () => ({
       isSidebarCollapse: false

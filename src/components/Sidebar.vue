@@ -213,7 +213,7 @@
 
     &__title {
       margin-top: 20px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
       padding-left: 20px !important;
     }
 
@@ -223,7 +223,7 @@
       cursor: pointer;
       padding: 0 20px;
       height: 50px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
 
       &._active {
         background-color: $color-bg-7;

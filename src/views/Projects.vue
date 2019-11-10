@@ -8,7 +8,7 @@
           </div>
           <b-form @submit.prevent="createProject">
             <b-form-group>
-              <b-input placeholder="Название"
+              <b-input placeholder="Введите название"
                        :class="{ 'is-invalid': errors.name }"
                        v-model="name"></b-input>
               <div class="invalid-feedback">
@@ -23,10 +23,10 @@
     <div class="row">
       <div class="col-12">
         <div class="row-title">
-          Все проекты
+          Все проекты и страницы
         </div>
         <div class="row-subtitle">
-          Вы можете перетаскивать страницы для распределения между проектами
+          Перетаскивайте страницы для распределения между проектами
         </div>
         <div class="projects-list">
           <div class="projects-list__item" v-for="(p, key) in projects">
@@ -52,33 +52,7 @@
                       Frontend Mafia
                     </div>
                   </div>
-                  <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="project-page">
-                  <div class="project-page__left">
-                    <div class="network" style="background-image: url(&quot;/test1.jpg&quot;);">
-                      <div class="network__icon" style="background-color: rgb(70, 128, 194);">
-                        <i class="fab fa-vk"></i>
-                      </div>
-                    </div>
-                    <div class="project-page__title">
-                      Frontend Mafia
-                    </div>
-                  </div>
-                  <i class="fas fa-ellipsis-v"></i>
-                </div>
-                <div class="project-page">
-                  <div class="project-page__left">
-                    <div class="network" style="background-image: url(&quot;/test1.jpg&quot;);">
-                      <div class="network__icon" style="background-color: rgb(70, 128, 194);">
-                        <i class="fab fa-vk"></i>
-                      </div>
-                    </div>
-                    <div class="project-page__title">
-                      Frontend Mafia
-                    </div>
-                  </div>
-                  <i class="fas fa-ellipsis-v"></i>
+                  <i class="fas fa-grip-vertical"></i>
                 </div>
               </div>
             </div>
@@ -122,7 +96,7 @@
       removeProject (project) {
         this.$swal({
           title: `Удалить проект?`,
-          html: `Проект "${project.name}" будет удален навсегда. <br> Все данные связанные с ним страницы, будут перемещенны в ваш первый проект`,
+          html: `Проект "${project.name}" будет удален навсегда. Все связанные с ним страницы, будут перемещенны в ваш первый проект`,
           type: 'warning',
           showCancelButton: true,
           confirmButtonText: 'Удалить',

@@ -57,8 +57,10 @@ export default {
       return axios.post(`${config.apiUrl}/user/login`, { email, password })
         .then(res => {
           commit('setUserData', res.data);
-          if (res.data.projects && res.data.projects.length) {
+          if (!localStorage.getItem('currentProject')) {
             commit('setCurrentProject', res.data.projects[0].short_id);
+          } else {
+            commit('setCurrentProject', localStorage.getItem('currentProject'));
           }
           return res.data;
         })
