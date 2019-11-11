@@ -1,5 +1,5 @@
 <template>
-  <b-modal modal-class="modal-bg-no-opacity" ref="select-account" size="md" no-close-on-backdrop>
+  <b-modal modal-class="modal-bg-no-opacity" ref="select-account" size="md" no-close-on-backdrop >
     <template v-slot:modal-header-close>
       <img src="../../assets/img/icons/times.svg">
     </template>

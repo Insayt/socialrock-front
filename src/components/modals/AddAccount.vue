@@ -94,6 +94,7 @@
             .then((res) => {
               this.$store.dispatch('user/getVkGroups')
                 .then((res) => {
+                  console.log(res);
                   this.$bus.$emit('modal:select-account', res);
                 });
             })
