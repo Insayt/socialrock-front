@@ -139,6 +139,11 @@ a {
   padding: 0;
 }
 
+.modal-bg-no-opacity + .modal-backdrop {
+  background-color: $color-bg-0;
+  opacity: 1;
+}
+
 .swal2-container.swal2-shown {
   background-color: rgba(#000, 0.9);
 }

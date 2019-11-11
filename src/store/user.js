@@ -7,7 +7,7 @@ axios.defaults.withCredentials = true;
 const deafaultUserData = {
   _id: null,
   loading: false,
-  currentProject: null,
+  currentProjectId: null,
   user: {
     email_verify: false,
     projects: [],
@@ -30,8 +30,8 @@ export default {
       Vue.set(state, 'user', data);
     },
     setCurrentProject (state, projectId) {
-      Vue.set(state, 'currentProject', projectId);
-      localStorage.setItem('currentProject', projectId);
+      Vue.set(state, 'currentProjectId', projectId);
+      localStorage.setItem('currentProjectId', projectId);
     },
   },
   actions: {
@@ -42,10 +42,10 @@ export default {
         return axios.post(`${config.apiUrl}/user/current`)
           .then(res => {
             commit('setUserData', res.data);
-            if (!localStorage.getItem('currentProject')) {
+            if (!localStorage.getItem('currentProjectId')) {
               commit('setCurrentProject', res.data.projects[0].short_id);
             } else {
-              commit('setCurrentProject', localStorage.getItem('currentProject'));
+              commit('setCurrentProject', localStorage.getItem('currentProjectId'));
             }
             return res.data;
           }).catch(() => {
@@ -57,10 +57,10 @@ export default {
       return axios.post(`${config.apiUrl}/user/login`, { email, password })
         .then(res => {
           commit('setUserData', res.data);
-          if (!localStorage.getItem('currentProject')) {
+          if (!localStorage.getItem('currentProjectId')) {
             commit('setCurrentProject', res.data.projects[0].short_id);
           } else {
-            commit('setCurrentProject', localStorage.getItem('currentProject'));
+            commit('setCurrentProject', localStorage.getItem('currentProjectId'));
           }
           return res.data;
         })
@@ -68,6 +68,7 @@ export default {
     logout ({commit}) {
       return axios.post(`${config.apiUrl}/user/logout`)
         .then(res => {
+          localStorage.removeItem('currentProjectId');
           commit('setUserData', Object.assign({}, deafaultUserData));
           return res.data;
         })
@@ -93,6 +94,24 @@ export default {
           return res.data;
         })
     },
+    getVkGroups ({state, commit}) {
+      return axios.get(`${config.apiUrl}/vk/groups`)
+        .then(res => {
+          return res.data;
+        })
+    },
+    createTestToken ({state, commit}, { token }) {
+      return axios.post(`${config.apiUrl}/vk/test-token`, { token })
+        .then(res => {
+          return res.data;
+        })
+    },
+    addAccounts ({state, commit}, { accounts, project_id }) {
+      return axios.post(`${config.apiUrl}/social/add`, { accounts, project_id })
+        .then(res => {
+          return res.data;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,
@@ -107,7 +126,7 @@ export default {
     currentProject: (state) => {
       if (state.user.projects.length) {
         return state.user.projects.find((p) => {
-          return p.short_id === state.currentProject
+          return p.short_id === state.currentProjectId
         })
       }
     }
