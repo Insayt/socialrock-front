@@ -36,7 +36,7 @@
         <div class="calendar-header__title">Редактор</div>
       </template>
       <template v-if="currentRoute === 'settings'">
-        <div class="calendar-header__title">Настройки проекта</div>
+        <div class="calendar-header__title">Настройки проекта — {{ currentProject.name }}</div>
       </template>
       <template v-if="currentRoute === 'projects'">
         <div class="calendar-header__title">Управление проектами</div>
@@ -80,6 +80,9 @@
       }
     },
     computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
       user () {
         return this.$store.getters['user/user'];
       },
@@ -115,7 +118,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
 
     &__title {
-      font-size: 22px;
+      font-size: 20px;
     }
 
     &__current {

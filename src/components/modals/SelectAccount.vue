@@ -76,7 +76,7 @@
         this.$store.dispatch('user/addAccounts', { accounts: checkedAccounts, project_id: this.currentProject._id })
           .then((res) => {
             this.$refs['select-account'].hide();
-            this.$bus.$emit('modal:hide-all');
+            this.$bus.$emit('modal:hide-add-account');
           })
       }
     }
@@ -92,7 +92,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /*width: 50%;*/
     padding: 10px 20px;
     cursor: pointer;
 

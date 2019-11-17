@@ -33,6 +33,10 @@ export default {
       Vue.set(state, 'currentProjectId', projectId);
       localStorage.setItem('currentProjectId', projectId);
     },
+    setProjectData (state, project) {
+      let pIndex = state.user.projects.findIndex(p => p._id === project._id );
+      Vue.set(state.user.projects, pIndex, project);
+    }
   },
   actions: {
     current ({state, commit}, force) {
@@ -106,10 +110,22 @@ export default {
           return res.data;
         })
     },
+    sortAccounts({state, commit}, { projectId, elementId, newIndex, oldIndex, type }) {
+      return axios.post(`${config.apiUrl}/social/sort`, { projectId, elementId, newIndex, oldIndex, type })
+        .then(res => {
+          // commit('setProjectData', res.data);
+        })
+    },
     addAccounts ({state, commit}, { accounts, project_id }) {
       return axios.post(`${config.apiUrl}/social/add`, { accounts, project_id })
         .then(res => {
-          return res.data;
+          commit('setProjectData', res.data);
+        })
+    },
+    deleteAccount ({state, commit}, { account_id }) {
+      return axios.post(`${config.apiUrl}/social/remove`, { account_id })
+        .then(res => {
+          commit('setProjectData', res.data);
         })
     },
   },

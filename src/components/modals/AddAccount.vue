@@ -6,7 +6,7 @@
     <template v-slot:modal-title>
       Добавить соцсеть
     </template>
-    <div class="add-account">
+    <div class="modal-info">
       Добавьте соцсети для планирования постов и сбора аналитики. Для подключения страницы вы должны быть её
       администратором.
       Обязательно предоставьте необходимые доступы, которые запросит SocialRock. Это необходимо для корректной работы
@@ -35,16 +35,11 @@
     <template v-slot:modal-footer>
       <div class="foot"></div>
     </template>
-    <modal-select-account></modal-select-account>
   </b-modal>
 </template>
 
 <script>
-  import ModalSelectAccount from './SelectAccount';
   export default {
-    components: {
-      ModalSelectAccount
-    },
     data: () => ({
       testToken: 'e09725369ada0bc39ccd57281f8430e9fd75bb4df36fa725e9586d25234d17a67ec3c9c5d7080aba1fb2f',
       popup: {},
@@ -52,14 +47,25 @@
     }),
     mounted () {
       this.$bus.$on('modal:add-account', () => {
-        this.$refs['add-account'].show()
+        if (this.$refs['add-account']) {
+          this.$refs['add-account'].show()
+        }
       });
       this.$bus.$on('modal:hide-all', () => {
-        this.$refs['add-account'].hide()
+        if (this.$refs['add-account']) {
+          this.$refs['add-account'].hide()
+        }
+      });
+      this.$bus.$on('modal:hide-add-account', () => {
+        if (this.$refs['add-account']) {
+          this.$refs['add-account'].hide()
+        }
       });
     },
     beforeDestroy () {
-      this.$bus.$off('modal:add-account')
+      this.$bus.$off('modal:add-account');
+      this.$bus.$off('modal:hide-all');
+      this.$bus.$off('modal:hide-add-account');
     },
     methods: {
       PopupCenter (url, title, w, h) {
@@ -92,11 +98,20 @@
         if (type === 'vk') {
           this.$store.dispatch('user/createTestToken', { token: this.testToken })
             .then((res) => {
-              this.$store.dispatch('user/getVkGroups')
-                .then((res) => {
-                  console.log(res);
-                  this.$bus.$emit('modal:select-account', res);
-                });
+              return this.$store.dispatch('user/getVkGroups')
+            })
+            .then((res) => {
+              this.$bus.$emit('modal:select-account', res);
+            })
+            .catch(e => {
+              this.$swal({
+                title: `Ошибка получения страниц`,
+                type: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              })
             })
         }
         // const payload = JSON.stringify({
@@ -142,12 +157,6 @@
 
 <style lang="scss" scoped>
   @import "../../variables";
-
-  .add-account {
-    padding: 20px;
-    background-color: $color-bg-2;
-    color: $color-font-gray;
-  }
 
   .socials {
     display: flex;
