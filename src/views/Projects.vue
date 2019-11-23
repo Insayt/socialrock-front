@@ -77,6 +77,7 @@
 </template>
 
 <script>
+  import { DateTime } from 'luxon';
   import draggable from "vuedraggable";
 
   export default {
@@ -125,7 +126,8 @@
         this.loading = true;
         this.errors = {};
         let data = {
-          name: this.name
+          name: this.name,
+          timezone: DateTime.local().zoneName
         };
         this.$store.dispatch('user/createProject', data)
           .then((res) => {

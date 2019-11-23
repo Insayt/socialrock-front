@@ -54,6 +54,7 @@
 </template>
 
 <script>
+  import { DateTime } from 'luxon';
   export default {
     data: () => ({
       errors: {},
@@ -87,7 +88,8 @@
         let data = {
           email: this.email,
           password: this.password,
-          repeatPassword: this.repeatPassword
+          repeatPassword: this.repeatPassword,
+          timezone: DateTime.local().zoneName
         };
         this.$store.dispatch('user/register', data)
           .then((res) => {

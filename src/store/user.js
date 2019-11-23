@@ -77,15 +77,15 @@ export default {
           return res.data;
         })
     },
-    register ({commit}, { email, password, repeatPassword }) {
-      return axios.post(`${config.apiUrl}/user/register`, { email, password, repeatPassword })
+    register ({commit}, { email, password, repeatPassword, timezone }) {
+      return axios.post(`${config.apiUrl}/user/register`, { email, password, repeatPassword, timezone })
         .then(res => {
           // commit('setUserData', res.data);
           return res.data;
         })
     },
-    createProject ({commit}, { name }) {
-      return axios.post(`${config.apiUrl}/project/create`, { name })
+    createProject ({commit}, { name, timezone }) {
+      return axios.post(`${config.apiUrl}/project/create`, { name, timezone })
         .then(res => {
           commit('setUserData', res.data);
           return res.data;
@@ -128,6 +128,12 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    savePost ({ state, commit }, data) {
+      return axios.post(`${config.apiUrl}/post/save`, data)
+        .then(res => {
+          // commit('setProjectData', res.data);
+        })
+    }
   },
   getters: {
     loading: state => state.loading,

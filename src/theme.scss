@@ -410,3 +410,140 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
 .color-primary {
   color: $color-primary;
 }
+
+.vdatetime-overlay {
+  background-color: rgba(black, 0.9);
+}
+
+.theme-dark {
+  .vdatetime-input {
+    background-color: $color-bg-4;
+    border: 1px solid $color-bg-4;
+    border-radius: 5px;
+    color: $color-font;
+    padding: 8px 16px;
+    height: auto;
+    box-shadow: none;
+  }
+
+  .vdatetime-popup {
+    background-color: $color-bg-1;
+    color: $color-font;
+  }
+
+  .vdatetime-popup__header {
+    background: $color-bg-1;
+    padding: 20px 30px;
+  }
+
+  .vdatetime-calendar__month__day {
+    font-size: 16px;
+  }
+
+  .vdatetime-calendar__month__day:hover > span > span {
+    background: $color-bg-9;
+  }
+
+  .vdatetime-year-picker__item--selected, .vdatetime-calendar__month__day--selected > span > span, .vdatetime-calendar__month__day--selected:hover > span > span {
+    background: $color-primary;
+  }
+
+  .vdatetime-year-picker__item--selected, .vdatetime-time-picker__item--selected, .vdatetime-popup__actions__button {
+    color: $color-primary;
+  }
+
+  .vdatetime-popup__actions__button {
+    border-radius: 5px;
+    font-weight: bold !important;
+    font-size: 14px;
+    color: $color-font;
+    background-color: $color-bg-6;
+    transition-property: color, background-color, border-color, box-shadow, -webkit-box-shadow;
+    transition-duration: 0.15s, 0.15s, 0.15s, 0.15s, 0.15s;
+    transition-timing-function: ease-in-out, ease-in-out, ease-in-out, ease-in-out, ease-in-out;
+    transition-delay: 0s, 0s, 0s, 0s, 0s;
+    &:focus {
+      box-shadow: none !important;
+    }
+
+    &:hover {
+      box-shadow: $box-shadow-button;
+      color: $color-font;
+      background-color: $color-bg-9;
+    }
+  }
+
+  .vdatetime-popup__actions__button--confirm {
+    background-color: $color-primary;
+    border-color:  $color-primary;
+    color: white;
+
+    &:hover {
+      background-color: $color-primary-hover;
+      border-color: $color-primary-hover;
+    }
+  }
+
+  .vdatetime-year-picker__item--selected {
+    background: $color-primary;
+    color: $color-font;
+  }
+
+  .vdatetime-month-picker__item--selected {
+    color: $color-primary;
+  }
+
+  .vdatetime-popup__actions {
+    margin-top: 15px;
+    padding: 0 20px 20px 20px;
+  }
+
+  .vdatetime-popup__title {
+    font-weight: bold;
+    color: $color-font-gray;
+    margin-bottom: 20px;
+    font-size: 18px;
+  }
+
+  .vdatetime-time-picker__list {
+    &::-webkit-scrollbar
+    {
+      width: 6px;  /* for vertical scrollbars */
+      height: 6px; /* for horizontal scrollbars */
+    }
+
+    &::-webkit-scrollbar-track
+    {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb
+    {
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+    }
+  }
+}
+
+//.popover {
+//  border: 1px solid $color-bg-0;
+//  border-radius: 5px;
+//}
+//
+//.popover-header {
+//  background-color: $color-bg-4;
+//  color: $color-font;
+//  border-bottom-color: $color-bg-0;
+//}
+//
+//.popover-body {
+//  background-color: $color-bg-9;
+//  color: $color-font-gray;
+//}
+//
+//.bs-popover-auto[x-placement^=top]>.arrow:after, .bs-popover-top>.arrow:after {
+//  bottom: 1px;
+//  border-width: .5rem .5rem 0;
+//  border-top-color: $color-bg-9;
+//}
