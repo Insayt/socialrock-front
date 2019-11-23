@@ -7,7 +7,7 @@
       Выберите страницы, которые хотите подключить
     </template>
     <div class="accounts">
-      <div class="project-page" v-for="acc in accounts" @click="acc.checked = !acc.checked">
+      <div class="project-page" v-for="acc in accounts" @click="acc.checked = !acc.checked" :class="{ _disabled: isAccountAdded(acc.id) }">
         <div class="project-page__left">
           <div class="network" :style="{ backgroundImage: `url(${acc.photo_200})` }">
             <div class="network__icon" style="background-color: rgb(70, 128, 194);">
@@ -16,6 +16,9 @@
           </div>
           <div class="project-page__title">
             {{ acc.name }}
+            <div class="project-page__subtitle" v-if="isAccountAdded(acc.id)">
+              Страница уже добавлена к одному из проектов
+            </div>
           </div>
         </div>
         <b-form-checkbox v-model="acc.checked">
@@ -67,8 +70,24 @@
       currentProject () {
         return this.$store.getters['user/currentProject'];
       },
+      projects () {
+        return this.$store.getters['user/projects'];
+      },
     },
     methods: {
+      isAccountAdded (socialId) {
+        let added = false;
+        let searchArray = [];
+        this.projects.map(p => {
+          p.social_accounts.map(acc => {
+            searchArray.push(Number(acc.social_id))
+          })
+        });
+        if (searchArray.includes(socialId)) {
+          added = true;
+        }
+        return added;
+      },
       addAccount () {
         let checkedAccounts = this.accounts.filter(acc => {
           return acc.checked;
@@ -99,6 +118,11 @@
       background-color: $color-bg-2;
     }
 
+    &._disabled {
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
     &__left {
       display: flex;
       align-items: center;
@@ -108,6 +132,9 @@
       overflow: hidden;
       width: 340px;
       text-overflow: ellipsis;
+    }
+    &__subtitle {
+      font-size: 14px;
     }
   }
 </style>

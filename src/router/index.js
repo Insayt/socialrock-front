@@ -19,14 +19,6 @@ const router = new VueRouter({
       component: Auth
     },
     {
-      path: '/projects',
-      name: 'projects',
-      component: Projects,
-      meta: {
-        protected: true,
-      },
-    },
-    {
       path: '/p/:projectId',
       name: 'project',
       component: ProjectWrapper,
@@ -63,7 +55,14 @@ const router = new VueRouter({
             protected: true,
           }
         },
-
+        {
+          path: 'projects',
+          name: 'projects',
+          component: Projects,
+          meta: {
+            protected: true,
+          },
+        },
       ]
     },
     {

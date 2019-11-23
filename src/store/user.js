@@ -133,14 +133,14 @@ export default {
     loading: state => state.loading,
     user: (state) => state.user,
     projects: (state) => {
-      if (state.user.projects.length) {
+      if (state.user.projects && state.user.projects.length) {
         return state.user.projects;
       } else {
         return [];
       }
     },
     currentProject: (state) => {
-      if (state.user.projects.length) {
+      if (state.user.projects && state.user.projects.length) {
         return state.user.projects.find((p) => {
           return p.short_id === state.currentProjectId
         })

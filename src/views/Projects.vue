@@ -26,7 +26,7 @@
           Все проекты и страницы
         </div>
         <div class="row-subtitle">
-          Перетаскивайте страницы для распределения между проектами
+          Перетаскивайте страницы для сортировки и распределения между проектами
         </div>
         <div class="projects-list">
           <div class="projects-list__item" v-for="(p, key) in projects">
@@ -90,6 +90,9 @@
       errors: {}
     }),
     computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
       projects () {
         return this.$store.getters['user/projects'];
       },
@@ -153,6 +156,10 @@
           cancelButtonText: 'Отмена',
         }).then(res => {
           if (res.value) {
+            if (this.currentProject._id === project._id) {
+              this.$router.replace({ name: this.$router.currentRoute.name, params: { projectId: this.projects[0].short_id } });
+              this.$store.commit('user/setCurrentProject', this.projects[0].short_id);
+            }
             this.$store.dispatch('user/deleteProject', {
               id: project._id
             }).then(() => {

@@ -9,6 +9,7 @@
       <s-header v-if="$router.currentRoute.name !== 'auth'" :current-route="$router.currentRoute.name"></s-header>
       <router-view/>
     </div>
+    <modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>
   </div>
 </template>
 
@@ -16,12 +17,14 @@
   // @ is an alias to /src
   import sHeader from '@/components/Header';
   import Sidebar from '@/components/Sidebar';
+  import ModalPost from '@/components/modals/Post';
 
 
   export default {
     components: {
       Sidebar,
       sHeader,
+      ModalPost,
     },
     data: () => ({
       isSidebarCollapse: false
@@ -107,12 +110,13 @@
     }
 
     &__bg {
+      display: none;
       position: absolute;
       top: 0;
       bottom: 0;
       left: 0;
       right: 0;
-      background-color: rgba($color-success, 0.3);
+      background-color: rgba($color-success, 0.5);
       border-radius: 5px;
     }
 
@@ -129,6 +133,12 @@
       border-radius: 2px;
       font-size: 16px;
       background: $color-bg-9;
+    }
+  }
+
+  .network._active {
+    .network__bg {
+      display: block;
     }
   }
 

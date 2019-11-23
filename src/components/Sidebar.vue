@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebar" :class="{ 'show-project-list': showProjectList }">
+  <div class="sidebar" :class="{ 'show-project-list': showProjectList }" v-if="currentProject">
     <div class="projects-list">
       <div class="projects-list__pd">
         <b-button class="sidebar-button projects-list__pd" variant="warning" block @click="createProject()">
@@ -50,7 +50,7 @@
           <i class="far fa-calendar-alt"></i>
         </div>
         <div class="nav-item__title">
-          Автопостинг
+          Публикации
         </div>
       </router-link>
       <router-link :to="{ name: 'editor', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
