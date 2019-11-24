@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import axios from 'axios';
+import { DateTime } from 'luxon';
 import config from '../config';
 
 axios.defaults.withCredentials = true;
@@ -16,7 +17,9 @@ const deafaultUserData = {
     trial_dt: null,
     created_at: null,
     updated_at: null
-  }
+  },
+  calendarDateStart: '',
+  calendarDateEnd: '',
 };
 
 export default {
@@ -36,7 +39,7 @@ export default {
     setProjectData (state, project) {
       let pIndex = state.user.projects.findIndex(p => p._id === project._id );
       Vue.set(state.user.projects, pIndex, project);
-    }
+    },
   },
   actions: {
     current ({state, commit}, force) {
@@ -133,7 +136,15 @@ export default {
         .then(res => {
           // commit('setProjectData', res.data);
         })
-    }
+    },
+    getPosts ({ state, commit }, { start, end, project_id }) {
+      return axios.get(`${config.apiUrl}/post/list`, {
+        params: { start, end, project_id }
+      })
+        .then(({ data }) => {
+          return data;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

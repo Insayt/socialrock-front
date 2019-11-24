@@ -100,7 +100,10 @@
             <div v-if="isAutoDelete">
               <datetime type="datetime"
                         class="theme-dark"
+                        title="Дата и время автоудаления:"
                         v-model="deleteDt"
+                        :value-zone="currentProject.timezone"
+                        :zone="currentProject.timezone"
                         :phrases="{ok: 'Ок', cancel: 'Отмена'}"
                         :min-datetime="runDt"
               ></datetime>
@@ -186,7 +189,7 @@
             a.checked = false;
             return a;
           });
-          this.runDt = DateTime.local().setZone(this.currentProject.timezone).toString();
+          this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
         });
       })
     },
@@ -201,7 +204,7 @@
       },
       savePost () {
         let postData = {
-          social_accounts: this.accounts.map(acc => {
+          social_accounts: this.accounts.filter(acc => {
             if (acc.checked) return acc._id;
           }),
           text: this.text,

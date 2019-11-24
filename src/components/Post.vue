@@ -1,6 +1,6 @@
 <template>
   <div class="post-wrapper" @click="$emit('click', post)">
-    <div class="post _empty" v-if="!post.id">
+    <div class="post _empty" v-if="!post._id">
       <div class="post__content">
         <div class="post__icon">
           <img src="../assets/img/icons/plus-round.svg">
@@ -16,7 +16,8 @@
     <div v-else class="post _full">
       <div class="post__header">
         <div class="post__time-small">
-          <img src="../assets/img/icons/clock.svg"> 09:00
+          <img src="../assets/img/icons/clock.svg">
+          {{ postTime(post.run_dt) }}
           <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>
         </div>
         <div class="post__tags">
@@ -25,9 +26,7 @@
         </div>
       </div>
       <div class="post__content">
-        Некий текст для тестового
-        поста который уйдет в разные
-        социальные сети
+        <div class="post__text">{{ post.text }}</div>
         <div class="post__images">
           <img class="post-image" src="/test1.jpg">
           <img class="post-image" src="/test1.jpg">
@@ -37,11 +36,11 @@
         </div>
       </div>
       <div class="post__footer">
-        <div class="post-social" :style="{ backgroundImage: `url(/test1.jpg)` }">
-          <i class="fab fa-vk"></i>
-        </div>
-        <div class="post-social" :style="{ backgroundImage: `url(/test1.jpg)` }">
-          <i class="fab fa-vk"></i>
+        <div class="post-social"
+             v-for="account in post.social_accounts"
+             :style="{ backgroundImage: `url(${account.picture})` }"
+        >
+          <i v-if="account.social_type === 'vk'" class="fab fa-vk"></i>
         </div>
       </div>
     </div>
@@ -49,6 +48,8 @@
 </template>
 
 <script>
+  import {DateTime} from 'luxon';
+
   export default {
     props: {
       post: {
@@ -56,10 +57,12 @@
         type: Object,
       }
     },
-    data: () => ({
-
-    }),
-    methods: {}
+    data: () => ({}),
+    methods: {
+      postTime (dt) {
+        return DateTime.fromISO(dt).toFormat('HH:mm');
+      }
+    }
   }
 </script>
 
@@ -67,8 +70,8 @@
   @import '../variables';
 
   .post {
-    width: 200px;
-    height: 200px;
+    width: 240px;
+    height: 240px;
     background-color: $color-bg-1;
     display: flex;
     align-items: center;
@@ -79,11 +82,11 @@
     transition: all 0.2s;
     margin-right: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
 
     &:hover {
       background-color: $color-bg-2;
-      box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
 
     &._empty {
@@ -99,7 +102,7 @@
       font-weight: normal;
 
       &:hover {
-        box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
       }
     }
 
@@ -110,7 +113,6 @@
       justify-content: space-between;
       margin-bottom: 10px;
     }
-
 
     &__time-small {
       font-size: 14px;
@@ -151,6 +153,11 @@
       font-size: 14px;
       padding: 0 10px 0 10px;
       margin-bottom: 10px;
+    }
+
+    &__text {
+      height: 85px;
+      overflow: hidden;
     }
 
     &__icon {
@@ -196,8 +203,8 @@
   }
 
   .post-social {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     background-size: cover;
     margin-right: 10px;
     position: relative;
