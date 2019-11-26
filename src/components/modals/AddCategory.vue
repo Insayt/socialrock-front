@@ -22,7 +22,7 @@
           </div>
         </b-form-group>
         <b-form-group
-          label="Цвет:"
+          label="Цвет"
         >
           <div class="colors">
             <div class="color"
@@ -37,7 +37,7 @@
       </b-form>
     </div>
     <template v-slot:modal-footer>
-      <b-button type="submit" variant="primary" @click="$bus.$emit('modal:add-account')">Добавить рубрику</b-button>
+      <b-button type="submit" variant="primary" @click="$bus.$emit('modal:add-account')">Добавить</b-button>
     </template>
   </b-modal>
 </template>
