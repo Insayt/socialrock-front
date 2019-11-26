@@ -20,7 +20,7 @@
             <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
           </div>
           <div class="calendar-rows__posts">
-            <post :post="post" v-for="post in day.posts" @click="showPostModal"></post>
+            <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
             <post :post="{}"></post>
             <post :post="{}"></post>
             <post :post="{}"></post>

@@ -74,7 +74,7 @@
           <i class="fas fa-cog"></i>
         </div>
         <div class="nav-item__title">
-          Настройки проекта
+          Настройки
         </div>
       </router-link>
     </div>

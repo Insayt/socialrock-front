@@ -84,7 +84,7 @@
             >
               {{ currentProject.timezone }}
               <i class="fas fa-info-circle"
-                 v-b-popover.hover.top="{ variant: 'info',  content: `Что бы сменить часовой пояс, перейдите в Настройки проекта -> Часовой пояс` }"
+                 v-b-popover.hover.top="{ variant: 'info',  content: `Что бы сменить часовой пояс, перейдите в Настройки -> Часовой пояс` }"
                  :title="`Текущий часовой пояс ${currentProject.timezone}`"
               ></i>
             </div>

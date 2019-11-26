@@ -1,7 +1,7 @@
 <template>
   <div class="page settings">
     <div class="settings-item" @click="$bus.$emit('modal:list-accounts')">
-      <div class="settings-item__left" style="background-color: #C62828">
+      <div class="settings-item__left" style="background-color: #37474F">
         <i class="fas fa-file-alt"></i>
       </div>
       <div class="settings-item__right">
@@ -17,6 +17,19 @@
       </div>
     </div>
     <div class="settings-item">
+      <div class="settings-item__left" style="background-color: #C62828">
+        <i class="far fa-calendar-alt"></i>
+      </div>
+      <div class="settings-item__right">
+        <div class="settings-item__title">
+          Слоты
+        </div>
+        <div class="settings-item__subtitle">
+          Управляйте слотами для публикаций в расписании
+        </div>
+      </div>
+    </div>
+    <div class="settings-item" @click="$bus.$emit('modal:category')">
       <div class="settings-item__left" style="background-color: #AD1457">
         <i class="fas fa-tags"></i>
       </div>
@@ -110,6 +123,9 @@
     <modal-add-account></modal-add-account>
     <modal-select-account></modal-select-account>
     <modal-accounts-list></modal-accounts-list>
+    <modal-category></modal-category>
+    <modal-add-category></modal-add-category>
+    <modal-slots></modal-slots>
   </div>
 </template>
 
@@ -117,11 +133,18 @@
   import ModalAddAccount from '@/components/modals/AddAccount';
   import ModalSelectAccount from '@/components/modals/SelectAccount';
   import ModalAccountsList from '@/components/modals/AccountsList';
+  import ModalCategory from '@/components/modals/Category';
+  import ModalAddCategory from '@/components/modals/AddCategory';
+  import ModalSlots from '@/components/modals/Slots';
+
   export default {
     components: {
       ModalAddAccount,
       ModalSelectAccount,
-      ModalAccountsList
+      ModalAccountsList,
+      ModalSlots,
+      ModalCategory,
+      ModalAddCategory
     },
     data: () => ({
       errors: {},

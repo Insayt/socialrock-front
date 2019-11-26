@@ -70,8 +70,9 @@
   @import '../variables';
 
   .post {
-    width: 240px;
-    height: 240px;
+    position: relative;
+    width: 200px;
+    height: 200px;
     background-color: $color-bg-1;
     display: flex;
     align-items: center;
@@ -156,7 +157,7 @@
     }
 
     &__text {
-      height: 85px;
+      height: 60px;
       overflow: hidden;
     }
 
@@ -181,14 +182,16 @@
     }
 
     &__images {
-      margin: 5px 0 5px 0;
-      height: 45px;
+      margin: 8px 0 8px 0;
+      height: 40px;
       overflow: hidden;
     }
 
     &__footer {
       display: flex;
       padding: 0 10px 0 10px;
+      position: absolute;
+      bottom: 10px;
     }
 
     .fa-trash {
