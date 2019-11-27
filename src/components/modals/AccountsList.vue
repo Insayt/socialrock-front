@@ -9,14 +9,6 @@
     <div class="modal-info">
       Подключайте новые страницы в соцсетях и удаляйте ненужные.
     </div>
-    <div class="no-projects" v-if="!currentProject.social_accounts.length">
-      <div class="no-projects__title">
-        Добавьте вашу первую страницу
-      </div>
-      <div class="no-projects__icon">
-        <i class="fas fa-arrow-down"></i>
-      </div>
-    </div>
     <div class="projects" v-if="currentProject.social_accounts.length">
       <div class="project-page" v-for="account in currentProject.social_accounts">
         <div class="project-page__left">

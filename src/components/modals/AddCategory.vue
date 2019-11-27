@@ -1,10 +1,11 @@
 <template>
-  <b-modal ref="add-category" size="md">
+  <b-modal ref="add-category" size="md" @hide="onHide">
     <template v-slot:modal-header-close>
       <img src="../../assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
-      Новая рубрика
+      <span v-if="!isEdit">Новая рубрика</span>
+      <span v-if="isEdit">Редактировать рубрику</span>
     </template>
     <div class="add-category">
       <b-form class="form-auth__form" @submit.prevent="register">
@@ -37,7 +38,7 @@
       </b-form>
     </div>
     <template v-slot:modal-footer>
-      <b-button type="submit" variant="primary" @click="$bus.$emit('modal:add-account')">Добавить</b-button>
+      <b-button type="submit" variant="primary" @click="saveCategory">Сохранить</b-button>
     </template>
   </b-modal>
 </template>
@@ -49,13 +50,26 @@
       name: '',
       colors: config.projectColors,
       checkColor: '',
-      errors: {}
+      errors: {},
+      isEdit: false
     }),
+    computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
+    },
     mounted () {
-      this.$bus.$on('modal:add-category', () => {
+      this.$bus.$on('modal:add-category', (category) => {
+        this.isEdit = category ? category._id : null;
+        if (category) {
+          this.name = category.name;
+          this.color = category.color;
+          this.checkColor = category.color;
+        } else {
+          this.checkColor = config.projectColors[0];
+        }
         if (this.$refs['add-category']) {
           this.$refs['add-category'].show();
-          this.checkColor = config.projectColors[0];
         }
       });
     },
@@ -63,8 +77,40 @@
       this.$bus.$off('modal:add-category');
     },
     methods: {
+      onHide () {
+        this.name = '';
+        this.colors = config.projectColors;
+        this.checkColor = '';
+        this.isEdit = false;
+        this.errors = {};
+      },
       selectColor (color) {
         this.checkColor = color;
+      },
+      saveCategory () {
+        this.errors = {};
+        let data = {
+          color: this.checkColor,
+          name: this.name,
+          project_id: this.currentProject._id
+        };
+        let url = 'user/createCategory';
+        if (this.isEdit) {
+          data.id = this.isEdit;
+          url = 'user/editCategory'
+        }
+        this.$store.dispatch(url, data)
+          .then((res) => {
+            this.$refs['add-category'].hide();
+            this.name = '';
+            this.colors = config.projectColors;
+            this.checkColor = '';
+            this.isEdit = false;
+            this.errors = {};
+          })
+          .catch(e => {
+            if (e.response && e.response.data.errors) this.errors = e.response.data.errors;
+          })
       },
     }
   }

@@ -145,6 +145,24 @@ export default {
           return data;
         })
     },
+    createCategory ({ state, commit }, data) {
+      return axios.post(`${config.apiUrl}/category/create`, data)
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
+    editCategory ({ state, commit }, data) {
+      return axios.post(`${config.apiUrl}/category/edit/${data.id}`, data)
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
+    deleteCategory ({ state, commit }, { id }) {
+      return axios.post(`${config.apiUrl}/category/delete/${id}`)
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
   },
   getters: {
     loading: state => state.loading,
