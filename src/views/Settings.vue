@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div class="settings-item">
+    <div class="settings-item" @click="$bus.$emit('modal:slots')">
       <div class="settings-item__left" style="background-color: #C62828">
         <i class="far fa-calendar-alt"></i>
       </div>
@@ -35,7 +35,10 @@
       </div>
       <div class="settings-item__right">
         <div class="settings-item__title">
-          Рубрики
+          <span>Рубрики</span>
+          <span class="settings-item__count" v-if="currentProject.categories.length">
+            {{ currentProject.categories.length }}
+          </span>
         </div>
         <div class="settings-item__subtitle">
           Используйте рубрики для разделения контента по темам

@@ -283,6 +283,21 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
   color: $color-danger;
 }
 
+.custom-select {
+  background-color: $color-bg-4;
+  border-color: $color-bg-4;
+  color: $color-font;
+  padding: 10px 15px;
+  height: auto;
+
+  &:focus {
+    background-color: $color-bg-4;
+    border-color: $color-bg-4;
+    color: $color-font;
+    box-shadow: none;
+  }
+}
+
 .form-control {
   background-color: $color-bg-4;
   border-color: $color-bg-4;
@@ -526,6 +541,16 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
       border-radius: 5px;
     }
   }
+}
+
+.slot__time .vdatetime-input {
+  width: 100px;
+  padding: 0.375rem 0.75rem;
+}
+
+.slot__category .custom-select {
+  width: 240px;
+  padding: 0.375rem 0.75rem;
 }
 
 //.popover {
