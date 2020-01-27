@@ -21,9 +21,9 @@
           </div>
           <div class="calendar-rows__posts">
             <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
-            <post :post="{}"></post>
-            <post :post="{}"></post>
-            <post :post="{}"></post>
+            <!--<post :post="{}"></post>-->
+            <!--<post :post="{}"></post>-->
+            <!--<post :post="{}"></post>-->
             <!--<post :post="{}"></post>-->
           </div>
         </div>
@@ -36,6 +36,7 @@
 <script>
   import { mapGetters } from 'vuex';
   import { DateTime } from 'luxon';
+  import { sortBy } from 'lodash';
   import Post from '@/components/Post';
   export default {
     components: {
@@ -68,16 +69,39 @@
               dt: dt.toISO(),
               posts: []
             };
+            let dayOfWeek = dt.toFormat('E'); // Номер дня недели
+            if (this.currentProject.slots[dayOfWeek]) {
+              Object.keys(this.currentProject.slots[dayOfWeek]).forEach(time => {
+                let times = time.split('_');
+                day.posts.push({
+                  time: `${times[0]}:${times[1]}`,
+                  hours: times[0],
+                  minutes: times[1],
+                  category: null
+                })
+              });
+            } else {
+
+            }
+
             data.forEach(post => { // Проходим по постам и сохраняем те что выходят в этот день
               let postRunDay = DateTime.fromISO(post.run_dt);
               if (postRunDay.hasSame(dt, 'days')) {
-                day.posts.push(post);
+                // Если есть слот на такое время - заменяем на пост, если нет - просто добавим в масив
+                let postTime = postRunDay.toFormat('HH:mm');
+                // post.time = postTime;
+                let slotForThisTime = day.posts.findIndex(el => el.time === postTime);
+                if (slotForThisTime !== -1) {
+                  day.posts.splice(slotForThisTime, 1, post);
+                } else {
+                  day.posts.push(post);
+                }
               }
             });
+            day.posts = sortBy(day.posts, 'run_dt');
+            // console.log(day.posts);
             results.push(day)
           }
-
-          console.log(results);
           this.days = results;
         })
     },

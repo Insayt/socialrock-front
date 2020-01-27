@@ -101,6 +101,40 @@ export default {
           return res.data;
         })
     },
+    editSlotCategory ({commit}, { project_id, day_number, slot_index, value }) {
+      return axios.post(`${config.apiUrl}/project/change-slot-category`, {
+        project_id,
+        day_number,
+        slot_index,
+        value
+      })
+        .then(res => {
+          return res.data;
+        })
+    },
+    deleteSlot ({commit}, { project_id, day_number, slot_index }) {
+      return axios.post(`${config.apiUrl}/project/delete-slot`, {
+        project_id,
+        day_number,
+        slot_index,
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+          return res.data;
+        })
+    },
+    addSlot ({commit}, { project_id, day_number, slot_index, value }) {
+      return axios.post(`${config.apiUrl}/project/add-slot`, {
+        project_id,
+        day_number,
+        slot_index,
+        value
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+          return res.data;
+        })
+    },
     getVkGroups ({state, commit}) {
       return axios.get(`${config.apiUrl}/vk/groups`)
         .then(res => {

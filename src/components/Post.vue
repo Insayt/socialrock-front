@@ -6,7 +6,7 @@
           <img src="../assets/img/icons/plus-round.svg">
         </div>
         <div class="post__time">
-          <img src="../assets/img/icons/clock.svg"> 09:00
+          <img src="../assets/img/icons/clock.svg"> {{ post.time }}
         </div>
         <!--<div class="post__title">-->
         <!--Запланировать пост-->
