@@ -21,6 +21,12 @@
           </div>
           <div class="calendar-rows__posts">
             <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
+            <div class="empty-post" @click="showPostModal">
+              <div class="empty-post__icon">
+                <img src="../assets/img/icons/plus-round.svg">
+                <div>Запланировать пост</div>
+              </div>
+            </div>
             <!--<post :post="{}"></post>-->
             <!--<post :post="{}"></post>-->
             <!--<post :post="{}"></post>-->
@@ -157,5 +163,34 @@
     }
 
     &__item {}
+  }
+
+  .empty-post {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    background-color: $color-bg-1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    color: lighten($color-bg-0, 50%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+    &:hover {
+      background-color: $color-bg-2;
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    }
+
+    &__icon {
+      text-align: center;
+      img {
+        margin-bottom: 10px;
+      }
+    }
   }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <b-modal modal-class="modal-bg-no-opacity" ref="select-account" size="md" no-close-on-backdrop >
+  <b-modal modal-class="modal-bg-no-opacity" ref="select-account" size="md" no-close-on-backdrop>
     <template v-slot:modal-header-close>
       <img src="../../assets/img/icons/times.svg">
     </template>
@@ -7,7 +7,8 @@
       Выберите страницы, которые хотите подключить
     </template>
     <div class="accounts">
-      <div class="project-page" v-for="acc in accounts" @click="acc.checked = !acc.checked" :class="{ _disabled: isAccountAdded(acc.id) }">
+      <div class="project-page" v-for="acc in accounts" @click="selectPage(acc)"
+           :class="{ _disabled: isAccountAdded(acc.id) }">
         <div class="project-page__left">
           <div class="network" :style="{ backgroundImage: `url(${acc.photo_200})` }">
             <div class="network__icon" style="background-color: rgb(70, 128, 194);">
@@ -21,8 +22,11 @@
             </div>
           </div>
         </div>
-        <b-form-checkbox v-model="acc.checked">
-        </b-form-checkbox>
+        <div class="custom-control custom-checkbox">
+          <input type="checkbox" autocomplete="off"
+                 class="custom-control-input" value="true" :checked="acc.checked">
+          <label class="custom-control-label"></label>
+        </div>
       </div>
     </div>
     <template v-slot:modal-footer>
@@ -75,6 +79,12 @@
       },
     },
     methods: {
+      test (acc) {
+        console.log(acc);
+      },
+      selectPage (page) {
+        page.checked = !page.checked
+      },
       isAccountAdded (socialId) {
         let added = false;
         let searchArray = [];
@@ -92,7 +102,7 @@
         let checkedAccounts = this.accounts.filter(acc => {
           return acc.checked;
         });
-        this.$store.dispatch('user/addAccounts', { accounts: checkedAccounts, project_id: this.currentProject._id })
+        this.$store.dispatch('user/addAccounts', {accounts: checkedAccounts, project_id: this.currentProject._id})
           .then((res) => {
             this.$refs['select-account'].hide();
             this.$bus.$emit('modal:hide-add-account');
@@ -104,9 +114,11 @@
 
 <style lang="scss" scoped>
   @import "../../variables";
+
   .accounts {
     padding: 10px 0;
   }
+
   .project-page {
     display: flex;
     justify-content: space-between;
