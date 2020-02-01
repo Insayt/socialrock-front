@@ -10,24 +10,24 @@
           <i class="fas fa-chevron-right"></i>
         </b-button>
         <span class="calendar-header__current">23 октября - 30 октября 2019</span>
-        <b-dropdown class="dropdown-calendar" size="sm" variant="black" toggle-class="text-decoration-none" no-caret>
-          <template v-slot:button-content>
-            Выбрать период <i class="fas fa-calendar-alt ml-1"></i>
-          </template>
-          <b-dropdown-text>
-            <v-date-picker
-              mode="range"
-              :value="null"
-              color="orange"
-              is-dark
-              is-inline
-              is-expanded
-            />
-            <b-button class="calendar-header__arrow" variant="black" size="sm" block>
-              Обновить
-            </b-button>
-          </b-dropdown-text>
-        </b-dropdown>
+        <!--<b-dropdown class="dropdown-calendar" size="sm" variant="black" toggle-class="text-decoration-none" no-caret>-->
+          <!--<template v-slot:button-content>-->
+            <!--Выбрать период <i class="fas fa-calendar-alt ml-1"></i>-->
+          <!--</template>-->
+          <!--<b-dropdown-text>-->
+            <!--<v-date-picker-->
+              <!--mode="range"-->
+              <!--:value="null"-->
+              <!--color="orange"-->
+              <!--is-dark-->
+              <!--is-inline-->
+              <!--is-expanded-->
+            <!--/>-->
+            <!--<b-button class="calendar-header__arrow" variant="black" size="sm" block>-->
+              <!--Обновить-->
+            <!--</b-button>-->
+          <!--</b-dropdown-text>-->
+        <!--</b-dropdown>-->
       </template>
       <template v-if="currentRoute === 'analytics'">
         <div class="calendar-header__title">Аналитика</div>

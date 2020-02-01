@@ -12,6 +12,16 @@
     <div class="links">
       <div class="links__checkbox">
         <b-form-checkbox
+          v-model="isShort"
+        >
+          Сокращать ссылки
+        </b-form-checkbox>
+        <div class="checkbox-subtitle">
+          Пример: some.com/s7ds
+        </div>
+      </div>
+      <div class="links__checkbox">
+        <b-form-checkbox
           v-model="isAddUtm"
         >
           Добавлять UTM метки к ссылкам
@@ -102,6 +112,7 @@
   export default {
     data: () => ({
       isAddUtm: false,
+      isShort: false,
       loading: false,
       errors: {},
       utm_medium: 'social',
@@ -120,6 +131,7 @@
       this.$bus.$on('modal:links', () => {
         if (this.$refs['links']) {
           this.$refs['links'].show();
+          this.isShort = this.currentProject.short_links;
           this.isAddUtm = this.currentProject.utm.enable;
           this.utm_medium = this.currentProject.utm.utm_medium;
           this.utm_source_vk = this.currentProject.utm.utm_source_vk;
@@ -136,6 +148,7 @@
     methods: {
       saveUtm () {
         let dt = {
+          short_links: this.isShort,
           enable: this.isAddUtm,
           utm_medium: this.utm_medium,
           utm_source_vk: this.utm_source_vk,
@@ -152,7 +165,7 @@
           .then((res) => {
             this.$refs['links'].hide();
             this.$swal({
-              title: `UTM метки сохранены`,
+              title: `Настройки ссылок сохранены`,
               type: 'success',
               toast: true,
               position: 'top-end',
@@ -176,7 +189,7 @@
   .links {
     padding: 20px;
     &__checkbox {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
   }
 </style>
