@@ -135,6 +135,14 @@ export default {
           return res.data;
         })
     },
+    saveUtm ({ state, commit }, { project_id, utm }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/utm`, {
+        utm: utm
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     getVkGroups ({state, commit}) {
       return axios.get(`${config.apiUrl}/vk/groups`)
         .then(res => {

@@ -298,6 +298,10 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
   }
 }
 
+.col-form-label {
+  color: $color-font-gray;
+}
+
 .form-control {
   background-color: $color-bg-4;
   border-color: $color-bg-4;

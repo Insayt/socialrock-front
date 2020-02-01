@@ -45,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="settings-item">
+    <div class="settings-item" @click="$bus.$emit('modal:links')">
       <div class="settings-item__left" style="background-color: #6A1B9A">
         <i class="fas fa-link"></i>
       </div>
@@ -129,6 +129,7 @@
     <modal-category></modal-category>
     <modal-add-category></modal-add-category>
     <modal-slots></modal-slots>
+    <modal-links></modal-links>
   </div>
 </template>
 
@@ -139,6 +140,7 @@
   import ModalCategory from '@/components/modals/Category';
   import ModalAddCategory from '@/components/modals/AddCategory';
   import ModalSlots from '@/components/modals/Slots';
+  import ModalLinks from '@/components/modals/Links';
 
   export default {
     components: {
@@ -147,7 +149,8 @@
       ModalAccountsList,
       ModalSlots,
       ModalCategory,
-      ModalAddCategory
+      ModalAddCategory,
+      ModalLinks
     },
     data: () => ({
       errors: {},

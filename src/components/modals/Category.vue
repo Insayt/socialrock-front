@@ -85,7 +85,7 @@
               id: category._id
             }).then(() => {
               this.$swal({
-                title: `Категория удалена`,
+                title: `Рубрика удалена`,
                 type: 'success',
                 toast: true,
                 position: 'top-end',

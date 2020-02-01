@@ -107,6 +107,14 @@
             this.checkColor = '';
             this.isEdit = false;
             this.errors = {};
+            this.$swal({
+              title: `Рубрика сохранена`,
+              type: 'success',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 5000
+            })
           })
           .catch(e => {
             if (e.response && e.response.data.errors) this.errors = e.response.data.errors;
