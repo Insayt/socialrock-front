@@ -168,6 +168,16 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    changeProjectReports ({ state, commit }, { project_id, email, week, month }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/reports`, {
+        email,
+        week,
+        month,
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     getVkGroups ({state, commit}) {
       return axios.get(`${config.apiUrl}/vk/groups`)
         .then(res => {
