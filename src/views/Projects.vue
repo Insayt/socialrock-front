@@ -46,6 +46,7 @@
               <div class="project__pages">
                 <draggable :list="p.social_accounts"
                            group="accounts"
+                           :disabled="p.user !== user._id"
                            @change="sortAccounts(p, $event)"
                 >
                   <div class="project-page"
@@ -96,6 +97,9 @@
       },
       projects () {
         return this.$store.getters['user/projects'];
+      },
+      user () {
+        return this.$store.getters['user/user'];
       },
     },
     methods: {
@@ -149,6 +153,14 @@
           })
       },
       removeProject (project) {
+        if (this.user._id !== project.user) {
+          this.$swal({
+            title: `Ошибка!`,
+            html: `Удалить проект может только <br> пользователь создавший его`,
+            type: 'error',
+          });
+          return;
+        }
         this.$swal({
           title: `Удалить проект?`,
           html: `Проект <b class="color-primary">${project.name}</b> будет удален навсегда. Все связанные с ним страницы, будут перемещенны в ваш первый проект`,

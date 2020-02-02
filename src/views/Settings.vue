@@ -1,135 +1,148 @@
 <template>
-  <div class="page settings">
-    <div class="settings-item" @click="$bus.$emit('modal:list-accounts')">
-      <div class="settings-item__left" style="background-color: #37474F">
-        <i class="fas fa-file-alt"></i>
+  <div>
+    <div class="access-denied" v-if="!currentProject.access.analytics">
+      <img src="../assets/img/access_denied.svg">
+      <div class="access-denied__header">
+        Oops.. 🤭
       </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          <span>Страницы</span>
-          <span class="settings-item__count" v-if="currentProject.social_accounts.length">
+      У вас нет доступа к этому разделу.
+      <br> Обратитесь к администратору проекта,
+      <br> если вам очень нужно сюда попасть :)
+    </div>
+    <div class="page settings" v-else>
+      <div class="settings-item" @click="$bus.$emit('modal:list-accounts')">
+        <div class="settings-item__left" style="background-color: #37474F">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            <span>Страницы</span>
+            <span class="settings-item__count" v-if="currentProject.social_accounts.length">
             {{ currentProject.social_accounts.length }}
           </span>
-        </div>
-        <div class="settings-item__subtitle">
-          Добавляйте и удаляйте страницы в социальных сетях
-        </div>
-      </div>
-    </div>
-    <div class="settings-item" @click="$bus.$emit('modal:slots')">
-      <div class="settings-item__left" style="background-color: #C62828">
-        <i class="far fa-calendar-alt"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Слоты
-        </div>
-        <div class="settings-item__subtitle">
-          Управляйте слотами для публикаций в расписании
+          </div>
+          <div class="settings-item__subtitle">
+            Добавляйте и удаляйте страницы в социальных сетях
+          </div>
         </div>
       </div>
-    </div>
-    <div class="settings-item" @click="$bus.$emit('modal:category')">
-      <div class="settings-item__left" style="background-color: #AD1457">
-        <i class="fas fa-tags"></i>
+      <div class="settings-item" @click="$bus.$emit('modal:slots')">
+        <div class="settings-item__left" style="background-color: #C62828">
+          <i class="far fa-calendar-alt"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Слоты
+          </div>
+          <div class="settings-item__subtitle">
+            Управляйте слотами для публикаций в расписании
+          </div>
+        </div>
       </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          <span>Рубрики</span>
-          <span class="settings-item__count" v-if="currentProject.categories.length">
+      <div class="settings-item" @click="$bus.$emit('modal:category')">
+        <div class="settings-item__left" style="background-color: #AD1457">
+          <i class="fas fa-tags"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            <span>Рубрики</span>
+            <span class="settings-item__count" v-if="currentProject.categories.length">
             {{ currentProject.categories.length }}
           </span>
-        </div>
-        <div class="settings-item__subtitle">
-          Используйте рубрики для разделения контента по темам
+          </div>
+          <div class="settings-item__subtitle">
+            Используйте рубрики для разделения контента по темам
+          </div>
         </div>
       </div>
+      <div class="settings-item" @click="$bus.$emit('modal:links')">
+        <div class="settings-item__left" style="background-color: #6A1B9A">
+          <i class="fas fa-link"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Ссылки
+          </div>
+          <div class="settings-item__subtitle">
+            Сокращение ссылок и UTM-метки
+          </div>
+        </div>
+      </div>
+      <div class="settings-item" @click="$bus.$emit('modal:users')">
+        <div class="settings-item__left" style="background-color: #4527A0">
+          <i class="fas fa-users-cog"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Пользователи
+          </div>
+          <div class="settings-item__subtitle">
+            Добавляйте к проекту коллег и клиентов
+          </div>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item__left" style="background-color: #283593">
+          <i class="far fa-clock"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Часовой пояс проекта
+          </div>
+          <div class="settings-item__subtitle">
+            В каком часовом поясе будет вестись работа в проекте
+          </div>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item__left" style="background-color: #1565C0">
+          <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Отчеты
+          </div>
+          <div class="settings-item__subtitle">
+            Настроить получение отчетов по проекту на почту
+          </div>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item__left" style="background-color: #2E7D32">
+          <i class="fas fa-cogs"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Кастомизация
+          </div>
+          <div class="settings-item__subtitle">
+            Название проекта и цвет иконки
+          </div>
+        </div>
+      </div>
+      <div class="settings-item">
+        <div class="settings-item__left" style="background-color: #EF6C00">
+          <i class="fas fa-rss"></i>
+        </div>
+        <div class="settings-item__right">
+          <div class="settings-item__title">
+            Кроспостинг
+          </div>
+          <div class="settings-item__subtitle">
+            Настройте публикацию из RSS
+          </div>
+        </div>
+      </div>
+      <modal-add-account></modal-add-account>
+      <modal-select-account></modal-select-account>
+      <modal-accounts-list></modal-accounts-list>
+      <modal-category></modal-category>
+      <modal-add-category></modal-add-category>
+      <modal-slots></modal-slots>
+      <modal-links></modal-links>
+      <modal-users></modal-users>
+      <modal-add-user></modal-add-user>
     </div>
-    <div class="settings-item" @click="$bus.$emit('modal:links')">
-      <div class="settings-item__left" style="background-color: #6A1B9A">
-        <i class="fas fa-link"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Ссылки
-        </div>
-        <div class="settings-item__subtitle">
-          Сокращение ссылок и UTM-метки
-        </div>
-      </div>
-    </div>
-    <div class="settings-item">
-      <div class="settings-item__left" style="background-color: #4527A0">
-        <i class="fas fa-users-cog"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Пользователи
-        </div>
-        <div class="settings-item__subtitle">
-          Добавляйте к проекту коллег и клиентов
-        </div>
-      </div>
-    </div>
-    <div class="settings-item">
-      <div class="settings-item__left" style="background-color: #283593">
-        <i class="far fa-clock"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Часовой пояс проекта
-        </div>
-        <div class="settings-item__subtitle">
-          В каком часовом поясе будет вестись работа в проекте
-        </div>
-      </div>
-    </div>
-    <div class="settings-item">
-      <div class="settings-item__left" style="background-color: #1565C0">
-        <i class="fas fa-envelope-open-text"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Отчеты
-        </div>
-        <div class="settings-item__subtitle">
-          Настроить получение отчетов по проекту на почту
-        </div>
-      </div>
-    </div>
-    <div class="settings-item">
-      <div class="settings-item__left" style="background-color: #2E7D32">
-        <i class="fas fa-cogs"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Кастомизация
-        </div>
-        <div class="settings-item__subtitle">
-          Название проекта и цвет иконки
-        </div>
-      </div>
-    </div>
-    <div class="settings-item">
-      <div class="settings-item__left" style="background-color: #EF6C00">
-        <i class="fas fa-rss"></i>
-      </div>
-      <div class="settings-item__right">
-        <div class="settings-item__title">
-          Кроспостинг
-        </div>
-        <div class="settings-item__subtitle">
-          Настройте публикацию из RSS
-        </div>
-      </div>
-    </div>
-    <modal-add-account></modal-add-account>
-    <modal-select-account></modal-select-account>
-    <modal-accounts-list></modal-accounts-list>
-    <modal-category></modal-category>
-    <modal-add-category></modal-add-category>
-    <modal-slots></modal-slots>
-    <modal-links></modal-links>
   </div>
 </template>
 
@@ -141,6 +154,8 @@
   import ModalAddCategory from '@/components/modals/AddCategory';
   import ModalSlots from '@/components/modals/Slots';
   import ModalLinks from '@/components/modals/Links';
+  import ModalUsers from '@/components/modals/Users';
+  import ModalAddUser from '@/components/modals/AddUser';
 
   export default {
     components: {
@@ -150,7 +165,9 @@
       ModalSlots,
       ModalCategory,
       ModalAddCategory,
-      ModalLinks
+      ModalLinks,
+      ModalUsers,
+      ModalAddUser
     },
     data: () => ({
       errors: {},

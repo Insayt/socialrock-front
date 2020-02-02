@@ -9,7 +9,7 @@
       <s-header v-if="$router.currentRoute.name !== 'auth'" :current-route="$router.currentRoute.name"></s-header>
       <router-view/>
     </div>
-    <modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>
+    <!--<modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>-->
   </div>
 </template>
 

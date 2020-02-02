@@ -1,6 +1,8 @@
 <template>
   <div class="auth">
     <form class="form-auth">
+      <img class="login-img-1" src="../assets/img/login-img-1.svg">
+      <img class="login-img-2" src="../assets/img/login-img-2.svg">
       <div class="logo">
         <img src="../assets/img/logo.png">
         <div>SOCIAL<span>ROCK</span></div>
@@ -131,6 +133,7 @@
   .form-auth {
     width: 410px;
     margin-top: 100px;
+    position: relative;
 
     &__form {
       width: 100%;
@@ -152,5 +155,19 @@
     span {
       color: $color-warning;
     }
+  }
+  .login-img-1 {
+    position: absolute;
+    left: -190px;
+    top: 120px;
+    z-index: -1;
+    opacity: 0.5;
+  }
+  .login-img-2 {
+    position: absolute;
+    right: -187px;
+    top: 120px;
+    z-index: -1;
+    opacity: 0.5;
   }
 </style>

@@ -143,6 +143,23 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    addUserAccess ({ state, commit }, { project_id, email, access }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/add-user-access`, {
+        email,
+        access
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
+    deleteUserAccess ({ state, commit }, { project_id, email }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/delete-user-access`, {
+        email,
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     getVkGroups ({state, commit}) {
       return axios.get(`${config.apiUrl}/vk/groups`)
         .then(res => {

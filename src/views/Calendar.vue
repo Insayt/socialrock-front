@@ -1,39 +1,50 @@
 <template>
-  <div class="calendar">
-    <div class="calendar-content">
-      <div class="calendar-rows">
-        <!--<div class="calendar-rows__item">-->
+  <div>
+    <div class="access-denied" v-if="!currentProject.access.posts">
+      <img src="../assets/img/access_denied.svg">
+      <div class="access-denied__header">
+        Oops.. 🤭
+      </div>
+      У вас нет доступа к этому разделу.
+      <br> Обратитесь к администратору проекта,
+      <br> если вам очень нужно сюда попасть :)
+    </div>
+    <div class="calendar" v-else>
+      <div class="calendar-content">
+        <div class="calendar-rows">
+          <!--<div class="calendar-rows__item">-->
           <!--<div class="calendar-rows__day">-->
-            <!--<span>Понедельник,</span> 23 октября-->
+          <!--<span>Понедельник,</span> 23 октября-->
           <!--</div>-->
           <!--<div class="calendar-rows__posts">-->
-            <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
-            <!--<post :post="{}"></post>-->
-            <!--<post :post="{}"></post>-->
-            <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
-            <!--<post :post="{}"></post>-->
+          <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
+          <!--<post :post="{}"></post>-->
+          <!--<post :post="{}"></post>-->
+          <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
+          <!--<post :post="{}"></post>-->
           <!--</div>-->
-        <!--</div>-->
+          <!--</div>-->
 
-        <div class="calendar-rows__item" v-for="day in days">
-          <div class="calendar-rows__day">
-            <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
-          </div>
-          <div class="calendar-rows__posts">
-            <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
-            <div class="empty-post" @click="showPostModal">
-              <div class="empty-post__icon">
-                <img src="../assets/img/icons/plus-round.svg">
-                <div>Запланировать пост</div>
-              </div>
+          <div class="calendar-rows__item" v-for="day in days">
+            <div class="calendar-rows__day">
+              <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
             </div>
-            <!--<post :post="{}"></post>-->
-            <!--<post :post="{}"></post>-->
-            <!--<post :post="{}"></post>-->
-            <!--<post :post="{}"></post>-->
+            <div class="calendar-rows__posts">
+              <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
+              <div class="empty-post" @click="showPostModal">
+                <div class="empty-post__icon">
+                  <img src="../assets/img/icons/plus-round.svg">
+                  <div>Запланировать пост</div>
+                </div>
+              </div>
+              <!--<post :post="{}"></post>-->
+              <!--<post :post="{}"></post>-->
+              <!--<post :post="{}"></post>-->
+              <!--<post :post="{}"></post>-->
+            </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
   </div>
