@@ -112,6 +112,7 @@
               project_id: this.currentProject._id,
               email: user.email,
             }).then(() => {
+              this.$refs['users'].hide();
               this.$swal({
                 title: `Пользователь удален`,
                 type: 'success',
@@ -119,7 +120,7 @@
                 position: 'top-end',
                 showConfirmButton: false,
                 timer: 5000
-              })
+              });
             })
           }
         })

@@ -81,7 +81,7 @@
           </div>
         </div>
       </div>
-      <div class="settings-item">
+      <div class="settings-item" @click="$bus.$emit('modal:timezone')">
         <div class="settings-item__left" style="background-color: #283593">
           <i class="far fa-clock"></i>
         </div>
@@ -142,6 +142,7 @@
       <modal-links></modal-links>
       <modal-users></modal-users>
       <modal-add-user></modal-add-user>
+      <modal-timezone></modal-timezone>
     </div>
   </div>
 </template>
@@ -156,6 +157,7 @@
   import ModalLinks from '@/components/modals/Links';
   import ModalUsers from '@/components/modals/Users';
   import ModalAddUser from '@/components/modals/AddUser';
+  import ModalTimezone from '@/components/modals/Timezone';
 
   export default {
     components: {
@@ -167,7 +169,8 @@
       ModalAddCategory,
       ModalLinks,
       ModalUsers,
-      ModalAddUser
+      ModalAddUser,
+      ModalTimezone
     },
     data: () => ({
       errors: {},

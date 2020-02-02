@@ -160,6 +160,14 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    changeProjectTimezone ({ state, commit }, { project_id, timezone }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/change-timezone`, {
+        timezone,
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     getVkGroups ({state, commit}) {
       return axios.get(`${config.apiUrl}/vk/groups`)
         .then(res => {
