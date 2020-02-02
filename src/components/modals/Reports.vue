@@ -18,10 +18,10 @@
             type="text"
             placeholder="Email"
             v-model="email"
-            :class="{ 'is-invalid': errors.name }"
+            :class="{ 'is-invalid': errors.email }"
           ></b-form-input>
           <div class="invalid-feedback">
-            {{ errors.name }}
+            {{ errors.email }}
           </div>
         </b-form-group>
         <b-form-group>
@@ -82,7 +82,7 @@
         }).then(() => {
           this.$refs['reports'].hide();
           this.$swal({
-            title: ` Настройки отчетов сохранены`,
+            title: `Настройки отчетов сохранены`,
             type: 'success',
             toast: true,
             position: 'top-end',

@@ -107,7 +107,7 @@
           </div>
         </div>
       </div>
-      <div class="settings-item">
+      <div class="settings-item" @click="$bus.$emit('modal:custom')">
         <div class="settings-item__left" style="background-color: #2E7D32">
           <i class="fas fa-cogs"></i>
         </div>
@@ -144,6 +144,7 @@
       <modal-add-user></modal-add-user>
       <modal-timezone></modal-timezone>
       <modal-reports></modal-reports>
+      <modal-custom></modal-custom>
     </div>
   </div>
 </template>
@@ -160,6 +161,7 @@
   import ModalAddUser from '@/components/modals/AddUser';
   import ModalTimezone from '@/components/modals/Timezone';
   import ModalReports from '@/components/modals/Reports';
+  import ModalCustom from '@/components/modals/Custom';
 
   export default {
     components: {
@@ -173,7 +175,8 @@
       ModalUsers,
       ModalAddUser,
       ModalTimezone,
-      ModalReports
+      ModalReports,
+      ModalCustom
     },
     data: () => ({
       errors: {},
