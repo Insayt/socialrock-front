@@ -10,6 +10,7 @@
       <router-view/>
     </div>
     <!--<modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>-->
+    <editor-wrap v-if="showEditor"></editor-wrap>
   </div>
 </template>
 
@@ -18,6 +19,7 @@
   import sHeader from '@/components/Header';
   import Sidebar from '@/components/Sidebar';
   import ModalPost from '@/components/modals/Post';
+  import EditorWrap from '@/components/editor/EditorWrapper'
 
 
   export default {
@@ -25,9 +27,11 @@
       Sidebar,
       sHeader,
       ModalPost,
+      EditorWrap
     },
     data: () => ({
-      isSidebarCollapse: false
+      isSidebarCollapse: false,
+      showEditor: false
     }),
     computed: {
       loading () {
@@ -35,9 +39,9 @@
       },
     },
     mounted () {
-      // this.$bus.$on('test', () => {
-      //   console.log('Test!');
-      // });
+      this.$bus.$on('editor:show', () => {
+        this.showEditor = true;
+      });
     },
     methods: {}
   }
