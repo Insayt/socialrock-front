@@ -59,21 +59,32 @@
       </div>
     </div>
 
-    <div class="canvas-wrap">
+    <div class="canvas-wrap" ref="canvasFitWrap">
       <div class="canvas-wrap__fit"
        id="canvas-wrap-id"
        ref="canvasFit"
+       :style="{ transform: 'scale(' + fitValue + ')', width: canvasParams.width + 'px' }"
+       :class="{ '_align-left': canvasAlignLeft }"
       >
         <canvas id="canvas"></canvas>
       </div>
       <div class="canvas-wrap__fitter">
         <div class="canvas-wrap__fitter-slider">
-          Слайдер
+          <vue-slider
+            v-model="fitValue"
+            :interval="0.01"
+            :min="0.1"
+            :max="2"
+            tooltip="none"
+            @change="changeFit"
+          >
+
+          </vue-slider>
         </div>
         <div class="canvas-wrap__fitter-val">
-          1%
+          {{ Math.floor(fitValue * 100 ) }}%
         </div>
-        <div class="canvas-wrap__fitter-btn">
+        <div class="canvas-wrap__fitter-btn" @click="fitCanvas">
           Вписать
         </div>
       </div>
@@ -85,14 +96,83 @@
 </template>
 
 <script>
+  import { fabric } from '../fabric';
   import bg from '../components/editor/toolBg';
+
   export default {
     components: {
       bg
     },
     data: () => ({
-      activeTab: 'bg'
+      activeTab: 'bg',
+      canvasAlignLeft: false,
+      fitValue: 1,
+      canvas: null,
+      canvasParams: {
+        width: 1080,
+        height: 1080
+      },
     }),
+    mounted() {
+      // document.addEventListener('keydown', this.keyDown);
+      // document.addEventListener('click', this.clickEditor);
+      this.canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true,
+        width: this.canvasParams.width,
+        height: this.canvasParams.height
+      });
+      this.canvas.backgroundColor = 'black';
+      this.canvas.renderAll();
+      // this.canvas.on('selection:updated', (e) => {
+      //   if (e.selected.length === 1) {
+      //     this.selection = {};
+      //     this.activeTab = null;
+      //     this.$nextTick(() => {
+      //       this.selection = e.selected[0];
+      //     });
+      //   }
+      // });
+      // this.canvas.on('selection:created', (e) => {
+      //   if (e.selected.length === 1) {
+      //     this.selection = {};
+      //     this.activeTab = null;
+      //     this.$nextTick(() => {
+      //       this.selection = e.selected[0];
+      //     });
+      //   }
+      // });
+      // this.canvas.on('selection:cleared', () => {
+      //   this.selection = {};
+      // });
+
+      // this.canvas.on('object:modified', this.saveState);
+      // this.canvas.on('object:added', this.saveState);
+      // this.canvas.on('object:removed', this.saveState);
+
+      // this.saveState();
+      this.fitCanvas();
+    },
+    methods: {
+      changeFit () {
+        this.$nextTick(() => {
+          if (this.$refs['canvasFitWrap'].getBoundingClientRect().width <= this.$refs['canvasFit'].getBoundingClientRect().width) {
+            this.canvasAlignLeft = true;
+          } else {
+            this.canvasAlignLeft = false;
+          }
+        });
+      },
+      fitCanvas () {
+        let fit;
+        if (this.canvasParams.width > this.canvasParams.height) {
+          fit = ( window.innerWidth - 320 ) / this.canvasParams.width;
+        } else {
+          fit = ( window.innerHeight - 130 ) / this.canvasParams.height;
+        }
+        this.fitValue = fit;
+        this.changeFit();
+      },
+    }
   }
 </script>
 
@@ -222,7 +302,8 @@
   }
 
   .canvas-wrap {
-    height: calc(100% - 60px);
+    width: 100%;
+    height: 100%;
     overflow: auto;
     position: relative;
     text-align: left;
@@ -231,11 +312,6 @@
     transform-origin: center top;
     display: flex;
     justify-content: center;
-    align-items: center;
-
-    &._align-left {
-      justify-content: left;
-    }
 
     &__fit {
       box-sizing: border-box;
@@ -243,6 +319,7 @@
 
       &._align-left {
         transform-origin: left top;
+        margin-left: -40px;
       }
       /*transform: scale(0.5);*/
     }
