@@ -53,6 +53,14 @@
           Публикации
         </div>
       </router-link>
+      <!--<div class="nav-item">-->
+        <!--<div class="nav-item__icon">-->
+          <!--<i class="far fa-calendar-alt"></i>-->
+        <!--</div>-->
+        <!--<div class="nav-item__title">-->
+          <!--Контент-план-->
+        <!--</div>-->
+      <!--</div>-->
       <router-link :to="{ name: 'editor', params: { projectId: currentProject.short_id } }" tag="div" class="nav-item" active-class="_active">
         <div class="nav-item__icon">
           <i class="fas fa-paint-brush"></i>
@@ -77,6 +85,14 @@
           Настройки
         </div>
       </router-link>
+      <!--<div class="nav-item">-->
+        <!--<div class="nav-item__icon">-->
+          <!--<i class="far fa-credit-card"></i>-->
+        <!--</div>-->
+        <!--<div class="nav-item__title">-->
+          <!--Оплата-->
+        <!--</div>-->
+      <!--</div>-->
     </div>
     <!--<div class="sidebar-bottom" v-if="!user.email_verify">-->
       <!--<div class="sidebar-bottom__emoji">-->

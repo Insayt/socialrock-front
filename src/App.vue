@@ -1,16 +1,18 @@
 <template>
-  <div id="app" :class="{ fullwidth: $router.currentRoute.name === 'auth' }" v-if="!loading">
+  <div id="app" :class="{ fullwidth: $router.currentRoute.name === 'auth' || $router.currentRoute.name === 'editor-create' }" v-if="!loading">
     <!--<div id="nav">-->
       <!--<router-link to="/">Home</router-link> |-->
       <!--<router-link to="/about">About</router-link>-->
     <!--</div>-->
-    <sidebar v-if="$router.currentRoute.name !== 'auth'"></sidebar>
+    <sidebar v-if="$router.currentRoute.name !== 'auth' && $router.currentRoute.name !== 'editor-create'"></sidebar>
     <div class="app-content">
-      <s-header v-if="$router.currentRoute.name !== 'auth'" :current-route="$router.currentRoute.name"></s-header>
+      <s-header
+        v-if="$router.currentRoute.name !== 'auth' && $router.currentRoute.name !== 'editor-create'"
+        :current-route="$router.currentRoute.name"
+      ></s-header>
       <router-view/>
     </div>
     <!--<modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>-->
-    <editor-wrap v-if="showEditor"></editor-wrap>
   </div>
 </template>
 
@@ -19,7 +21,6 @@
   import sHeader from '@/components/Header';
   import Sidebar from '@/components/Sidebar';
   import ModalPost from '@/components/modals/Post';
-  import EditorWrap from '@/components/editor/EditorWrapper'
 
 
   export default {
@@ -27,7 +28,6 @@
       Sidebar,
       sHeader,
       ModalPost,
-      EditorWrap
     },
     data: () => ({
       isSidebarCollapse: false,
@@ -41,6 +41,9 @@
     mounted () {
       this.$bus.$on('editor:show', () => {
         this.showEditor = true;
+      });
+      this.$bus.$on('editor:hide', () => {
+        this.showEditor = false;
       });
     },
     methods: {}

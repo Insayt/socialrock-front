@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import Auth from '../views/Auth';
 import ProjectWrapper from '../views/ProjectWrapper';
 import Calendar from '../views/Calendar';
+import Editor from '../views/Editor';
+import EditorWrapper from '../views/EditorWrapper';
 import Analytics from '../views/Analytics';
 import Settings from '../views/Settings';
 import Projects from '../views/Projects';
@@ -42,7 +44,16 @@ const router = new VueRouter({
         {
           path: 'editor',
           name: 'editor',
-          component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue'),
+          // component: () => import(/* webpackChunkName: "editor" */ '../views/Editor.vue'),
+          component: Editor,
+          meta: {
+            protected: true,
+          },
+        },
+        {
+          path: 'editor/create',
+          name: 'editor-create',
+          component: EditorWrapper,
           meta: {
             protected: true,
           }

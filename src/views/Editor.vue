@@ -19,7 +19,7 @@
       <div class="editor__title">
         👷 Создайте дизайн с нуля
       </div>
-      <div class="editor__items" @click="$bus.$emit('editor:show')">
+      <div class="editor__items" @click="$router.push({ name: 'editor-create' })">
         <div class="editor-item">
           <div class="editor-item__img"></div>
           <div class="editor-item__title">

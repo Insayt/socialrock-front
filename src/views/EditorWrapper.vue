@@ -1,0 +1,290 @@
+<template>
+  <div class="editor">
+    <div class="editor-sidebar">
+      <div class="editor-logo">
+        <img src="../assets/img/logo.png">
+        <div>SOCIAL<span>ROCK</span></div>
+        <div class="editor-logo__budge">РЕДАКТОР</div>
+      </div>
+      <div class="editor-tabs">
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'bg' }" @click="activeTab = 'bg'">
+          <div class="editor-tabs__icon fa fa-image"></div>
+          <div class="editor-tabs__title">Фон</div>
+        </div>
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'txt' }" @click="activeTab = 'txt'">
+          <div class="editor-tabs__icon fa fa-font"></div>
+          <div class="editor-tabs__title">Текст</div>
+        </div>
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'image' }" @click="activeTab = 'image'">
+          <div class="editor-tabs__icon fa fa-smile"></div>
+          <div class="editor-tabs__title">Графика</div>
+        </div>
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="activeTab = 'shape'">
+          <div class="editor-tabs__icon fa fa-shapes"></div>
+          <div class="editor-tabs__title">Фигура</div>
+        </div>
+      </div>
+      <div class="editor-sidebar-tools" >
+        <bg v-if="activeTab === 'bg'"></bg>
+      </div>
+    </div>
+    <div class="editor-header">
+      <div class="editor-header__left">
+        <b-button variant="black">
+          <i class="fas fa-undo"></i>
+        </b-button>
+        <b-button variant="black">
+          <i class="fas fa-redo"></i>
+        </b-button>
+        <b-button variant="black">
+          <i class="fas fa-trash"></i>
+        </b-button>
+        <b-button variant="black" class="_align-v">
+          <i class="fas fa-arrow-down"></i>
+          <i class="fas fa-arrow-up"></i>
+        </b-button>
+        <b-button variant="black" class="_align-h">
+          <i class="fas fa-arrow-right"></i>
+          <i class="fas fa-arrow-left"></i>
+        </b-button>
+      </div>
+
+      <div class="editor-header__right">
+        <b-button variant="primary">
+          <i class="fas fa-save"></i>
+        </b-button>
+        <b-button variant="black" @click="$router.push({ name: 'editor' })">
+          <i class="fas fa-times"></i>
+        </b-button>
+      </div>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="canvas-wrap__fit"
+       id="canvas-wrap-id"
+       ref="canvasFit"
+      >
+        <canvas id="canvas"></canvas>
+      </div>
+      <div class="canvas-wrap__fitter">
+        <div class="canvas-wrap__fitter-slider">
+          Слайдер
+        </div>
+        <div class="canvas-wrap__fitter-val">
+          1%
+        </div>
+        <div class="canvas-wrap__fitter-btn">
+          Вписать
+        </div>
+      </div>
+    </div>
+    <!--<div class="editor-resize">-->
+    <!--Resize-->
+    <!--</div>-->
+  </div>
+</template>
+
+<script>
+  import bg from '../components/editor/toolBg';
+  export default {
+    components: {
+      bg
+    },
+    data: () => ({
+      activeTab: 'bg'
+    }),
+  }
+</script>
+
+<style scoped lang="scss">
+  @import '../variables';
+
+  .editor {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: $color-bg-0;
+    z-index: 10;
+    top: 0;
+    left: 0;
+    padding-left: 300px;
+    box-sizing: border-box;
+  }
+
+  .editor-header {
+    width: 100%;
+    height: 60px;
+    padding: 10px 20px;
+    background-color: $color-bg-1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+
+    button {
+      margin-right: 10px;
+      height: 38px;
+      width: 38px;
+      align-items: center;
+      justify-content: center;
+      display: inline-flex;
+
+      &:last-child {
+        margin-right: 0;
+      }
+      &._align-v {
+        flex-direction: column;
+        font-size: 10px;
+      }
+
+      &._align-h {
+        font-size: 10px;
+      }
+    }
+  }
+
+  .editor-logo {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-top: 10px;
+    font-weight: bold;
+    font-size: 26px;
+    display: flex;
+    align-items: center;
+    color: white;
+    position: relative;
+
+    &__budge {
+      font-size: 10px;
+      margin-left: 8px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background-color: $color-success;
+    }
+
+    img {
+      width: 25px;
+      margin-right: 10px;
+    }
+    span {
+      color: $color-warning;
+    }
+  }
+
+  .editor-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__item {
+      border-right: 1px solid $color-bg-9;
+      border-bottom: 1px solid $color-bg-9;
+      border-top: 1px solid $color-bg-9;
+      width: 25%;
+      font-size: 13px;
+      padding: 8px;
+      cursor: pointer;
+      text-align: center;
+
+      &:last-child {
+        border-right: 0;
+      }
+
+      &._active {
+        background-color: $color-bg-9;
+        border-color: transparent;
+      }
+    }
+
+    &__icon {
+      margin-bottom: 3px;
+    }
+  }
+
+  .editor-sidebar-tools {
+    padding: 20px;
+  }
+
+  .editor-sidebar {
+    width: 300px;
+    background-color: $color-bg-3;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    height: 100%;
+    min-height: 100%;
+  }
+
+  .editor-bottom {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .canvas-wrap {
+    height: calc(100% - 60px);
+    overflow: auto;
+    position: relative;
+    text-align: left;
+    padding: 10px;
+    box-sizing: border-box;
+    transform-origin: center top;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &._align-left {
+      justify-content: left;
+    }
+
+    &__fit {
+      box-sizing: border-box;
+      transform-origin: center top;
+
+      &._align-left {
+        transform-origin: left top;
+      }
+      /*transform: scale(0.5);*/
+    }
+
+    &__fitter {
+      margin-left: 150px;
+      margin-bottom: 5px;
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #2e3246;
+      color: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+
+      &-slider {
+        width: 250px;
+        margin-right: 10px;
+      }
+
+      &-val {
+        margin-right: 10px;
+      }
+
+      &-btn {
+        cursor: pointer;
+        padding: 5px 10px;
+        border-radius: 4px;
+        background-color: rgba(255, 255, 255, 0.1);
+
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+
+    canvas {
+      border: 1px solid;
+    }
+  }
+</style>
