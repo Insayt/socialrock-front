@@ -53,6 +53,9 @@
         <b-button variant="primary">
           <i class="fas fa-save"></i>
         </b-button>
+        <b-button variant="black">
+          <i class="fas fa-download"></i>
+        </b-button>
         <b-button variant="black" @click="$router.push({ name: 'editor' })">
           <i class="fas fa-times"></i>
         </b-button>
@@ -121,7 +124,7 @@
         width: this.canvasParams.width,
         height: this.canvasParams.height
       });
-      this.canvas.backgroundColor = 'black';
+      this.canvas.backgroundColor = 'white';
       this.canvas.renderAll();
       // this.canvas.on('selection:updated', (e) => {
       //   if (e.selected.length === 1) {
@@ -328,11 +331,10 @@
       margin-left: 150px;
       margin-bottom: 5px;
       position: fixed;
-      bottom: 0;
+      bottom: 5px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #2e3246;
-      color: rgba(255, 255, 255, 0.8);
+      background-color: $color-bg-9;
       padding: 5px 10px;
       border-radius: 4px;
       font-size: 14px;
