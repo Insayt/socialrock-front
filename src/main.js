@@ -6,9 +6,11 @@ import VCalendar from 'v-calendar';
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { Datetime } from 'vue-datetime';
-import 'vue-datetime/dist/vue-datetime.css'
-import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/default.css'
+import 'vue-datetime/dist/vue-datetime.css';
+import VueSlider from 'vue-slider-component';
+import 'vue-slider-component/theme/default.css';
+// import Sketch from 'vue-color/src/components/Sketch';
+import colorPicker from '@caohenghu/vue-colorpicker'
 
 import App from './App.vue';
 import router from './router';
@@ -22,6 +24,7 @@ Vue.use(VueSweetalert2);
 
 Vue.component('VueSlider', VueSlider);
 Vue.component('datetime', Datetime);
+Vue.component('colorPicker', colorPicker);
 
 Object.defineProperty(Vue.prototype,"$bus",{
   get: function() {

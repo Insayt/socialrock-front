@@ -39,12 +39,12 @@
       },
     },
     mounted () {
-      this.$bus.$on('editor:show', () => {
-        this.showEditor = true;
-      });
-      this.$bus.$on('editor:hide', () => {
-        this.showEditor = false;
-      });
+      // this.$bus.$on('editor:show', () => {
+      //   this.showEditor = true;
+      // });
+      // this.$bus.$on('editor:hide', () => {
+      //   this.showEditor = false;
+      // });
     },
     methods: {}
   }

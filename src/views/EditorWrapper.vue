@@ -154,6 +154,32 @@
 
       // this.saveState();
       this.fitCanvas();
+
+      this.$bus.$on('editor:changeBg', (color) => {
+        this.canvas.backgroundColor = color;
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:changeBgGradient', ({color1, color2, type}) => {
+        var grad = new fabric.Gradient({
+          type: 'linear',
+          coords: {
+            x1: 0,
+            y1: this.canvas.height,
+          },
+          colorStops: [
+            {
+              color: color1,
+              offset: 0,
+            },
+            {
+              color: color2,
+              offset: 1,
+            }
+          ]});
+        this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
+        this.canvas.renderAll();
+      })
     },
     methods: {
       changeFit () {
@@ -287,16 +313,20 @@
 
   .editor-sidebar-tools {
     padding: 20px;
+    overflow: auto;
+    height: 100%;
+    padding-bottom: 100px;
   }
 
   .editor-sidebar {
     width: 300px;
-    background-color: $color-bg-3;
+    background-color: $color-bg-2;
     position: fixed;
     z-index: 1;
     left: 0;
     height: 100%;
     min-height: 100%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   }
 
   .editor-bottom {
