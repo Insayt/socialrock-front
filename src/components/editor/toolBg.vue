@@ -72,7 +72,7 @@
         <b-button  :variant="gradientRevert ? 'primary' : 'black'"
                    size="sm" v-b-tooltip.hover.bottom
                    title="Перевернуть"
-                   @click="gradientRevert = !gradientRevert"
+                   @click="revertGradient"
         >
           <i class="fas fa-sync"></i>
         </b-button>
@@ -99,7 +99,8 @@
       colorsDefault: ['transparent', '#000000', '#FFFFFF', '#FF1900', '#F47365', '#FFB243', '#FFE623', '#6EFF2A', '#1BC7B1', '#00BEFF', '#2E81FF', '#5D61FF', '#FF89CF', '#FC3CAD', '#BF3DCE', '#8E00A7'],
       backgroundsDefault: require('../../gradients'),
       gradientType: 'vertical',
-      gradientRevert: false
+      gradientRevert: false,
+      currentBg: null
     }),
     methods: {
       generateGradient (bg) {
@@ -135,12 +136,22 @@
       },
 
       changeBgGradient(bg) {
+        this.currentBg = bg;
         this.$bus.$emit('editor:changeBgGradient', {color1: bg.colors[0], color2: bg.colors[1], type: this.gradientType, revert: this.gradientRevert});
       },
 
       changeGradientType(type) {
         this.gradientType = type;
-        // this.$bus.$emit('editor:changeBgGradient', {color1: bg.colors[0], color2: bg.colors[1], type: this.gradientType})
+        if (this.currentBg) {
+          this.changeBgGradient(this.currentBg);
+        }
+      },
+
+      revertGradient () {
+        this.gradientRevert = !this.gradientRevert;
+        if (this.currentBg) {
+          this.changeBgGradient(this.currentBg);
+        }
       }
     }
   }
