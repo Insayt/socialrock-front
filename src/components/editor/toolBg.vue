@@ -70,7 +70,8 @@
       </div>
       <div class="gradient-settings">
         <b-button  :variant="gradientRevert ? 'primary' : 'black'"
-                   size="sm" v-b-tooltip.hover.bottom
+                   size="sm"
+                   v-b-tooltip.hover.bottom
                    title="Перевернуть"
                    @click="revertGradient"
         >
@@ -242,8 +243,8 @@
     margin-bottom: 15px;
 
     button {
-      height: 38px;
-      width: 76px;
+      height: 40px;
+      width: 70px;
       margin-right: 10px;
       font-size: 20px;
       padding: 0;
