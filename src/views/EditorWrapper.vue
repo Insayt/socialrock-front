@@ -160,14 +160,40 @@
         this.canvas.renderAll();
       });
 
-      this.$bus.$on('editor:changeBgGradient', ({color1, color2, type}) => {
-        var grad = new fabric.Gradient({
+      this.$bus.$on('editor:changeBgGradient', ({color1, color2, type, revert}) => {
+        let bgObject = {
           type: 'linear',
-          coords: {
+        };
+        if (type === 'vertical') {
+          bgObject.coords = {
             x1: 0,
             y1: this.canvas.height,
-          },
-          colorStops: [
+          };
+        } else if (type === 'horizontal') {
+          bgObject.coords = {
+            x2: this.canvas.width,
+            y2: 0,
+          };
+        } else if (type === 'angle') {
+          bgObject.coords = {
+            x1: this.canvas.width,
+            y1: this.canvas.height,
+          };
+        }
+
+        if (revert) {
+          bgObject.colorStops = [
+            {
+              color: color2,
+              offset: 0,
+            },
+            {
+              color: color1,
+              offset: 1,
+            }
+          ];
+        } else {
+          bgObject.colorStops = [
             {
               color: color1,
               offset: 0,
@@ -176,7 +202,10 @@
               color: color2,
               offset: 1,
             }
-          ]});
+          ];
+        }
+
+        let grad = new fabric.Gradient(bgObject);
         this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
         this.canvas.renderAll();
       })

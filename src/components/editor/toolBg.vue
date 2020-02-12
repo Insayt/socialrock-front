@@ -15,7 +15,7 @@
       </div>
     </div>
 
-    <template v-if="activeTab === 'color'">
+    <div v-show="activeTab === 'color'">
       <div class="controls-title">Выбрать цвет</div>
       <div class="color-dropdown">
         <b-dropdown class="color-dropdown__dropdown">
@@ -40,36 +40,53 @@
              @click="changeBg(color)"
         ></div>
       </div>
-    </template>
+    </div>
 
-    <template v-if="activeTab === 'gradient'">
+    <div v-show="activeTab === 'gradient'">
       <div class="controls-title">Настройки градиента</div>
       <div class="gradient-settings">
-        <b-button variant="primary" v-b-tooltip.hover title="Вертикальный">
+        <b-button :variant="gradientType === 'vertical' ? 'primary' : 'black'"
+                  v-b-tooltip.hover
+                  title="Вертикальный"
+                  @click="changeGradientType('vertical')"
+        >
           <i class="fad fa-arrows-v"></i>
         </b-button>
-        <b-button variant="black" v-b-tooltip.hover title="Горизонтальный">
+        <b-button :variant="gradientType === 'horizontal' ? 'primary' : 'black'"
+                  v-b-tooltip.hover
+                  title="Горизонтальный"
+                  @click="changeGradientType('horizontal')"
+        >
           <i class="fad fa-arrows-h"></i>
         </b-button>
-        <b-button variant="black" class="angle" v-b-tooltip.hover title="Под углом">
+        <b-button class="angle"
+                  :variant="gradientType === 'angle' ? 'primary' : 'black'"
+                  v-b-tooltip.hover
+                  title="Под углом"
+                  @click="changeGradientType('angle')"
+        >
           <i class="fad fa-arrows-h"></i>
         </b-button>
       </div>
       <div class="gradient-settings">
-        <b-button variant="black" size="sm" v-b-tooltip.hover.bottom title="Перевернуть">
+        <b-button  :variant="gradientRevert ? 'primary' : 'black'"
+                   size="sm" v-b-tooltip.hover.bottom
+                   title="Перевернуть"
+                   @click="gradientRevert = !gradientRevert"
+        >
           <i class="fas fa-sync"></i>
         </b-button>
       </div>
-      <div class="controls-title">Палитра градиентов</div>
+      <div class="controls-title">Выберите градиент</div>
       <div class="colors">
         <div class="colors__item"
              v-for="bg in backgroundsDefault"
-             :style="{ background: `linear-gradient(to top, ${bg.colors[0]}, ${bg.colors[1]})` }"
+             :style="{ background: generateGradient(bg) }"
              @click="changeBgGradient(bg)"
              :title="bg.name"
         ></div>
       </div>
-    </template>
+    </div>
 
   </div>
 </template>
@@ -81,8 +98,32 @@
       activeTab: 'color',
       colorsDefault: ['transparent', '#000000', '#FFFFFF', '#FF1900', '#F47365', '#FFB243', '#FFE623', '#6EFF2A', '#1BC7B1', '#00BEFF', '#2E81FF', '#5D61FF', '#FF89CF', '#FC3CAD', '#BF3DCE', '#8E00A7'],
       backgroundsDefault: require('../../gradients'),
+      gradientType: 'vertical',
+      gradientRevert: false
     }),
     methods: {
+      generateGradient (bg) {
+        if (this.gradientType === 'vertical') {
+          if (this.gradientRevert) {
+            return `linear-gradient(to bottom, ${bg.colors[0]}, ${bg.colors[1]})`;
+          } else {
+            return `linear-gradient(to top, ${bg.colors[0]}, ${bg.colors[1]})`;
+          }
+        } else if (this.gradientType === 'horizontal') {
+          if (this.gradientRevert) {
+            return `linear-gradient(to left, ${bg.colors[0]}, ${bg.colors[1]})`;
+          } else {
+            return `linear-gradient(to right, ${bg.colors[0]}, ${bg.colors[1]})`;
+          }
+        } else if (this.gradientType === 'angle') {
+          if (this.gradientRevert) {
+            return `linear-gradient(135deg, ${bg.colors[0]}, ${bg.colors[1]})`;
+          } else {
+            return `linear-gradient(135deg, ${bg.colors[1]}, ${bg.colors[0]})`;
+          }
+        }
+      },
+
       changeColor(color) {
         const {r, g, b, a} = color.rgba;
         this.userColor = `rgba(${r}, ${g}, ${b}, ${a})`;
@@ -94,8 +135,13 @@
       },
 
       changeBgGradient(bg) {
-        this.$bus.$emit('editor:changeBgGradient', { color1: bg.colors[0], color2: bg.colors[1] })
+        this.$bus.$emit('editor:changeBgGradient', {color1: bg.colors[0], color2: bg.colors[1], type: this.gradientType, revert: this.gradientRevert});
       },
+
+      changeGradientType(type) {
+        this.gradientType = type;
+        // this.$bus.$emit('editor:changeBgGradient', {color1: bg.colors[0], color2: bg.colors[1], type: this.gradientType})
+      }
     }
   }
 </script>
@@ -183,6 +229,7 @@
 
   .gradient-settings {
     margin-bottom: 15px;
+
     button {
       height: 38px;
       width: 76px;
