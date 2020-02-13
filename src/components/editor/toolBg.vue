@@ -7,7 +7,7 @@
       <div class="controls-tabs__item" :class="{ _active: activeTab === 'gradient' }" @click="activeTab = 'gradient'">
         <span>Градиент</span>
       </div>
-      <div class="controls-tabs__item" :class="{ _active: activeTab === 'texture' }" @click="activeTab = 'texture'">
+      <div class="controls-tabs__item" :class="{ _active: activeTab === 'pattern' }" @click="activeTab = 'pattern'">
         <span>Текстура</span>
       </div>
       <div class="controls-tabs__item" :class="{ _active: activeTab === 'image' }" @click="activeTab = 'image'">
@@ -89,6 +89,40 @@
       </div>
     </div>
 
+    <div v-show="activeTab === 'pattern'">
+      <div class="controls-title">Загрузить текстуру</div>
+      <label class="input-file" for="pattern-file">
+        <div class="btn btn-success btn-sm" :disabled="patternLoading" :class="{ disabled: patternLoading }">
+          <i class="fas fa-upload" v-show="!patternLoading"></i>
+          <i class="fas fa-spinner fa-spin" v-show="patternLoading"></i>
+          Выбрать файл
+        </div>
+        <input id="pattern-file"
+               type="file"
+               accept=".jpg,.jpeg,.png"
+               hidden
+               ref="pattern"
+               @change="handlePatternUpload"
+               :disabled="patternLoading"
+        />
+      </label>
+      <div class="controls-title">Текстуры проекта</div>
+      <div class="pattern">
+        <div class="pattern__item _contain"
+             v-for="pat in currentProject.patterns"
+             :style="{ backgroundImage: `url(${pat})` }"
+             @click="changeBgPattern(pat)"
+        ></div>
+      </div>
+      <div class="controls-title">Готовые текстуры</div>
+      <div class="pattern">
+        <div class="pattern__item"
+             v-for="num in 4"
+             :style="{ backgroundImage: `url(./patterns/${num}.png)` }"
+             @click="changeBgPattern(`./patterns/${num}.png`)"
+        ></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -101,8 +135,17 @@
       backgroundsDefault: require('../../gradients'),
       gradientType: 'vertical',
       gradientRevert: false,
-      currentBg: null
+      currentBg: null,
+      patternLoading: false
     }),
+    computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
+      user () {
+        return this.$store.getters['user/user'];
+      },
+    },
     methods: {
       generateGradient (bg) {
         if (this.gradientType === 'vertical') {
@@ -153,6 +196,49 @@
         if (this.currentBg) {
           this.changeBgGradient(this.currentBg);
         }
+      },
+
+      changeBgPattern (path) {
+        this.$bus.$emit('editor:changeBgPattern', path);
+      },
+
+      handlePatternUpload () {
+        this.patternLoading = true;
+        let file = this.$refs.pattern.files[0];
+        if (file.size > 2000000) {
+          this.$swal({
+            title: `Ошибка`,
+            html: `Максимальный размер файла 2 мегабайта`,
+            type: 'error'
+          });
+          return;
+        }
+        let fd = new FormData();
+        fd.append('file', file);
+        this.$store.dispatch('user/uploadPattern', {
+          project_id: this.currentProject._id,
+          form_data: fd
+        }).then(() => {
+          this.$swal({
+            title: `Текстура загружена`,
+            type: 'success',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000
+          });
+        }).catch(() => {
+          this.$swal({
+            title: `Ошибка загрузки`,
+            type: 'error',
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 5000
+          });
+        }).finally(() => {
+          this.patternLoading = false;
+        })
       }
     }
   }
@@ -226,6 +312,33 @@
     }
   }
 
+  .pattern {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+
+    &__item {
+      width: 120px;
+      height: 120px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      background-size: auto;
+      background-repeat: no-repeat;
+      background-position: center;
+
+      &._contain {
+        background-size: contain;
+      }
+
+      &:nth-child(4n) {
+        margin-right: 0;
+      }
+    }
+  }
+
   .transparent {
     background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoV2luZG93cykiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6M0FFNTQzRTU5ODRGMTFFMjhBRDVEODk3RjlCOUZGREIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6M0FFNTQzRTY5ODRGMTFFMjhBRDVEODk3RjlCOUZGREIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDozQUU1NDNFMzk4NEYxMUUyOEFENUQ4OTdGOUI5RkZEQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDozQUU1NDNFNDk4NEYxMUUyOEFENUQ4OTdGOUI5RkZEQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PnjjAFIAAAAmSURBVHjaYvz//z8DEjh79iwyl4kBL6CpNAuaW4yNjQeL0wACDAApUAh6jNqwUwAAAABJRU5ErkJggg==);
     background-repeat: repeat;
@@ -255,5 +368,9 @@
         }
       }
     }
+  }
+
+  .input-file {
+    margin-bottom: 15px;
   }
 </style>

@@ -249,6 +249,12 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    uploadPattern ({ state, commit }, { project_id, form_data }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/upload/pattern`, form_data)
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

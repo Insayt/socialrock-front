@@ -53,7 +53,7 @@
         <b-button variant="primary">
           <i class="fas fa-save"></i>
         </b-button>
-        <b-button variant="black">
+        <b-button variant="black" @click="exportCanvas">
           <i class="fas fa-download"></i>
         </b-button>
         <b-button variant="black" @click="$router.push({ name: 'editor' })">
@@ -116,45 +116,7 @@
         height: 1080
       },
     }),
-    mounted() {
-      // document.addEventListener('keydown', this.keyDown);
-      // document.addEventListener('click', this.clickEditor);
-      this.canvas = new fabric.Canvas('canvas', {
-        preserveObjectStacking: true,
-        width: this.canvasParams.width,
-        height: this.canvasParams.height
-      });
-      this.canvas.backgroundColor = 'white';
-      this.canvas.renderAll();
-      // this.canvas.on('selection:updated', (e) => {
-      //   if (e.selected.length === 1) {
-      //     this.selection = {};
-      //     this.activeTab = null;
-      //     this.$nextTick(() => {
-      //       this.selection = e.selected[0];
-      //     });
-      //   }
-      // });
-      // this.canvas.on('selection:created', (e) => {
-      //   if (e.selected.length === 1) {
-      //     this.selection = {};
-      //     this.activeTab = null;
-      //     this.$nextTick(() => {
-      //       this.selection = e.selected[0];
-      //     });
-      //   }
-      // });
-      // this.canvas.on('selection:cleared', () => {
-      //   this.selection = {};
-      // });
-
-      // this.canvas.on('object:modified', this.saveState);
-      // this.canvas.on('object:added', this.saveState);
-      // this.canvas.on('object:removed', this.saveState);
-
-      // this.saveState();
-      this.fitCanvas();
-
+    created () {
       this.$bus.$on('editor:changeBg', (color) => {
         this.canvas.backgroundColor = color;
         this.canvas.renderAll();
@@ -209,8 +171,75 @@
         this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
         this.canvas.renderAll();
       })
+
+      this.$bus.$on('editor:changeBgPattern', async (file) => {
+        let image = await this.loadPattern(file);
+        this.canvas.backgroundColor = new fabric.Pattern({source: image});
+        this.canvas.renderAll();
+      });
+    },
+    destroyed() {
+      let events = [
+        'editor:changeBg',
+        'editor:changeBgGradient',
+        'editor:changeBgPattern'
+      ];
+      events.forEach(e => {
+        this.$bus.$off(e);
+      })
+    },
+    mounted() {
+      // document.addEventListener('keydown', this.keyDown);
+      // document.addEventListener('click', this.clickEditor);
+      this.canvas = new fabric.Canvas('canvas', {
+        preserveObjectStacking: true,
+        width: this.canvasParams.width,
+        height: this.canvasParams.height
+      });
+      this.canvas.backgroundColor = 'white';
+      this.canvas.renderAll();
+      // this.canvas.on('selection:updated', (e) => {
+      //   if (e.selected.length === 1) {
+      //     this.selection = {};
+      //     this.activeTab = null;
+      //     this.$nextTick(() => {
+      //       this.selection = e.selected[0];
+      //     });
+      //   }
+      // });
+      // this.canvas.on('selection:created', (e) => {
+      //   if (e.selected.length === 1) {
+      //     this.selection = {};
+      //     this.activeTab = null;
+      //     this.$nextTick(() => {
+      //       this.selection = e.selected[0];
+      //     });
+      //   }
+      // });
+      // this.canvas.on('selection:cleared', () => {
+      //   this.selection = {};
+      // });
+
+      // this.canvas.on('object:modified', this.saveState);
+      // this.canvas.on('object:added', this.saveState);
+      // this.canvas.on('object:removed', this.saveState);
+
+      // this.saveState();
+      this.fitCanvas();
     },
     methods: {
+      exportCanvas () {
+        console.log(this.canvas.toObject());
+      },
+
+      async loadPattern(url) {
+        return  new Promise((resolve, reject) => {
+          fabric.util.loadImage(url, function(img) {
+            return resolve(img);
+          });
+        });
+      },
+
       changeFit () {
         this.$nextTick(() => {
           if (this.$refs['canvasFitWrap'].getBoundingClientRect().width <= this.$refs['canvasFit'].getBoundingClientRect().width) {
@@ -422,7 +451,7 @@
     }
 
     canvas {
-      border: 1px solid;
+      box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
     }
   }
 </style>
