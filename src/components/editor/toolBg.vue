@@ -112,7 +112,15 @@
              v-for="pat in currentProject.patterns"
              :style="{ backgroundImage: `url(${pat})` }"
              @click="changeBgPattern(pat)"
-        ></div>
+        >
+          <div class="pattern__delete">
+            <i class="fa fa-times"
+               v-b-tooltip.hover
+               title="Удалить"
+               @click.stop="deletePattern(pat)"
+            ></i>
+          </div>
+        </div>
       </div>
       <div class="controls-title">Готовые текстуры</div>
       <div class="pattern">
@@ -239,6 +247,41 @@
         }).finally(() => {
           this.patternLoading = false;
         })
+      },
+
+      deletePattern (pat) {
+        this.$swal({
+          title: `Удалить текстуру?`,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Удалить',
+          cancelButtonText: 'Отмена',
+        }).then(res => {
+          if (res.value) {
+            this.$store.dispatch('user/deletePattern', {
+              project_id: this.currentProject._id,
+              pattern: pat
+            }).then(() => {
+              this.$swal({
+                title: `Текстура удалена`,
+                type: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              });
+            }).catch(() => {
+              this.$swal({
+                title: `Ошибка удаления`,
+                type: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              });
+            })
+          }
+        })
       }
     }
   }
@@ -325,6 +368,7 @@
       cursor: pointer;
       margin-right: 10px;
       margin-bottom: 10px;
+      background-color: $color-bg-1;
       background-size: auto;
       background-repeat: no-repeat;
       background-position: center;
@@ -335,6 +379,31 @@
 
       &:nth-child(4n) {
         margin-right: 0;
+      }
+
+      &:hover {
+        .pattern__delete i {
+          display: block;
+        }
+      }
+    }
+
+    &__delete {
+      color: $color-danger;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      border-radius: 1px;
+      font-size: 14px;
+      position: relative;
+
+      i {
+        display: none;
+        position: absolute;
+        right: 0;
+        padding: 10px;
+        background-color: lighten($color-danger, 20%);
+        border-radius: 0 0 0 10px;
       }
     }
   }

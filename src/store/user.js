@@ -255,6 +255,12 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    deletePattern ({ state, commit }, { project_id, pattern }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/delete/pattern`, { pattern })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
   },
   getters: {
     loading: state => state.loading,
