@@ -4,6 +4,7 @@
       <!--<router-link to="/">Home</router-link> |-->
       <!--<router-link to="/about">About</router-link>-->
     <!--</div>-->
+    <vue-topprogress ref="topProgress"></vue-topprogress>
     <sidebar v-if="$router.currentRoute.name !== 'auth' && $router.currentRoute.name !== 'editor-create'"></sidebar>
     <div class="app-content">
       <s-header
@@ -39,12 +40,12 @@
       },
     },
     mounted () {
-      // this.$bus.$on('editor:show', () => {
-      //   this.showEditor = true;
-      // });
-      // this.$bus.$on('editor:hide', () => {
-      //   this.showEditor = false;
-      // });
+      this.$bus.$on('loading:start', () => {
+        this.$refs.topProgress.start();
+      });
+      this.$bus.$on('loading:stop', () => {
+        this.$refs.topProgress.done();
+      });
     },
     methods: {}
   }

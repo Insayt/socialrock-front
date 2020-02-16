@@ -100,6 +100,7 @@
 
 <script>
   import { fabric } from '../fabric';
+  import { cover } from 'intrinsic-scale';
   import bg from '../components/editor/toolBg';
 
   export default {
@@ -168,21 +169,40 @@
         }
 
         let grad = new fabric.Gradient(bgObject);
+        this.canvas.backgroundImage = 0;
         this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
         this.canvas.renderAll();
-      })
+      });
 
       this.$bus.$on('editor:changeBgPattern', async (file) => {
-        let image = await this.loadPattern(file);
+        let image = await this.loadImage(file);
         this.canvas.backgroundColor = new fabric.Pattern({source: image});
+        this.canvas.backgroundImage = 0;
         this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:changeBgImage',  (dataUrl, options = {}) => {
+        this.$bus.$emit('loading:start');
+        let img = new Image();
+        img.setAttribute('crossOrigin', 'anonymous');
+        img.onload = () => {
+          let { width, height, x, y } = cover(this.canvas.width, this.canvas.height, img.width, img.height);
+          let nsgImage = new fabric.Image(img);
+          nsgImage.width = width;
+          nsgImage.height = height;
+          nsgImage.set({ left: x, top: y });
+          this.canvas.setBackgroundImage(nsgImage, () => this.canvas.renderAll());
+          this.$bus.$emit('loading:stop');
+        };
+        img.src = dataUrl;
       });
     },
     destroyed() {
       let events = [
         'editor:changeBg',
         'editor:changeBgGradient',
-        'editor:changeBgPattern'
+        'editor:changeBgPattern',
+        'changeBgImage'
       ];
       events.forEach(e => {
         this.$bus.$off(e);
@@ -232,7 +252,7 @@
         console.log(this.canvas.toObject());
       },
 
-      async loadPattern(url) {
+      async loadImage(url) {
         return  new Promise((resolve, reject) => {
           fabric.util.loadImage(url, function(img) {
             return resolve(img);

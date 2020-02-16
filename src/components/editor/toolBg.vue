@@ -106,7 +106,7 @@
                :disabled="patternLoading"
         />
       </label>
-      <div class="controls-title">Текстуры проекта</div>
+      <div class="controls-title" v-if="currentProject.patterns.length">Текстуры проекта</div>
       <div class="pattern">
         <div class="pattern__item _contain"
              v-for="pat in currentProject.patterns"
@@ -131,11 +131,19 @@
         ></div>
       </div>
     </div>
+
+    <div v-show="activeTab === 'image'">
+      <images></images>
+    </div>
   </div>
 </template>
 
 <script>
+  import Images from './Images';
   export default {
+    components: {
+      Images
+    },
     data: () => ({
       userColor: '#FFFFFF',
       activeTab: 'color',
@@ -362,8 +370,8 @@
     margin-bottom: 15px;
 
     &__item {
-      width: 120px;
-      height: 120px;
+      width: 125px;
+      height: 125px;
       border-radius: 2px;
       cursor: pointer;
       margin-right: 10px;
@@ -377,7 +385,7 @@
         background-size: contain;
       }
 
-      &:nth-child(4n) {
+      &:nth-child(2n) {
         margin-right: 0;
       }
 

@@ -249,6 +249,12 @@ export default {
           commit('setProjectData', res.data);
         })
     },
+    uploadImage ({ state, commit }, { project_id, form_data }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/upload/image`, form_data)
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     uploadPattern ({ state, commit }, { project_id, form_data }) {
       return axios.post(`${config.apiUrl}/project/${project_id}/upload/pattern`, form_data)
         .then(res => {
@@ -259,6 +265,33 @@ export default {
       return axios.post(`${config.apiUrl}/project/${project_id}/delete/pattern`, { pattern })
         .then(res => {
           commit('setProjectData', res.data);
+        })
+    },
+    deleteImage ({ state, commit }, { project_id, image }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/delete/image`, { image })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
+    getStockImages ({ state, commit }, { category, page }) {
+      return axios.get(`${config.apiUrl}/resource/stock-images`, {
+        params: {
+          category,
+          page
+        }
+      } )
+        .then(res => {
+          return res.data;
+        })
+    },
+    getOneStockImage ({ state, commit }, { url }) {
+      return axios.get(`${config.apiUrl}/resource/get-photo`, {
+        params: {
+          url
+        }
+      })
+        .then(res => {
+          return res.data;
         })
     },
   },

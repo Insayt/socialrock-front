@@ -10,7 +10,8 @@ import 'vue-datetime/dist/vue-datetime.css';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
 // import Sketch from 'vue-color/src/components/Sketch';
-import colorPicker from '@caohenghu/vue-colorpicker'
+import colorPicker from '@caohenghu/vue-colorpicker';
+import vueTopprogress from 'vue-top-progress';
 
 import App from './App.vue';
 import router from './router';
@@ -21,6 +22,7 @@ Vue.config.productionTip = false;
 Vue.use(BootstrapVue);
 Vue.use(VCalendar);
 Vue.use(VueSweetalert2);
+Vue.use(vueTopprogress);
 
 Vue.component('VueSlider', VueSlider);
 Vue.component('datetime', Datetime);
