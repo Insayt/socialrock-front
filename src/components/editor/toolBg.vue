@@ -18,16 +18,25 @@
     <div v-show="activeTab === 'color'">
       <div class="controls-title">Выбрать цвет</div>
       <div class="color-dropdown">
-        <b-dropdown class="color-dropdown__dropdown">
+        <b-dropdown class="color-dropdown__dropdown" ref="colordropdown">
           <template v-slot:button-content>
             <div class="color-dropdown__color" :style="{ backgroundColor: userColor }"></div>
           </template>
           <b-dropdown-group>
             <color-picker
-                    theme="light"
-                    :color="userColor"
-                    @changeColor="changeColor"
+                theme="light"
+                :color="userColor"
+                @changeColor="changeColor"
             />
+            <b-button
+              block
+              variant="primary"
+              size="sm"
+              class="picker-button"
+              @click="changeColorSet"
+            >
+              Выбрать
+            </b-button>
           </b-dropdown-group>
         </b-dropdown>
       </div>
@@ -125,7 +134,7 @@
       <div class="controls-title">Готовые текстуры</div>
       <div class="pattern">
         <div class="pattern__item"
-             v-for="num in 4"
+             v-for="num in 20"
              :style="{ backgroundImage: `url(./patterns/${num}.png)` }"
              @click="changeBgPattern(`./patterns/${num}.png`)"
         ></div>
@@ -188,7 +197,11 @@
       changeColor(color) {
         const {r, g, b, a} = color.rgba;
         this.userColor = `rgba(${r}, ${g}, ${b}, ${a})`;
+      },
+
+      changeColorSet () {
         this.changeBg(this.userColor);
+        this.$refs['colordropdown'].hide(true)
       },
 
       changeBg(color) {
@@ -449,5 +462,9 @@
 
   .input-file {
     margin-bottom: 15px;
+  }
+
+  .picker-button {
+    border-radius: 0 0 5px 5px;
   }
 </style>

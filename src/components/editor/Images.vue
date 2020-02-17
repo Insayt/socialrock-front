@@ -43,7 +43,7 @@
       </div>
       <infinite-loading spinner="spiral":identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">
-          <span class="scroll-no-more">Все фото загружены</span>
+          <span class="scroll-no-more"></span>
         </div>
       </infinite-loading>
     </div>
@@ -171,15 +171,12 @@
       getStockImages() {
         this.imagePage = 1;
         this.infiniteId += 1;
-        this.$bus.$emit('loading:start');
         this.$store.dispatch('user/getStockImages', {
           category: this.selectedCategory,
           page: this.imagePage
         }).then(res => {
           this.stockImages = res.results;
-        }).finally(() => {
-          this.$bus.$emit('loading:stop');
-        })
+        });
       },
       changeBgImage(img) {
         this.$bus.$emit('editor:changeBgImage', img);

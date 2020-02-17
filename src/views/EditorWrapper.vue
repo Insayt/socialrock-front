@@ -120,6 +120,7 @@
     created () {
       this.$bus.$on('editor:changeBg', (color) => {
         this.canvas.backgroundColor = color;
+        this.canvas.backgroundImage = 0;
         this.canvas.renderAll();
       });
 
