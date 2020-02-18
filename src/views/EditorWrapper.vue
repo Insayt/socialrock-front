@@ -26,6 +26,21 @@
       </div>
       <div class="editor-sidebar-tools" >
         <bg v-if="activeTab === 'bg'"></bg>
+        <div v-if="activeTab === 'txt'">
+          <div class="text-tool">
+            <div class="text-tool__add">
+              <div class="text-tool__item _header" @click="addObject('title', 'Заголовок')">
+                Заголовок
+              </div>
+              <div class="text-tool__item _subheader" @click="addObject('title', 'Подзаголовок')">
+                Подзаголовок
+              </div>
+              <div class="text-tool__item _text" @click="addObject('title', 'Текст')">
+                Текст
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="editor-header">
@@ -105,7 +120,7 @@
 
   export default {
     components: {
-      bg
+      bg,
     },
     data: () => ({
       activeTab: 'bg',
@@ -251,6 +266,41 @@
     methods: {
       exportCanvas () {
         console.log(this.canvas.toObject());
+      },
+
+      addObject(type, data) {
+        if (type === 'title') {
+          let skew = 1;
+          let fw = 'normal';
+          if (data === 'Заголовок') {
+            skew = 3;
+            fw = 'bold';
+          }
+          if (data === 'Подзаголовок') {
+            skew = 2;
+          }
+          if (data === 'Текст') {
+            skew = 1;
+          }
+          let text = new fabric.IText(data, {
+            fontFamily: 'Arial',
+            editable: true,
+            lineHeight: 1.2,
+            lockUniScaling: true,
+            fontWeight: fw,
+            scaleX: skew,
+            scaleY: skew,
+            fill: '#A2A2A2',
+            shadow: {
+              color: '#8B8B8B',
+              blur: 0,
+              offsetX: 0,
+              offsetY: 0
+            },
+          });
+          this.canvas.add(text);
+          text.center();
+        }
       },
 
       async loadImage(url) {
@@ -473,6 +523,34 @@
 
     canvas {
       box-shadow: 0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);
+    }
+  }
+
+  .text-tool {
+    &__add {
+      text-align: center;
+    }
+
+    &__item {
+      margin-bottom: 15px;
+      cursor: pointer;
+      color: $color-font;
+
+      &:hover {
+        color: $color-font-gray;
+      }
+
+      &._header {
+        font-size: 36px;
+        font-weight: bold;
+      }
+      &._subheader {
+        font-size: 26px;
+      }
+      &._text {
+        font-size: 18px;
+      }
+
     }
   }
 </style>
