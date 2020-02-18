@@ -12,6 +12,8 @@ import 'vue-slider-component/theme/default.css';
 // import Sketch from 'vue-color/src/components/Sketch';
 import colorPicker from '@caohenghu/vue-colorpicker';
 import vueTopprogress from 'vue-top-progress';
+import Multiselect from 'vue-multiselect'
+import 'vue-multiselect/dist/vue-multiselect.min.css';
 
 import App from './App.vue';
 import router from './router';
@@ -23,6 +25,7 @@ Vue.use(BootstrapVue);
 Vue.use(VCalendar);
 Vue.use(VueSweetalert2);
 Vue.use(vueTopprogress);
+Vue.component('multiselect', Multiselect);
 
 Vue.component('VueSlider', VueSlider);
 Vue.component('datetime', Datetime);

@@ -7,12 +7,117 @@
     <link rel="icon" href="<%= BASE_URL %>favicon.ico">
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap&subset=cyrillic" rel="stylesheet">
     <title>socialrock-front</title>
+    <!--Шрифты без засечек-->
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Alegreya+Sans|Alegreya+Sans+SC|Andika|Arimo|Arsenal|Cuprum|Didact+Gothic|El+Messiri|Exo+2|Fira+Sans|Fira+Sans+Condensed|Fira+Sans+Extra+Condensed|IBM+Plex+Sans|Istok+Web|Jura|Marmelad|Montserrat|Montserrat+Alternates|Noto+Sans|Open+Sans|Open+Sans+Condensed:300|Oswald|PT+Sans|PT+Sans+Caption|PT+Sans+Narrow|Philosopher|Play|Roboto|Roboto+Condensed|Rubik|Rubik+Mono+One|Russo+One|Sawarabi+Gothic|Scada|Seymour+One|Source+Sans+Pro|Tenor+Sans|Ubuntu&subset=cyrillic');
+    </style>
+    <!--Шрифты с засечками-->
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Alegreya|Alegreya+SC|Alice|Cormorant|Cormorant+Garamond|Cormorant+Infant|Cormorant+SC|EB+Garamond|Gabriela|IBM+Plex+Serif|Ledger|Lora|Merriweather|Noto+Serif|Old+Standard+TT|Oranienbaum|PT+Serif|PT+Serif+Caption|Playfair+Display|Playfair+Display+SC|Podkova|Prata|Roboto+Slab|Spectral|Spectral+SC|Tinos|Vollkorn|Vollkorn+SC&subset=cyrillic');
+    </style>
+    <!--Шрифты декоративные-->
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Comfortaa|Forum|Kelly+Slab|Lobster|Poiret+One|Press+Start+2P|Prosto+One|Ruslan+Display|Stalinist+One|Underdog|Yeseva+One&subset=cyrillic');
+    </style>
+    <!--Шрифты рукописные-->
+    <style>
+      @import url('https://fonts.googleapis.com/css?family=Amatic+SC|Bad+Script|Caveat|Marck+Script|Neucha|Pacifico|Pangolin&subset=cyrillic');
+    </style>
   </head>
   <body>
     <noscript>
       <strong>We're sorry but socialrock-front doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
+    <!-- Хак для рендеринга шрифтов -->
+    <div style="position: absolute; left: -99999px;">
+      <p style="font-family: 'Alegreya Sans'">Привет мир</p>
+      <p style="font-family: 'Alegreya Sans SC'">Привет мир</p>
+      <p style="font-family: 'Andika'">Привет мир</p>
+      <p style="font-family: 'Arimo'">Привет мир</p>
+      <p style="font-family: 'Arsenal'">Привет мир</p>
+      <p style="font-family: 'Cuprum'">Привет мир</p>
+      <p style="font-family: 'Didact Gothic'">Привет мир</p>
+      <p style="font-family: 'El Messiri'">Привет мир</p>
+      <p style="font-family: 'Exo 2'">Привет мир</p>
+      <p style="font-family: 'Fira Sans'">Привет мир</p>
+      <p style="font-family: 'Fira Sans Condensed'">Привет мир</p>
+      <p style="font-family: 'Fira Sans Extra Condensed'">Привет мир</p>
+      <p style="font-family: 'IBM Plex Sans'">Привет мир</p>
+      <p style="font-family: 'Istok Web'">Привет мир</p>
+      <p style="font-family: 'Jura'">Привет мир</p>
+      <p style="font-family: 'Marmelad'">Привет мир</p>
+      <p style="font-family: 'Montserrat'">Привет мир</p>
+      <p style="font-family: 'Montserrat Alternates'">Привет мир</p>
+      <p style="font-family: 'Noto Sans'">Привет мир</p>
+      <p style="font-family: 'Open Sans'">Привет мир</p>
+      <p style="font-family: 'Open Sans Condensed'">Привет мир</p>
+      <p style="font-family: 'Oswald'">Привет мир</p>
+      <p style="font-family: 'Philosopher'">Привет мир</p>
+      <p style="font-family: 'Play'">Привет мир</p>
+      <p style="font-family: 'PT Sans'">Привет мир</p>
+      <p style="font-family: 'PT Sans Caption'">Привет мир</p>
+      <p style="font-family: 'PT Sans Narrow'">Привет мир</p>
+      <p style="font-family: 'Roboto'">Привет мир</p>
+      <p style="font-family: 'Roboto Condensed'">Привет мир</p>
+      <p style="font-family: 'Rubik'">Привет мир</p>
+      <p style="font-family: 'Rubik Mono One'">Привет мир</p>
+      <p style="font-family: 'Russo One'">Привет мир</p>
+      <p style="font-family: 'Scada'">Привет мир</p>
+      <p style="font-family: 'Seymour One'">Привет мир</p>
+      <p style="font-family: 'Source Sans Pro'">Привет мир</p>
+      <p style="font-family: 'Tenor Sans'">Привет мир</p>
+      <p style="font-family: 'Ubuntu'">Привет мир</p>
+
+      <p style="font-family: 'Alegreya'">Привет мир</p>
+      <p style="font-family: 'Alegreya SC'">Привет мир</p>
+      <p style="font-family: 'Alice'">Привет мир</p>
+      <p style="font-family: 'Cormorant'">Привет мир</p>
+      <p style="font-family: 'Cormorant Garamond'">Привет мир</p>
+      <p style="font-family: 'Cormorant Infant'">Привет мир</p>
+      <p style="font-family: 'Cormorant SC'">Привет мир</p>
+      <p style="font-family: 'EB Garamond'">Привет мир</p>
+      <p style="font-family: 'Gabriela'">Привет мир</p>
+      <p style="font-family: 'Ledger'">Привет мир</p>
+      <p style="font-family: 'Lora'">Привет мир</p>
+      <p style="font-family: 'Merriweather'">Привет мир</p>
+      <p style="font-family: 'Noto Serif'">Привет мир</p>
+      <p style="font-family: 'Old Standard TT'">Привет мир</p>
+      <p style="font-family: 'Oranienbaum'">Привет мир</p>
+      <p style="font-family: 'Playfair Display'">Привет мир</p>
+      <p style="font-family: 'Playfair Display SC'">Привет мир</p>
+      <p style="font-family: 'Podkova'">Привет мир</p>
+      <p style="font-family: 'Prata'">Привет мир</p>
+      <p style="font-family: 'PT Serif'">Привет мир</p>
+      <p style="font-family: 'PT Serif Caption'">Привет мир</p>
+      <p style="font-family: 'Roboto Slab'">Привет мир</p>
+      <p style="font-family: 'Spectral'">Привет мир</p>
+      <p style="font-family: 'Spectral SC'">Привет мир</p>
+      <p style="font-family: 'Tinos'">Привет мир</p>
+      <p style="font-family: 'Vollkorn'">Привет мир</p>
+      <p style="font-family: 'Vollkorn SC'">Привет мир</p>
+
+      <p style="font-family: 'Lobster'">Привет мир</p>
+      <p style="font-family: 'Comfortaa'">Привет мир</p>
+      <p style="font-family: 'Underdog'">Привет мир</p>
+      <p style="font-family: 'Poiret One'">Привет мир</p>
+      <p style="font-family: 'Press Start 2P'">Привет мир</p>
+      <p style="font-family: 'Prosto One'">Привет мир</p>
+      <p style="font-family: 'Forum'">Привет мир</p>
+      <p style="font-family: 'Yeseva One'">Привет мир</p>
+      <p style="font-family: 'Kelly Slab'">Привет мир</p>
+      <p style="font-family: 'Ruslan Display'">Привет мир</p>
+      <p style="font-family: 'Stalinist One'">Привет мир</p>
+
+      <p style="font-family: 'Pacifico'">Привет мир</p>
+      <p style="font-family: 'Amatic SC'">Привет мир</p>
+      <p style="font-family: 'Caveat'">Привет мир</p>
+      <p style="font-family: 'Marck Script'">Привет мир</p>
+      <p style="font-family: 'Neucha'">Привет мир</p>
+      <p style="font-family: 'Bad Script'">Привет мир</p>
+      <p style="font-family: 'Pangolin'">Привет мир</p>
+    </div>
+    <!-- /Хак для рендеринга шрифтов -->
     <!-- built files will be auto injected -->
   </body>
 </html>

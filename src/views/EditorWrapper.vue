@@ -1,30 +1,30 @@
 <template>
   <div class="editor">
-    <div class="editor-sidebar">
+    <div class="editor-sidebar" id='sidebar' ref="sidebar">
       <div class="editor-logo">
         <img src="../assets/img/logo.png">
         <div>SOCIAL<span>ROCK</span></div>
         <div class="editor-logo__budge">РЕДАКТОР</div>
       </div>
       <div class="editor-tabs">
-        <div class="editor-tabs__item" :class="{ _active: activeTab === 'bg' }" @click="activeTab = 'bg'">
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'bg' }" @click="changeEditorTab('bg')">
           <div class="editor-tabs__icon fa fa-image"></div>
           <div class="editor-tabs__title">Фон</div>
         </div>
-        <div class="editor-tabs__item" :class="{ _active: activeTab === 'txt' }" @click="activeTab = 'txt'">
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'txt' }" @click="changeEditorTab('txt')">
           <div class="editor-tabs__icon fa fa-font"></div>
           <div class="editor-tabs__title">Текст</div>
         </div>
-        <div class="editor-tabs__item" :class="{ _active: activeTab === 'image' }" @click="activeTab = 'image'">
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'image' }" @click="changeEditorTab('image')">
           <div class="editor-tabs__icon fa fa-smile"></div>
           <div class="editor-tabs__title">Графика</div>
         </div>
-        <div class="editor-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="activeTab = 'shape'">
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="changeEditorTab('shape')">
           <div class="editor-tabs__icon fa fa-shapes"></div>
           <div class="editor-tabs__title">Фигура</div>
         </div>
       </div>
-      <div class="editor-sidebar-tools" >
+      <div class="editor-sidebar-tools" v-if="activeTab">
         <bg v-if="activeTab === 'bg'"></bg>
         <div v-if="activeTab === 'txt'">
           <div class="text-tool">
@@ -42,6 +42,14 @@
           </div>
         </div>
       </div>
+      <div class="editor-sidebar-tools" v-if="!activeTab">
+        <txt
+          v-if="selection.type === 'i-text'"
+          v-bind="selection",
+          @changeProp="changeProp"
+        ></txt>
+      </div>
+
     </div>
     <div class="editor-header">
       <div class="editor-header__left">
@@ -117,10 +125,12 @@
   import { fabric } from '../fabric';
   import { cover } from 'intrinsic-scale';
   import bg from '../components/editor/toolBg';
+  import txt from '../components/editor/toolTxt';
 
   export default {
     components: {
       bg,
+      txt,
     },
     data: () => ({
       activeTab: 'bg',
@@ -131,6 +141,7 @@
         width: 1080,
         height: 1080
       },
+      selection: {} // Текущее выделение
     }),
     created () {
       this.$bus.$on('editor:changeBg', (color) => {
@@ -226,7 +237,7 @@
     },
     mounted() {
       // document.addEventListener('keydown', this.keyDown);
-      // document.addEventListener('click', this.clickEditor);
+      document.addEventListener('click', this.clickEditor);
       this.canvas = new fabric.Canvas('canvas', {
         preserveObjectStacking: true,
         width: this.canvasParams.width,
@@ -234,27 +245,27 @@
       });
       this.canvas.backgroundColor = 'white';
       this.canvas.renderAll();
-      // this.canvas.on('selection:updated', (e) => {
-      //   if (e.selected.length === 1) {
-      //     this.selection = {};
-      //     this.activeTab = null;
-      //     this.$nextTick(() => {
-      //       this.selection = e.selected[0];
-      //     });
-      //   }
-      // });
-      // this.canvas.on('selection:created', (e) => {
-      //   if (e.selected.length === 1) {
-      //     this.selection = {};
-      //     this.activeTab = null;
-      //     this.$nextTick(() => {
-      //       this.selection = e.selected[0];
-      //     });
-      //   }
-      // });
-      // this.canvas.on('selection:cleared', () => {
-      //   this.selection = {};
-      // });
+      this.canvas.on('selection:updated', (e) => {
+        if (e.selected.length === 1) {
+          this.selection = {};
+          this.activeTab = null;
+          this.$nextTick(() => {
+            this.selection = e.selected[0];
+          });
+        }
+      });
+      this.canvas.on('selection:created', (e) => {
+        if (e.selected.length === 1) {
+          this.selection = {};
+          this.activeTab = null;
+          this.$nextTick(() => {
+            this.selection = e.selected[0];
+          });
+        }
+      });
+      this.canvas.on('selection:cleared', () => {
+        this.selection = {};
+      });
 
       // this.canvas.on('object:modified', this.saveState);
       // this.canvas.on('object:added', this.saveState);
@@ -266,6 +277,30 @@
     methods: {
       exportCanvas () {
         console.log(this.canvas.toObject());
+      },
+      changeEditorTab (tab) {
+        this.activeTab = tab;
+        this.canvas.discardActiveObject();
+        this.canvas.renderAll();
+      },
+      clickEditor (e) {
+        if (!e.target.closest(`#${this.$refs.sidebar.id}`) && !e.target.closest(`#canvas-wrap-id`)) {
+          this.canvas.discardActiveObject();
+          this.canvas.renderAll();
+        }
+      },
+      changeProp (payload) {
+        if (payload.type === 'shadow.color') {
+          let shadow = this.selection.get('shadow');
+          shadow.color = payload.val;
+          this.selection.set('shadow', shadow);
+        } else {
+          this.selection.set(payload.type, payload.val);
+        }
+        this.canvas.renderAll();
+        if (payload.type !== 'fill' &&
+          payload.type !== 'shadow.color') {
+        }
       },
 
       addObject(type, data) {

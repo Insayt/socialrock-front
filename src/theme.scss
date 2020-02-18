@@ -618,6 +618,18 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
   //display: inline-flex;
   //border-color: $color-btn-bg !important;
 
+  &._small {
+    position: relative;
+    top: -4px;
+
+    .color-dropdown__color {
+      width: 32px;
+      height: 32px;
+      border: 3px solid $color-bg-9;
+      border-radius: 3px;
+    }
+  }
+
   &__color {
     width: 40px;
     height: 40px;
@@ -667,5 +679,68 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
   .scroll-no-more {
     color: $color-font-gray;
     font-size: 16px;
+  }
+}
+
+.font-select {
+  width: 100%;
+  font-family: -apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto;
+  margin-bottom: 15px;
+
+  &:hover {
+    .multiselect__tags {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .multiselect__tags {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    padding-top: 10px;
+  }
+  .multiselect__single {
+    word-break: break-all;
+    overflow: hidden;
+    max-height: 20px;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .multiselect__input {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+
+  .multiselect__content-wrapper {
+    width: 260px;
+    border: none;
+    border-top: 1px solid $color-bg-9;
+    margin-top: -1px;
+    font-size: 14px;
+    background: $color-bg-9;
+    color: rgba(255, 255, 255, 0.8);
+    border-radius: 0 0 4px 4px;
+  }
+
+  .multiselect__option--selected {
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+  }
+
+  .multiselect__option--group.multiselect__option--disabled {
+    font-size: 14px;
+    color:  rgba(255, 255, 255, 0.8) !important;
+    background: $color-bg-9 !important;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .multiselect__option--highlight {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
   }
 }
