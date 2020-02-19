@@ -103,8 +103,89 @@
         </b-dropdown>
       </div>
     </div>
+    <div class="controls-title">
+      Интервал между буквами
+      <span>{{ letterSpacing }}</span>
+    </div>
+    <div class="slider-wrap">
+      <vue-slider
+        v-model="letterSpacing"
+        :min="-10"
+        :max="20"
+        tooltip="none"
+        @change="changeProp('charSpacing', letterSpacing * 30)"
+      ></vue-slider>
+    </div>
 
-<!--    color-picker-dropdown(:color="fill", @change="changeColor", @hide="hidePicker")-->
+    <div class="controls-title">
+      Межстрочный интервал
+      <span>{{ vLineHeight }}</span>
+    </div>
+    <div class="slider-wrap">
+      <vue-slider
+        v-model="vLineHeight"
+        :min="0.8"
+        :max="3"
+        :interval="0.1"
+        tooltip="none"
+        @change="changeProp('lineHeight', vLineHeight)"
+      >
+      </vue-slider>
+    </div>
+
+    <div class="controls-title">
+      Тень
+      <div class="color-dropdown _small">
+        <b-dropdown class="color-dropdown__dropdown" ref="colordropdown">
+          <template v-slot:button-content>
+            <div class="color-dropdown__color" :style="{ backgroundColor: vShadow.color }"></div>
+          </template>
+          <b-dropdown-group>
+            <color-picker
+                    theme="light"
+                    :color="vShadow.color"
+                    @changeColor="changeShadowColor"
+            />
+            <b-button
+                    block
+                    variant="primary"
+                    size="sm"
+                    class="picker-button"
+                    @click="changeShadowColorSet"
+            >
+              Выбрать
+            </b-button>
+          </b-dropdown-group>
+        </b-dropdown>
+      </div>
+    </div>
+
+    <div class="shadows">
+      <div class="shadows__item">
+        <div class="controls-title">Отступ</div>
+        <vue-slider
+          v-model="vShadow.offsetX"
+          :min="0"
+          :max="25"
+          :interval="1"
+          tooltip="none"
+          @change="debounceChangeShadow"
+        >
+        </vue-slider>
+      </div>
+      <div class="shadows__item">
+        <div class="controls-title">Размытие</div>
+        <vue-slider
+          v-model="vShadow.blur"
+          :min="0"
+          :max="15"
+          :interval="1"
+          tooltip="none"
+          @change="debounceChangeShadow"
+        >
+        </vue-slider>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -277,6 +358,10 @@
         const {r, g, b, a} = color.rgba;
         this.userColor = `rgba(${r}, ${g}, ${b}, ${a})`;
       },
+      changeShadowColor(color) {
+        const {r, g, b, a} = color.rgba;
+        this.vShadow.color = `rgba(${r}, ${g}, ${b}, ${a})`;
+      },
       changeProp(type, val) {
         this.$emit('changeProp', {
           type,
@@ -296,18 +381,10 @@
         };
         this.changeProp('shadow', shadow);
       },
-      changeShadowColor(color) {
-        this.vShadow.color = color.rgba.toRgbaString();
-        this.changeProp('shadow.color', color.rgba.toRgbaString());
+      changeShadowColorSet(color) {
+        this.changeProp('shadow.color', this.vShadow.color);
+        this.$refs['colordropdown'].hide(true);
       },
-      checkPicker(e) {
-        if (this.isPickerShow && !e.target.closest('.color')) {
-          this.isPickerShow = false;
-        }
-      },
-      showPicker() {
-        this.isPickerShow = true;
-      }
     }
   }
 </script>
@@ -359,5 +436,20 @@
   }
   .icon-rotate {
     transform: rotate(180deg);
+  }
+  .slider-wrap {
+    margin-bottom: 15px;
+  }
+  .shadows {
+    &__item {
+      margin-bottom: 15px;
+    }
+    &__title {
+      font-size: 14px;
+      text-align: left;
+      margin-bottom: 10px;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.8);
+    }
   }
 </style>

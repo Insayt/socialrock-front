@@ -233,7 +233,8 @@
       ];
       events.forEach(e => {
         this.$bus.$off(e);
-      })
+      });
+      document.removeEventListener('click', this.clickEditor);
     },
     mounted() {
       // document.addEventListener('keydown', this.keyDown);
