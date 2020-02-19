@@ -10,6 +10,9 @@
       <div class="controls-tabs__item" :class="{ _active: activeTab === 'pattern' }" @click="activeTab = 'pattern'">
         <span>Картинка</span>
       </div>
+      <div class="controls-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="activeTab = 'shape'">
+        <span>Фигура</span>
+      </div>
     </div>
   </div>
 </template>

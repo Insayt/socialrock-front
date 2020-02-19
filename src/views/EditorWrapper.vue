@@ -11,6 +11,10 @@
           <div class="editor-tabs__icon fa fa-image"></div>
           <div class="editor-tabs__title">Фон</div>
         </div>
+        <div class="editor-tabs__item" :class="{ _active: activeTab === 'effect' }" @click="changeEditorTab('effect')">
+          <div class="editor-tabs__icon fa fa-magic"></div>
+          <div class="editor-tabs__title">Эффект</div>
+        </div>
         <div class="editor-tabs__item" :class="{ _active: activeTab === 'txt' }" @click="changeEditorTab('txt')">
           <div class="editor-tabs__icon fa fa-font"></div>
           <div class="editor-tabs__title">Текст</div>
@@ -18,10 +22,6 @@
         <div class="editor-tabs__item" :class="{ _active: activeTab === 'image' }" @click="changeEditorTab('image')">
           <div class="editor-tabs__icon fa fa-smile"></div>
           <div class="editor-tabs__title">Графика</div>
-        </div>
-        <div class="editor-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="changeEditorTab('shape')">
-          <div class="editor-tabs__icon fa fa-shapes"></div>
-          <div class="editor-tabs__title">Фигура</div>
         </div>
       </div>
       <div class="editor-sidebar-tools" v-if="activeTab">
@@ -42,6 +42,15 @@
           </div>
         </div>
         <t-image v-if="activeTab === 'image'"></t-image>
+        <div v-if="activeTab === 'effect'" class="effect">
+          <div v-if="!canvas.backgroundImage">
+            <div class="effect__icon">☝🏻</div>
+            <div class="effect__text">
+              Для использования эффектов, добавьте картинку в качестве фона
+            </div>
+          </div>
+          <effect v-if="canvas.backgroundImage"></effect>
+        </div>
       </div>
       <div class="editor-sidebar-tools" v-if="!activeTab">
         <txt
@@ -128,12 +137,14 @@
   import bg from '../components/editor/toolBg';
   import txt from '../components/editor/toolTxt';
   import tImage from '../components/editor/toolImage';
+  import effect from '../components/editor/toolEffect';
 
   export default {
     components: {
       bg,
       txt,
       tImage,
+      effect
     },
     data: () => ({
       activeTab: 'bg',
@@ -144,6 +155,7 @@
         width: 1080,
         height: 1080
       },
+      canvasBgImage: null,
       selection: {} // Текущее выделение
     }),
     created () {
@@ -218,6 +230,7 @@
         img.onload = () => {
           let { width, height, x, y } = cover(this.canvas.width, this.canvas.height, img.width, img.height);
           let nsgImage = new fabric.Image(img);
+          this.canvasBgImage = nsgImage; // Сохраним пикчу для фильтров
           nsgImage.width = width;
           nsgImage.height = height;
           nsgImage.set({ left: x, top: y });
@@ -605,6 +618,21 @@
         font-size: 18px;
       }
 
+    }
+  }
+
+  .effect {
+
+    &__icon {
+      font-size: 30px;
+      margin-bottom: 10px;
+    }
+
+    &__text {
+      border: 1px solid $color-font-gray;
+      color: $color-font-gray;
+      padding: 10px;
+      border-radius: 10px;
     }
   }
 </style>
