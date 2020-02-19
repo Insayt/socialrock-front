@@ -16,7 +16,7 @@
              :disabled="imageLoading"
       />
     </label>
-    <div class="controls-title">Картинки проекта</div>
+    <div class="controls-title" v-if="currentProject.patterns.length">Картинки проекта</div>
     <div class="image">
       <div class="image__item"
            v-for="img in currentProject.images"

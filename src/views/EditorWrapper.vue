@@ -41,6 +41,7 @@
             </div>
           </div>
         </div>
+        <t-image v-if="activeTab === 'image'"></t-image>
       </div>
       <div class="editor-sidebar-tools" v-if="!activeTab">
         <txt
@@ -126,11 +127,13 @@
   import { cover } from 'intrinsic-scale';
   import bg from '../components/editor/toolBg';
   import txt from '../components/editor/toolTxt';
+  import tImage from '../components/editor/toolImage';
 
   export default {
     components: {
       bg,
       txt,
+      tImage,
     },
     data: () => ({
       activeTab: 'bg',
