@@ -244,6 +244,15 @@
         width: this.canvasParams.width,
         height: this.canvasParams.height
       });
+
+
+      // this.canvas.add(new fabric.Circle({ radius: 30, fill: '#f55', top: 100, left: 100 }));
+      //
+      // this.canvas.selectionColor = 'rgba(0,255,0,0.3)';
+      // this.canvas.selectionBorderColor = 'red';
+      // this.canvas.selectionLineWidth = 5;
+      // window.__canvases.push(this.canvas);
+
       this.canvas.backgroundColor = 'white';
       this.canvas.renderAll();
       this.canvas.on('selection:updated', (e) => {
@@ -268,11 +277,17 @@
         this.selection = {};
       });
 
+      this.canvas.on('object:added', function (e) {
+        e.target.cornerStyle = 'circle';
+        e.target.transparentCorners = false;
+      });
+
       // this.canvas.on('object:modified', this.saveState);
       // this.canvas.on('object:added', this.saveState);
       // this.canvas.on('object:removed', this.saveState);
 
       // this.saveState();
+
       this.fitCanvas();
     },
     methods: {

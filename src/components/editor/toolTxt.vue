@@ -136,7 +136,7 @@
     <div class="controls-title">
       Тень
       <div class="color-dropdown _small">
-        <b-dropdown class="color-dropdown__dropdown" ref="colordropdown">
+        <b-dropdown class="color-dropdown__dropdown" ref="colordropdownshadow">
           <template v-slot:button-content>
             <div class="color-dropdown__color" :style="{ backgroundColor: vShadow.color }"></div>
           </template>
@@ -383,7 +383,7 @@
       },
       changeShadowColorSet(color) {
         this.changeProp('shadow.color', this.vShadow.color);
-        this.$refs['colordropdown'].hide(true);
+        this.$refs['colordropdownshadow'].hide(true);
       },
     }
   }
