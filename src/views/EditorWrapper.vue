@@ -239,6 +239,16 @@
         };
         img.src = dataUrl;
       });
+
+      this.$bus.$on('editor:applyFilter', async (filter, args) => {
+        this.canvasBgImage.filters = [];
+        if (filter !== 'none') {
+          let f = new fabric.Image.filters[filter](args);
+          this.canvasBgImage.filters.push(f);
+        }
+        await this.canvasBgImage.applyFilters();
+        this.canvas.renderAll();
+      });
     },
     destroyed() {
       let events = [
@@ -308,7 +318,17 @@
     },
     methods: {
       exportCanvas () {
-        console.log(this.canvas.toObject());
+        let url = this.canvas.toDataURL({
+          format: 'png',
+          quality: 0.8
+        });
+        const downloadLink = document.createElement('a');
+        document.body.appendChild(downloadLink);
+
+        downloadLink.href = url;
+        downloadLink.target = '_self';
+        downloadLink.download = '123123.png';
+        downloadLink.click();
       },
       changeEditorTab (tab) {
         this.activeTab = tab;
