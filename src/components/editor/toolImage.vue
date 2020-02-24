@@ -1,17 +1,31 @@
 <template>
   <div>
     <div class="controls-tabs">
-      <div class="controls-tabs__item" :class="{ _active: activeTab === 'color' }" @click="activeTab = 'color'">
-        <span>Иконка</span>
+<!--      <div class="controls-tabs__item" :class="{ _active: activeTab === 'color' }" @click="activeTab = 'color'">-->
+<!--        <span>Иконка</span>-->
+<!--      </div>-->
+      <div class="controls-tabs__item" :class="{ _active: activeTab === 'stickers' }" @click="activeTab = 'stickers'">
+        <span>Стикеры</span>
       </div>
-      <div class="controls-tabs__item" :class="{ _active: activeTab === 'gradient' }" @click="activeTab = 'gradient'">
-        <span>Стикер</span>
-      </div>
-      <div class="controls-tabs__item" :class="{ _active: activeTab === 'pattern' }" @click="activeTab = 'pattern'">
+      <div class="controls-tabs__item" :class="{ _active: activeTab === 'img' }" @click="activeTab = 'img'">
         <span>Картинка</span>
       </div>
       <div class="controls-tabs__item" :class="{ _active: activeTab === 'shape' }" @click="activeTab = 'shape'">
         <span>Фигура</span>
+      </div>
+    </div>
+    <div class="editor-sidebar-tools">
+      <div v-if="activeTab === 'stickers'">
+        <div v-for="s in stickers">
+          <div class="controls-title">{{ s.name }}</div>
+          <div class="sticker">
+            <div class="sticker__item"
+                 v-for="img in s.count"
+                 :style="{ backgroundImage: `url(./stickers/${s.folder}/${img}.png)` }"
+                 @click="addSticker(`./stickers/${s.folder}/${img}.png`)"
+            ></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -20,8 +34,25 @@
 <script>
   export default {
     data: () => ({
-      activeTab: 'color',
+      activeTab: 'stickers',
+      stickers: [
+        {
+          name: 'Мемы',
+          folder: 'memes',
+          count: 10,
+        },
+        {
+          name: 'Смайлы',
+          folder: 'smile',
+          count: 32,
+        },
+      ]
     }),
+    methods: {
+      addSticker (url) {
+        this.$bus.$emit('editor:addImage', url);
+      }
+    }
   }
 </script>
 
@@ -48,6 +79,41 @@
         color: $color-primary;
       }
     }
+  }
+
+  .sticker {
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    margin-bottom: 15px;
+
+    &__item {
+      width: 125px;
+      height: 125px;
+      border-radius: 2px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      background-color: $color-bg-1;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+
+      &:nth-child(2n) {
+        margin-right: 0;
+      }
+    }
+  }
+
+  .controls-title {
+    text-align: left;
+    color: $color-font-gray;
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
   }
 
 </style>

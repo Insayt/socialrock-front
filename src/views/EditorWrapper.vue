@@ -58,25 +58,43 @@
           v-bind="selection",
           @changeProp="changeProp"
         ></txt>
+        <div v-if="selection.type === 'image'">
+          111
+        </div>
       </div>
 
     </div>
     <div class="editor-header">
       <div class="editor-header__left">
-        <b-button variant="black">
-          <i class="fas fa-undo"></i>
-        </b-button>
-        <b-button variant="black">
-          <i class="fas fa-redo"></i>
-        </b-button>
-        <b-button variant="black">
+<!--        <b-button variant="black">-->
+<!--          <i class="fas fa-undo"></i>-->
+<!--        </b-button>-->
+<!--        <b-button variant="black">-->
+<!--          <i class="fas fa-redo"></i>-->
+<!--        </b-button>-->
+        <b-button variant="black"
+                  :disabled="!selection.type"
+                  v-b-tooltip.hover
+                  title="Удалить объект"
+                  @click="deleteObject"
+        >
           <i class="fas fa-trash"></i>
         </b-button>
-        <b-button variant="black" class="_align-v">
+        <b-button variant="black" class="_align-v"
+                  :disabled="!selection.type"
+                  v-b-tooltip.hover
+                  title="Выравнивание по вертикали"
+                  @click="centerObject('v')"
+        >
           <i class="fas fa-arrow-down"></i>
           <i class="fas fa-arrow-up"></i>
         </b-button>
-        <b-button variant="black" class="_align-h">
+        <b-button variant="black" class="_align-h"
+                  :disabled="!selection.type"
+                  v-b-tooltip.hover
+                  title="Выравнивание по горизонтали"
+                  @click="centerObject('h')"
+        >
           <i class="fas fa-arrow-right"></i>
           <i class="fas fa-arrow-left"></i>
         </b-button>
@@ -240,6 +258,19 @@
         img.src = dataUrl;
       });
 
+      this.$bus.$on('editor:addImage',  (dataUrl, options = {}) => {
+        this.$bus.$emit('loading:start');
+        let img = new Image();
+        img.setAttribute('crossOrigin', 'anonymous');
+        img.onload = () => {
+          let nsgImage = new fabric.Image(img);
+          this.canvas.add(nsgImage);
+          this.canvas.renderAll();
+          this.$bus.$emit('loading:stop');
+        };
+        img.src = dataUrl;
+      });
+
       this.$bus.$on('editor:applyFilter', async (filter, args) => {
         this.canvasBgImage.filters = [];
         if (filter !== 'none') {
@@ -255,6 +286,8 @@
         'editor:changeBg',
         'editor:changeBgGradient',
         'editor:changeBgPattern',
+        'editor:applyFilter',
+        'editor:addImage',
         'changeBgImage'
       ];
       events.forEach(e => {
@@ -317,6 +350,24 @@
       this.fitCanvas();
     },
     methods: {
+      deleteObject () {
+        let objects = this.canvas.getActiveObjects() || [];
+        if (objects.length) {
+          objects.forEach(obj => {
+            this.canvas.remove(obj);
+          });
+          this.canvas.discardActiveObject();
+        }
+        this.$root.$emit('bv::hide::tooltip');
+      },
+      centerObject (type) {
+        if (type === 'v') {
+          this.canvas.getActiveObject().centerV()
+        } else {
+          this.canvas.getActiveObject().centerH()
+        }
+        this.$root.$emit('bv::hide::tooltip');
+      },
       exportCanvas () {
         let url = this.canvas.toDataURL({
           format: 'png',
@@ -349,10 +400,10 @@
         } else {
           this.selection.set(payload.type, payload.val);
         }
-        this.canvas.renderAll();
         if (payload.type !== 'fill' &&
           payload.type !== 'shadow.color') {
         }
+        this.canvas.renderAll();
       },
 
       addObject(type, data) {
@@ -377,6 +428,9 @@
             fontWeight: fw,
             scaleX: skew,
             scaleY: skew,
+            // strokeWidth: 2,
+            // paintFirst: "stroke",
+            // stroke: 'rgba(0, 0, 0, 1)',
             fill: '#A2A2A2',
             shadow: {
               color: '#8B8B8B',
