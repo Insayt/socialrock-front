@@ -58,9 +58,11 @@
           v-bind="selection",
           @changeProp="changeProp"
         ></txt>
-        <div v-if="selection.type === 'image'">
-          111
-        </div>
+        <graphic
+          v-if="selection.type === 'image'"
+          v-bind="selection"
+          @changeProp="changeProp"
+        ></graphic>
       </div>
 
     </div>
@@ -74,7 +76,7 @@
 <!--        </b-button>-->
         <b-button variant="black"
                   :disabled="!selection.type"
-                  v-b-tooltip.hover
+                  v-b-tooltip.hove
                   title="Удалить объект"
                   @click="deleteObject"
         >
@@ -156,18 +158,21 @@
   import txt from '../components/editor/toolTxt';
   import tImage from '../components/editor/toolImage';
   import effect from '../components/editor/toolEffect';
+  import graphic from '../components/editor/toolGraphics';
 
   export default {
     components: {
       bg,
       txt,
       tImage,
-      effect
+      effect,
+      graphic
     },
     data: () => ({
       activeTab: 'bg',
       canvasAlignLeft: false,
       fitValue: 1,
+      imageOpacity: 0,
       canvas: null,
       canvasParams: {
         width: 1080,
@@ -280,6 +285,30 @@
         await this.canvasBgImage.applyFilters();
         this.canvas.renderAll();
       });
+
+      this.$bus.$on('editor:rotateObject', async angle => {
+        this.selection.rotate(this.selection.angle + angle);
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:rotateObject', async angle => {
+        this.selection.rotate(this.selection.angle + Number());
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:flipObject', async type => {
+        if (type === 'x') {
+          this.selection.toggle('flipX');
+        } else {
+          this.selection.toggle('flipY');
+        }
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:changeOpacity', async val => {
+        this.selection.set({ opacity: val / 100 });
+        this.canvas.renderAll();
+      });
     },
     destroyed() {
       let events = [
@@ -288,7 +317,10 @@
         'editor:changeBgPattern',
         'editor:applyFilter',
         'editor:addImage',
-        'changeBgImage'
+        'changeBgImage',
+        'editor:rotateObject',
+        'editor:flipObject',
+        'editor:changeOpacity',
       ];
       events.forEach(e => {
         this.$bus.$off(e);
@@ -400,12 +432,8 @@
         } else {
           this.selection.set(payload.type, payload.val);
         }
-        if (payload.type !== 'fill' &&
-          payload.type !== 'shadow.color') {
-        }
         this.canvas.renderAll();
       },
-
       addObject(type, data) {
         if (type === 'title') {
           let skew = 1;
@@ -477,6 +505,17 @@
 
 <style scoped lang="scss">
   @import '../variables';
+
+  .controls-title {
+    text-align: left;
+    color: $color-font-gray;
+    font-size: 16px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
 
   .editor {
     position: fixed;

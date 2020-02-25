@@ -33,5 +33,4 @@ fabric.IText.prototype.updateTextareaPosition = function() {
 //   },
 // });
 
-console.log(fabric.Image.filters);
 export { fabric };
