@@ -100,6 +100,22 @@
           <i class="fas fa-arrow-right"></i>
           <i class="fas fa-arrow-left"></i>
         </b-button>
+        <b-button variant="black"
+                  :disabled="!selection.type"
+                  v-b-tooltip.hover
+                  title="Опустить слой"
+                  @click="moveLayer('down')"
+        >
+          <i class="far fa-arrow-alt-circle-up _rotate"></i>
+        </b-button>
+        <b-button variant="black"
+                  :disabled="!selection.type"
+                  v-b-tooltip.hover
+                  title="Поднять слой"
+                  @click="moveLayer('top')"
+        >
+          <i class="far fa-arrow-alt-circle-up"></i>
+        </b-button>
       </div>
 
       <div class="editor-header__right">
@@ -389,6 +405,14 @@
             this.canvas.remove(obj);
           });
           this.canvas.discardActiveObject();
+        }
+        this.$root.$emit('bv::hide::tooltip');
+      },
+      moveLayer (type) {
+        if (type === 'top') {
+          this.canvas.bringToFront(this.selection);
+        } else {
+          this.canvas.sendToBack(this.selection);
         }
         this.$root.$emit('bv::hide::tooltip');
       },
@@ -747,5 +771,9 @@
       padding: 10px;
       border-radius: 10px;
     }
+  }
+
+  ._rotate {
+    transform: rotate(180deg);
   }
 </style>

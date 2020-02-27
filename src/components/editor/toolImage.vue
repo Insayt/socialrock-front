@@ -27,12 +27,19 @@
           </div>
         </div>
       </div>
+      <div v-if="activeTab === 'img'">
+        <images type="graphic"></images>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Images from './Images';
   export default {
+    components: {
+      Images
+    },
     data: () => ({
       activeTab: 'stickers',
       stickers: [

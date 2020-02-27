@@ -56,6 +56,9 @@
     components: {
       InfiniteLoading
     },
+    props: [
+      'type'
+    ],
     data: () => ({
       loading: false,
       imageLoading: false,
@@ -179,7 +182,11 @@
         });
       },
       changeBgImage(img) {
-        this.$bus.$emit('editor:changeBgImage', img);
+        if (this.type === 'graphic') {
+          this.$bus.$emit('editor:addImage', img);
+        } else {
+          this.$bus.$emit('editor:changeBgImage', img);
+        }
       },
       handleImageUpload() {
         this.imageLoading = true;
