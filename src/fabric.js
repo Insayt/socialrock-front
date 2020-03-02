@@ -7,7 +7,7 @@ fabric.IText.prototype.updateTextareaPosition = function() {
   }
 };
 
-// Тут подом можно напедалить фильтров аля инстаграм или caman.js
+// Тут потом можно напедалить фильтров аля инстаграм или caman.js
 // fabric.Image.filters.Greenify = fabric.util.createClass({
 //
 //   type: 'greenify',

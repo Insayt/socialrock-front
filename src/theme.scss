@@ -651,6 +651,12 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
     height: 40px;
     background: transparent !important;
     border: none;
+    display: flex;
+    justify-content: flex-end;
+
+    &:hover {
+      box-shadow: none;
+    }
   }
 }
 

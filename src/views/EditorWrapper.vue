@@ -59,7 +59,7 @@
           @changeProp="changeProp"
         ></txt>
         <graphic
-          v-if="selection.type === 'image'"
+          v-if="['image', 'rect', 'circle', 'triangle', 'ellipse'].includes(selection.type)"
           v-bind="selection"
           @changeProp="changeProp"
         ></graphic>
@@ -325,6 +325,68 @@
         this.selection.set({ opacity: val / 100 });
         this.canvas.renderAll();
       });
+
+      this.$bus.$on('editor:changeFill', async val => {
+        this.selection.set({ fill: val });
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:changeStroke', async val => {
+        this.selection.set({ strokeWidth: val });
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:changeStrokeColor', async color => {
+        this.selection.set({ stroke: color });
+        this.canvas.renderAll();
+      });
+
+      this.$bus.$on('editor:addShape', async (type) => {
+        let object;
+        if (type === 'rect') {
+          object = new fabric.Rect({
+            width: 300,
+            height: 300,
+            fill: '#4968AC',
+            opacity: 1,
+            left: 10,
+            top: 10,
+            stroke : 'black',
+            strokeWidth : 0
+          });
+        } else if (type === 'circle') {
+          object = new fabric.Circle({
+            radius: 150,
+            fill: '#4968AC',
+            left: 10,
+            top: 10,
+            stroke : 'black',
+            strokeWidth : 0
+          });
+        } else if (type === 'triangle') {
+          object = new fabric.Triangle({
+            width: 300,
+            height: 300,
+            fill: '#4968AC',
+            left: 10,
+            top: 10,
+            stroke : 'black',
+            strokeWidth : 0
+          });
+        } else if (type === 'ellipse') {
+          object = new fabric.Ellipse({
+            rx: 150,
+            ry: 100,
+            fill: '#4968AC',
+            left: 10,
+            top: 10,
+            stroke : 'black',
+            strokeWidth : 0
+          });
+        }
+        this.canvas.add(object);
+        this.canvas.renderAll();
+      });
     },
     destroyed() {
       let events = [
@@ -337,6 +399,10 @@
         'editor:rotateObject',
         'editor:flipObject',
         'editor:changeOpacity',
+        'editor:addShape',
+        'editor:changeFill',
+        'editor:changeStrokeColor',
+        'editor:changeStroke'
       ];
       events.forEach(e => {
         this.$bus.$off(e);

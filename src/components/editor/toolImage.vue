@@ -30,6 +30,15 @@
       <div v-if="activeTab === 'img'">
         <images type="graphic"></images>
       </div>
+      <div v-if="activeTab === 'shape'">
+        <div class="sticker">
+          <div class="sticker__item _shape"
+               v-for="shape in shapes"
+               :style="{ backgroundImage: `url(./shapes/${shape}.svg)` }"
+               @click="$bus.$emit('editor:addShape', shape)"
+          ></div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -53,7 +62,8 @@
           folder: 'smile',
           count: 32,
         },
-      ]
+      ],
+      shapes: ['rect', 'circle', 'triangle', 'ellipse']
     }),
     methods: {
       addSticker (url) {
@@ -108,6 +118,10 @@
 
       &:nth-child(2n) {
         margin-right: 0;
+      }
+
+      &._shape {
+        background-size: 80%
       }
     }
   }
