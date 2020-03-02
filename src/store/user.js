@@ -294,6 +294,22 @@ export default {
           return res.data;
         })
     },
+    saveDesign ({ state, commit }, { project_id, object, format }) {
+      return axios.post(`${config.apiUrl}/design/save`, {
+        project_id,
+        object,
+        format
+      })
+        .then(res => {
+          return res.data;
+        })
+    },
+    getDesign ({ state, commit }, { project_id }) {
+      return axios.get(`${config.apiUrl}/design/project/${project_id}`)
+        .then(res => {
+          return res.data;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

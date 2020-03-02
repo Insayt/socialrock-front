@@ -119,10 +119,18 @@
       </div>
 
       <div class="editor-header__right">
-        <b-button variant="primary">
+        <b-button variant="primary"
+                  v-b-tooltip.hover
+                  title="Сохранить дизайн"
+                  @click="saveDesign"
+        >
           <i class="fas fa-save"></i>
         </b-button>
-        <b-button variant="black" @click="exportCanvas">
+        <b-button variant="black"
+                  v-b-tooltip.hover
+                  title="Скачать изображение"
+                  @click="exportCanvas"
+        >
           <i class="fas fa-download"></i>
         </b-button>
         <b-button variant="black" @click="$router.push({ name: 'editor' })">
@@ -185,18 +193,21 @@
       graphic
     },
     data: () => ({
+      format: 'square',
       activeTab: 'bg',
       canvasAlignLeft: false,
       fitValue: 1,
       imageOpacity: 0,
       canvas: null,
-      canvasParams: {
-        width: 1080,
-        height: 1080
-      },
+      canvasParams: {},
       canvasBgImage: null,
       selection: {} // Текущее выделение
     }),
+    computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
+    },
     created () {
       this.$bus.$on('editor:changeBg', (color) => {
         this.canvas.backgroundColor = color;
@@ -412,6 +423,28 @@
     mounted() {
       // document.addEventListener('keydown', this.keyDown);
       document.addEventListener('click', this.clickEditor);
+
+      // Обрабатываем вариант канваса
+      let from = this.$route.query.from;
+
+      if (!from || from === 'square') {
+        this.canvasParams.width = 1080;
+        this.canvasParams.height = 1080;
+        this.format = 'square';
+      } else if (from === 'horizontal') {
+        this.canvasParams.width = 1080;
+        this.canvasParams.height = 608;
+        this.format = 'horizontal';
+      } else if (from === 'vertical') {
+        this.canvasParams.width = 1080;
+        this.canvasParams.height = 1350;
+        this.format = 'vertical';
+      } else if (from === 'stories') {
+        this.canvasParams.width = 1080;
+        this.canvasParams.height = 1920;
+        this.format = 'stories';
+      }
+
       this.canvas = new fabric.Canvas('canvas', {
         preserveObjectStacking: true,
         width: this.canvasParams.width,
@@ -490,6 +523,18 @@
         }
         this.$root.$emit('bv::hide::tooltip');
       },
+      generateName () {
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      },
+      saveDesign () {
+        this.$store.dispatch('user/saveDesign', {
+          project_id: this.currentProject._id,
+          object: this.canvas.toObject(),
+          format: this.format
+        }).then(res => {
+          console.log(res);
+        })
+      },
       exportCanvas () {
         let url = this.canvas.toDataURL({
           format: 'png',
@@ -500,7 +545,7 @@
 
         downloadLink.href = url;
         downloadLink.target = '_self';
-        downloadLink.download = '123123.png';
+        downloadLink.download = `${this.generateName()}.jpg`;
         downloadLink.click();
       },
       changeEditorTab (tab) {
@@ -751,7 +796,7 @@
 
       &._align-left {
         transform-origin: left top;
-        margin-left: -40px;
+        margin-left: -130px;
       }
       /*transform: scale(0.5);*/
     }

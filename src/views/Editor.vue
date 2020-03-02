@@ -19,21 +19,35 @@
       <div class="editor__title">
         👷 Создайте дизайн с нуля
       </div>
-      <div class="editor__items" @click="$router.push({ name: 'editor-create' })">
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
+      <div class="editor__items">
+        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'square' } })">
+          <div class="editor-item__img">
+            <div class="editor-item__type _square"></div>
+          </div>
           <div class="editor-item__title">
             Квадратный
           </div>
         </div>
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
+        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'horizontal' } })">
+          <div class="editor-item__img">
+            <div class="editor-item__type _horizonral"></div>
+          </div>
           <div class="editor-item__title">
             Горизонтальный
           </div>
         </div>
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
+        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'vertical' } })">
+          <div class="editor-item__img">
+            <div class="editor-item__type _vertical"></div>
+          </div>
+          <div class="editor-item__title">
+            Вертикальный
+          </div>
+        </div>
+        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'stories' } })">
+          <div class="editor-item__img">
+            <div class="editor-item__type _stories"></div>
+          </div>
           <div class="editor-item__title">
             Stories
           </div>
@@ -124,10 +138,34 @@
       margin-bottom: 10px;
       transition: all 0.2s;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     &__title {
       font-weight: normal;
       font-size: 16px;
+    }
+
+    &__type {
+      background-color: white;
+
+      &._square {
+        width: 150px;
+        height: 150px;
+      }
+      &._horizonral {
+        width: 200px;
+        height: 100px;
+      }
+      &._vertical {
+        width: 100px;
+        height: 150px;
+      }
+      &._stories {
+        width: 100px;
+        height: 200px;
+      }
     }
   }
 </style>
