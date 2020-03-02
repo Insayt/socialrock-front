@@ -530,14 +530,37 @@
         this.$store.dispatch('user/saveDesign', {
           project_id: this.currentProject._id,
           object: this.canvas.toObject(),
-          format: this.format
+          format: this.format,
         }).then(res => {
-          console.log(res);
+          let url = this.canvas.toDataURL({
+            format: 'jpg',
+            quality: 0.8
+          });
+          fetch(url)
+            .then(res => res.blob())
+            .then((blob) => {
+              let fd = new FormData();
+              fd.append('file', blob);
+              this.$store.dispatch('user/saveDesignImage', {
+                project_id: this.currentProject._id,
+                design_id: res._id,
+                file: fd
+              }).then(() => {
+                this.$swal({
+                  title: `Дизайн сохранен`,
+                  type: 'success',
+                  toast: true,
+                  position: 'top-end',
+                  showConfirmButton: false,
+                  timer: 5000
+                });
+              })
+            })
         })
       },
       exportCanvas () {
         let url = this.canvas.toDataURL({
-          format: 'png',
+          format: 'jpg',
           quality: 0.8
         });
         const downloadLink = document.createElement('a');

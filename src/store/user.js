@@ -294,12 +294,19 @@ export default {
           return res.data;
         })
     },
-    saveDesign ({ state, commit }, { project_id, object, format }) {
+    saveDesign ({ state, commit }, { project_id, object, format, file }) {
       return axios.post(`${config.apiUrl}/design/save`, {
         project_id,
         object,
-        format
+        format,
+        file
       })
+        .then(res => {
+          return res.data;
+        })
+    },
+    saveDesignImage ({ state, commit }, { project_id, design_id, file }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/upload/design/${design_id}`, file)
         .then(res => {
           return res.data;
         })
