@@ -273,11 +273,12 @@ export default {
           commit('setProjectData', res.data);
         })
     },
-    getStockImages ({ state, commit }, { category, page }) {
+    getStockImages ({ state, commit }, { category, page, orientation }) {
       return axios.get(`${config.apiUrl}/resource/stock-images`, {
         params: {
           category,
-          page
+          page,
+          orientation
         }
       } )
         .then(res => {
@@ -294,9 +295,17 @@ export default {
           return res.data;
         })
     },
-    saveDesign ({ state, commit }, { project_id, object, format, file }) {
-      return axios.post(`${config.apiUrl}/design/save`, {
-        project_id,
+    createDesign ({ state, commit }, { project_id, format }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/design/create`, {
+        format,
+      })
+        .then(res => {
+          commit('setProjectData', res.data.project);
+          return res.data;
+        })
+    },
+    saveDesign ({ state, commit }, { design_id, object, format, file }) {
+      return axios.post(`${config.apiUrl}/design/${design_id}/save`, {
         object,
         format,
         file
@@ -308,12 +317,22 @@ export default {
     saveDesignImage ({ state, commit }, { project_id, design_id, file }) {
       return axios.post(`${config.apiUrl}/project/${project_id}/upload/design/${design_id}`, file)
         .then(res => {
+          commit('setProjectData', res.data);
           return res.data;
         })
     },
-    getDesign ({ state, commit }, { project_id }) {
-      return axios.get(`${config.apiUrl}/design/project/${project_id}`)
+    getDesign ({ state, commit }, { design_id }) {
+      return axios.get(`${config.apiUrl}/design/${design_id}`)
         .then(res => {
+          return res.data;
+        })
+    },
+    deleteDesign ({ state, commit }, { design_id }) {
+      return axios.post(`${config.apiUrl}/design/delete`, {
+        design_id: design_id
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
           return res.data;
         })
     },

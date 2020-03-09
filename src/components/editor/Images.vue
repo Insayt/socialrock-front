@@ -34,6 +34,28 @@
     </div>
     <div class="controls-title">Фотосток <span class="badge badge-success">unsplash</span></div>
     <b-form-select class="image-select" v-model="selectedCategory" :options="options" @change="getStockImages"></b-form-select>
+    <div class="orientation">
+      <div class="orientation__title">
+        Ориентация
+      </div>
+      <div class="orientation__items">
+        <i class="fas fa-square"
+           :class="{ _active: orientation === 'squarish' }"
+           v-b-tooltip.hover title="Квадратная"
+           @click="setOrientation('squarish')"
+        ></i>
+        <i class="fas fa-rectangle-portrait"
+           :class="{ _active: orientation === 'portrait' }"
+           v-b-tooltip.hover title="Портретная"
+           @click="setOrientation('portrait')"
+        ></i>
+        <i class="fas fa-rectangle-landscape"
+           :class="{ _active: orientation === 'landscape' }"
+           v-b-tooltip.hover title="Горизонтальная"
+           @click="setOrientation('landscape')"
+        ></i>
+      </div>
+    </div>
     <div class="image">
       <div class="image__item"
            v-for="img in stockImages"
@@ -41,7 +63,7 @@
            @click="changeBgImage(img.urls.regular)"
       >
       </div>
-      <infinite-loading spinner="spiral":identifier="infiniteId" @infinite="infiniteHandler">
+      <infinite-loading spinner="spiral" :identifier="infiniteId" @infinite="infiniteHandler">
         <div slot="no-more">
           <span class="scroll-no-more"></span>
         </div>
@@ -66,6 +88,7 @@
       stockImages: [],
       imagePage: 1, // Страница поиска
       infiniteId: Date.now(),
+      orientation: 'squarish',
       options: [
         {value: 'pop', text: 'Выберите категорию'},
         {value: 'business', text: 'Бизнес'},
@@ -157,11 +180,20 @@
       this.getStockImages();
     },
     methods: {
+      setOrientation (orientation) {
+        if (this.orientation === orientation) {
+          this.orientation = null;
+        } else {
+          this.orientation = orientation;
+        }
+        this.getStockImages();
+      },
       infiniteHandler ($state) {
         this.imagePage += 1;
         this.$store.dispatch('user/getStockImages', {
           category: this.selectedCategory,
-          page: this.imagePage
+          page: this.imagePage,
+
         }).then(res => {
           if (res.results.length) {
             this.stockImages.push(...res.results);
@@ -176,7 +208,8 @@
         this.infiniteId += 1;
         this.$store.dispatch('user/getStockImages', {
           category: this.selectedCategory,
-          page: this.imagePage
+          page: this.imagePage,
+          orientation: this.orientation
         }).then(res => {
           this.stockImages = res.results;
         });
@@ -300,7 +333,7 @@
       background-color: $color-bg-1;
       background-repeat: no-repeat;
       background-position: center;
-      background-size: cover;
+      background-size: contain;
 
       &:nth-child(2n) {
         margin-right: 0;
@@ -335,6 +368,33 @@
 
   .image-select {
     margin-bottom: 15px;
+  }
+
+  .orientation {
+    display: flex;
+    text-align: left;
+    color: $color-font-gray;
+    font-size: 16px;
+    margin-bottom: 15px;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+
+    &__title {
+      margin-right: 15px;
+    }
+
+    &__items {
+      i {
+        cursor: pointer;
+        font-size: 18px;
+        margin-right: 10px;
+
+        &._active {
+          color: $color-primary;
+        }
+      }
+    }
   }
 
 </style>

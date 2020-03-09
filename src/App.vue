@@ -14,6 +14,9 @@
       <router-view/>
     </div>
     <!--<modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>-->
+    <div class="loader" v-show="loaderWrap">
+      <i class="fas fa-cog fa-spin"></i>
+    </div>
   </div>
 </template>
 
@@ -23,7 +26,6 @@
   import Sidebar from '@/components/Sidebar';
   import ModalPost from '@/components/modals/Post';
 
-
   export default {
     components: {
       Sidebar,
@@ -32,7 +34,8 @@
     },
     data: () => ({
       isSidebarCollapse: false,
-      showEditor: false
+      showEditor: false,
+      loaderWrap: false
     }),
     computed: {
       loading () {
@@ -45,6 +48,12 @@
       });
       this.$bus.$on('loading:stop', () => {
         this.$refs.topProgress.done();
+      });
+      this.$bus.$on('fixedloader:start', () => {
+        this.loaderWrap = true;
+      });
+      this.$bus.$on('fixedloader:stop', () => {
+        this.loaderWrap = false;
       });
     },
     methods: {}
@@ -191,5 +200,20 @@
         box-shadow: $box-shadow-button;
       }
     }
+  }
+
+  .loader {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba($color-bg-0, 0.9);
+    color: $color-font-gray;
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 35px;
   }
 </style>

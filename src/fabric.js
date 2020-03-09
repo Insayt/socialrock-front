@@ -33,4 +33,37 @@ fabric.IText.prototype.updateTextareaPosition = function() {
 //   },
 // });
 
+fabric.Pattern.prototype.toObject = (function(toObject) {
+  return function() {
+    return fabric.util.object.extend(toObject.call(this), {
+      crossOrigin: this.crossOrigin,
+      patternTransform: this.patternTransform ? this.patternTransform.concat() : null
+    });
+  };
+})(fabric.Pattern.prototype.toObject);
+
+fabric.Pattern.prototype.initialize = function(options, callback) {
+  options || (options = {});
+
+  this.id = fabric.Object.__uid++;
+  this.setOptions(options);
+  if (!options.source || (options.source && typeof options.source !== 'string')) {
+    callback && callback(this);
+    return;
+  }
+  // function string
+  if (typeof fabric.util.getFunctionBody(options.source) !== 'undefined') {
+    this.source = new Function(fabric.util.getFunctionBody(options.source));
+    callback && callback(this);
+  } else {
+    // img src string
+    var _this = this;
+    this.source = fabric.util.createImage();
+    fabric.util.loadImage(options.source, function(img) {
+      _this.source = img;
+      callback && callback(_this);
+    }, null, this.crossOrigin);
+  }
+}
+
 export { fabric };

@@ -13,14 +13,38 @@
       <div class="editor__title">
         🤘 Ваши дизайны
       </div>
-      <div class="editor__empty">
+      <div class="editor__empty" v-if="!currentProject.designs.length">
         Вы еще не создали ни одного дизайна. Выберите один из вариантов ниже и начинайте работу 💪
+      </div>
+      <div class="editor__items" v-if="currentProject.designs.length">
+        <div class="editor-item"
+             v-for="d in currentProject.designs"
+             @click="redirectToEditor(d._id)"
+        >
+          <div class="editor-item__img">
+            <div class="editor-item__type"
+                 :class="{
+                  _square: d.format === 'square',
+                  _horizontal: d.format === 'horizontal',
+                  _vertical: d.format === 'vertical',
+                  _stories: d.format === 'stories',
+                 }"
+                 :style="{ backgroundImage: `url(${d.image_url})` }"
+            ></div>
+          </div>
+          <div class="editor-item__delete"
+               @click.stop="deleteDesign(d._id)"
+               v-b-tooltip.hover title="Удалить дизайн"
+          >
+            <i class="fa fa-trash"></i>
+          </div>
+        </div>
       </div>
       <div class="editor__title">
         👷 Создайте дизайн с нуля
       </div>
       <div class="editor__items">
-        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'square' } })">
+        <div class="editor-item" @click="createDesign('square')">
           <div class="editor-item__img">
             <div class="editor-item__type _square"></div>
           </div>
@@ -28,15 +52,15 @@
             Квадратный
           </div>
         </div>
-        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'horizontal' } })">
+        <div class="editor-item" @click="createDesign('horizontal')">
           <div class="editor-item__img">
-            <div class="editor-item__type _horizonral"></div>
+            <div class="editor-item__type _horizontal"></div>
           </div>
           <div class="editor-item__title">
             Горизонтальный
           </div>
         </div>
-        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'vertical' } })">
+        <div class="editor-item" @click="createDesign('vertical')">
           <div class="editor-item__img">
             <div class="editor-item__type _vertical"></div>
           </div>
@@ -44,7 +68,7 @@
             Вертикальный
           </div>
         </div>
-        <div class="editor-item" @click="$router.push({ name: 'editor-create', query: { from: 'stories' } })">
+        <div class="editor-item" @click="createDesign('stories')">
           <div class="editor-item__img">
             <div class="editor-item__type _stories"></div>
           </div>
@@ -93,6 +117,57 @@
         return this.$store.getters['user/currentProject'];
       },
     },
+    methods: {
+      redirectToEditor (id) {
+        this.$router.push({ name: 'editor-create', params: { id: id } });
+      },
+      createDesign (type) {
+        this.$bus.$emit('fixedloader:start');
+        this.$store.dispatch('user/createDesign', {
+          project_id: this.currentProject._id,
+          format: type
+        })
+        .then(res => {
+          this.$router.push({ name: 'editor-create', params: { id: res.design._id } });
+        })
+        .finally(() => {
+          this.$bus.$emit('fixedloader:stop');
+        })
+      },
+      deleteDesign (id) {
+        this.$swal({
+          title: `Удалить дизайн?`,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Удалить',
+          cancelButtonText: 'Отмена',
+        }).then(res => {
+          if (res.value) {
+            this.$store.dispatch('user/deleteDesign', {
+              design_id: id
+            }).then(() => {
+              this.$swal({
+                title: `Дизайн удален`,
+                type: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              });
+            }).catch(() => {
+              this.$swal({
+                title: `Ошибка удаления`,
+                type: 'error',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              });
+            })
+          }
+        })
+      }
+    }
   }
 </script>
 
@@ -116,6 +191,7 @@
     }
     &__items {
       display: flex;
+      flex-wrap: wrap;
       margin-bottom: 15px;
     }
   }
@@ -124,11 +200,27 @@
     text-align: center;
     text-transform: uppercase;
     cursor: pointer;
+    position: relative;
 
     &:hover {
       .editor-item__img {
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
       }
+      .editor-item__delete {
+        display: block;
+      }
+    }
+
+    &__delete {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: $color-danger;
+      padding: 10px;
+      background-color: $color-bg-0;
+      font-size: 14px;
+      border-radius: 0 0 0 5px;
     }
 
     &__img {
@@ -149,22 +241,23 @@
 
     &__type {
       background-color: white;
+      background-size: cover;
 
       &._square {
-        width: 150px;
-        height: 150px;
+        width: 250px;
+        height: 250px;
       }
-      &._horizonral {
-        width: 200px;
-        height: 100px;
+      &._horizontal {
+        width: 250px;
+        height: 150px;
       }
       &._vertical {
-        width: 100px;
-        height: 150px;
+        width: 160px;
+        height: 250px;
       }
       &._stories {
-        width: 100px;
-        height: 200px;
+        width: 120px;
+        height: 250px;
       }
     }
   }

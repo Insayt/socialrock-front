@@ -133,7 +133,7 @@
         >
           <i class="fas fa-download"></i>
         </b-button>
-        <b-button variant="black" @click="$router.push({ name: 'editor' })">
+        <b-button variant="black" @click="closeEditor">
           <i class="fas fa-times"></i>
         </b-button>
       </div>
@@ -284,7 +284,9 @@
           nsgImage.width = width;
           nsgImage.height = height;
           nsgImage.set({ left: x, top: y });
-          this.canvas.setBackgroundImage(nsgImage, () => this.canvas.renderAll());
+          this.canvas.setBackgroundImage(nsgImage, () => this.canvas.renderAll(), {
+            crossOrigin: 'anonymous'
+          });
           this.$bus.$emit('loading:stop');
         };
         img.src = dataUrl;
@@ -420,26 +422,30 @@
       });
       document.removeEventListener('click', this.clickEditor);
     },
-    mounted() {
+    async mounted() {
       // document.addEventListener('keydown', this.keyDown);
       document.addEventListener('click', this.clickEditor);
 
       // Обрабатываем вариант канваса
-      let from = this.$route.query.from;
+      this.$bus.$emit('fixedloader:start');
+      let ds = await this.$store.dispatch('user/getDesign', {
+        design_id: this.$route.params.id
+      });
+      this.$bus.$emit('fixedloader:stop');
 
-      if (!from || from === 'square') {
+      if (ds.format === 'square') {
         this.canvasParams.width = 1080;
         this.canvasParams.height = 1080;
         this.format = 'square';
-      } else if (from === 'horizontal') {
+      } else if (ds.format === 'horizontal') {
         this.canvasParams.width = 1080;
         this.canvasParams.height = 608;
         this.format = 'horizontal';
-      } else if (from === 'vertical') {
+      } else if (ds.format === 'vertical') {
         this.canvasParams.width = 1080;
         this.canvasParams.height = 1350;
         this.format = 'vertical';
-      } else if (from === 'stories') {
+      } else if (ds.format === 'stories') {
         this.canvasParams.width = 1080;
         this.canvasParams.height = 1920;
         this.format = 'stories';
@@ -451,13 +457,7 @@
         height: this.canvasParams.height
       });
 
-
-      // this.canvas.add(new fabric.Circle({ radius: 30, fill: '#f55', top: 100, left: 100 }));
-      //
-      // this.canvas.selectionColor = 'rgba(0,255,0,0.3)';
-      // this.canvas.selectionBorderColor = 'red';
-      // this.canvas.selectionLineWidth = 5;
-      // window.__canvases.push(this.canvas);
+      this.canvas.loadFromJSON(ds.object);
 
       this.canvas.backgroundColor = 'white';
       this.canvas.renderAll();
@@ -497,6 +497,20 @@
       this.fitCanvas();
     },
     methods: {
+      closeEditor () {
+        this.$swal({
+          title: `Выйти из редактора?`,
+          html: `Все несохраненные данные будут потеряны`,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Выйти',
+          cancelButtonText: 'Отмена',
+        }).then(res => {
+          if (res.value) {
+            this.$router.push({ name: 'editor' });
+          }
+        });
+      },
       deleteObject () {
         let objects = this.canvas.getActiveObjects() || [];
         if (objects.length) {
@@ -527,8 +541,9 @@
         return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       },
       saveDesign () {
+        this.$bus.$emit('fixedloader:start');
         this.$store.dispatch('user/saveDesign', {
-          project_id: this.currentProject._id,
+          design_id: this.$route.params.id,
           object: this.canvas.toObject(),
           format: this.format,
         }).then(res => {
@@ -546,6 +561,7 @@
                 design_id: res._id,
                 file: fd
               }).then(() => {
+                this.$bus.$emit('fixedloader:stop');
                 this.$swal({
                   title: `Дизайн сохранен`,
                   type: 'success',
@@ -561,7 +577,7 @@
       exportCanvas () {
         let url = this.canvas.toDataURL({
           format: 'jpg',
-          quality: 0.8
+          quality: 0.8,
         });
         const downloadLink = document.createElement('a');
         document.body.appendChild(downloadLink);
@@ -634,6 +650,8 @@
         return  new Promise((resolve, reject) => {
           fabric.util.loadImage(url, function(img) {
             return resolve(img);
+          }, {
+            crossOrigin: 'Anonymous'
           });
         });
       },

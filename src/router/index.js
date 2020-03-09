@@ -51,7 +51,7 @@ const router = new VueRouter({
           },
         },
         {
-          path: 'editor/create',
+          path: 'editor/create/:id',
           name: 'editor-create',
           component: EditorWrapper,
           meta: {
