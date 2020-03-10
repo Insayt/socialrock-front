@@ -295,9 +295,11 @@ export default {
           return res.data;
         })
     },
-    createDesign ({ state, commit }, { project_id, format }) {
+    createDesign ({ state, commit }, { project_id, format, object, image_url }) {
       return axios.post(`${config.apiUrl}/project/${project_id}/design/create`, {
         format,
+        object,
+        image_url
       })
         .then(res => {
           commit('setProjectData', res.data.project);

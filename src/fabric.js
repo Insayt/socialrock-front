@@ -42,6 +42,7 @@ fabric.Pattern.prototype.toObject = (function(toObject) {
   };
 })(fabric.Pattern.prototype.toObject);
 
+
 fabric.Pattern.prototype.initialize = function(options, callback) {
   options || (options = {});
 
@@ -64,6 +65,14 @@ fabric.Pattern.prototype.initialize = function(options, callback) {
       callback && callback(_this);
     }, null, this.crossOrigin);
   }
-}
+};
+
+fabric.Canvas.prototype.toObject = (function(toObject) {
+  return function() {
+    return fabric.util.object.extend(toObject.call(this), {
+      backgroundGradient: this.backgroundGradient ? this.backgroundGradient : null
+    });
+  };
+})(fabric.Canvas.prototype.toObject);
 
 export { fabric };

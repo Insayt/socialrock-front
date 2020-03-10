@@ -263,6 +263,7 @@
         let grad = new fabric.Gradient(bgObject);
         this.canvas.backgroundImage = 0;
         this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
+        this.canvas.backgroundGradient = grad.toObject();
         this.canvas.renderAll();
       });
 
@@ -292,17 +293,12 @@
         img.src = dataUrl;
       });
 
-      this.$bus.$on('editor:addImage',  (dataUrl, options = {}) => {
+      this.$bus.$on('editor:addImage',  async (dataUrl, options = {}) => {
         this.$bus.$emit('loading:start');
-        let img = new Image();
-        img.setAttribute('crossOrigin', 'anonymous');
-        img.onload = () => {
-          let nsgImage = new fabric.Image(img);
-          this.canvas.add(nsgImage);
-          this.canvas.renderAll();
-          this.$bus.$emit('loading:stop');
-        };
-        img.src = dataUrl;
+        let img = await this.loadImage(dataUrl);
+        this.canvas.add(img);
+        this.canvas.renderAll();
+        this.$bus.$emit('loading:stop');
       });
 
       this.$bus.$on('editor:applyFilter', async (filter, args) => {
@@ -457,10 +453,19 @@
         height: this.canvasParams.height
       });
 
-      this.canvas.loadFromJSON(ds.object);
+      this.canvas.loadFromJSON(ds.object, () => {
+        // Градиент на фоне по дефолту не экспортится, храним костылем
+        if (ds.object.backgroundGradient) {
+          let grad = new fabric.Gradient(ds.object.backgroundGradient);
+          this.canvas.backgroundImage = 0;
+          this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
+          this.canvas.backgroundGradient = grad.toObject();
+        } else {
+          this.canvas.backgroundColor = 'white';
+        }
+        this.canvas.renderAll();
+      });
 
-      this.canvas.backgroundColor = 'white';
-      this.canvas.renderAll();
       this.canvas.on('selection:updated', (e) => {
         if (e.selected.length === 1) {
           this.selection = {};
@@ -648,10 +653,10 @@
 
       async loadImage(url) {
         return  new Promise((resolve, reject) => {
-          fabric.util.loadImage(url, function(img) {
+          fabric.Image.fromURL(url, function(img) {
             return resolve(img);
           }, {
-            crossOrigin: 'Anonymous'
+            crossOrigin: 'anonymous'
           });
         });
       },

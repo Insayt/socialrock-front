@@ -81,30 +81,40 @@
         🔥 Или выберите из готовых шаблонов
       </div>
       <div class="editor__items">
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
-          <div class="editor-item__title">
-            Квадратный
+        <div class="editor-item"
+             v-for="d in showDesigns"
+             @click="createDesignFromTemplate(d)"
+        >
+          <div class="editor-item__img">
+            <div class="editor-item__type"
+                 :class="{
+                  _square: d.format === 'square',
+                  _horizontal: d.format === 'horizontal',
+                  _vertical: d.format === 'vertical',
+                  _stories: d.format === 'stories',
+                 }"
+                 :style="{ backgroundImage: `url(${d.image_url})` }"
+            ></div>
           </div>
         </div>
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
-          <div class="editor-item__title">
-            Горизонтальный
-          </div>
-        </div>
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
-          <div class="editor-item__title">
-            Stories
-          </div>
-        </div>
-        <div class="editor-item">
-          <div class="editor-item__img"></div>
-          <div class="editor-item__title">
-            Stories
-          </div>
-        </div>
+<!--        <div class="editor-item">-->
+<!--          <div class="editor-item__img"></div>-->
+<!--          <div class="editor-item__title">-->
+<!--            Горизонтальный-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="editor-item">-->
+<!--          <div class="editor-item__img"></div>-->
+<!--          <div class="editor-item__title">-->
+<!--            Stories-->
+<!--          </div>-->
+<!--        </div>-->
+<!--        <div class="editor-item">-->
+<!--          <div class="editor-item__img"></div>-->
+<!--          <div class="editor-item__title">-->
+<!--            Stories-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </div>
   </div>
@@ -112,10 +122,17 @@
 
 <script>
   export default {
+    data: () => ({
+      designs: require('../designs.json'),
+      designType: 'square'
+    }),
     computed: {
       currentProject () {
         return this.$store.getters['user/currentProject'];
       },
+      showDesigns () {
+        return this.designs[this.designType];
+      }
     },
     methods: {
       redirectToEditor (id) {
@@ -126,6 +143,21 @@
         this.$store.dispatch('user/createDesign', {
           project_id: this.currentProject._id,
           format: type
+        })
+        .then(res => {
+          this.$router.push({ name: 'editor-create', params: { id: res.design._id } });
+        })
+        .finally(() => {
+          this.$bus.$emit('fixedloader:stop');
+        })
+      },
+      createDesignFromTemplate (design) {
+        this.$bus.$emit('fixedloader:start');
+        this.$store.dispatch('user/createDesign', {
+          project_id: this.currentProject._id,
+          format: this.designType,
+          object: design.object,
+          image_url: design.image_url
         })
         .then(res => {
           this.$router.push({ name: 'editor-create', params: { id: res.design._id } });
@@ -252,11 +284,11 @@
         height: 150px;
       }
       &._vertical {
-        width: 160px;
-        height: 250px;
+        width: 140px;
+        height: 200px;
       }
       &._stories {
-        width: 120px;
+        width: 130px;
         height: 250px;
       }
     }
