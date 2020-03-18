@@ -50,16 +50,36 @@
                   <i class="far fa-smile"></i>
                 </template>
                 <b-dropdown-group>
-                  <picker :data="emojiIndex" :native="true" :show-search="false" @select="selectEmoji"/>
+                  <picker :data="emojiIndex" :native="true" :show-search="false" @select="selectEmoji" title=""/>
                 </b-dropdown-group>
               </b-dropdown>
             </div>
-            <b-button variant="link" v-b-tooltip.hover title="Ссылка">
-              <i class="fas fa-link"></i>
-            </b-button>
-            <b-button variant="link" v-b-tooltip.hover title="Фото или видео">
-              <i class="fas fa-photo-video"></i>
-            </b-button>
+<!--            <b-dropdown class="clean-dropdown" variant="link" v-b-tooltip.hover title="Ссылка" no-caret>-->
+<!--              <template v-slot:button-content>-->
+<!--                <i class="fas fa-link"></i>-->
+<!--              </template>-->
+<!--              <b-dropdown-group>-->
+<!--                <b-input placeholder="Вставьте ссылку" v-model="link"></b-input>-->
+<!--              </b-dropdown-group>-->
+<!--            </b-dropdown>-->
+            <label class="input-file" for="pattern-file">
+              <div class="btn btn-link"
+                   :disabled="patternLoading"
+                   :class="{ disabled: patternLoading }"
+                   v-b-tooltip.hover title="Фото или видео"
+              >
+                <i class="fas fa-photo-video" v-show="!patternLoading"></i>
+                <i class="fas fa-spinner fa-spin" v-show="patternLoading"></i>
+              </div>
+              <input id="pattern-file"
+                     type="file"
+                     accept=".jpg,.jpeg,.png"
+                     hidden
+                     ref="pattern"
+                     @change="handlePatternUpload"
+                     :disabled="patternLoading"
+              />
+            </label>
             <b-button variant="link" v-b-tooltip.hover title="Фото из редактора">
               <i class="fas fa-paint-brush"></i>
             </b-button>
@@ -153,12 +173,12 @@
         >
           Запланировать
         </b-button>
-        <b-button
-          variant="black"
-          class="float-right mr-3"
-        >
-          Отмена
-        </b-button>
+<!--        <b-button-->
+<!--          variant="black"-->
+<!--          class="float-right mr-3"-->
+<!--        >-->
+<!--          Отмена-->
+<!--        </b-button>-->
       </div>
     </template>
   </b-modal>
@@ -177,6 +197,7 @@
     data: () => ({
       emojiIndex: new EmojiIndex(data),
       text: '',
+      link: '',
       accounts: [],
       isAutoDelete: false,
       runDt: '',

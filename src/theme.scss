@@ -12,6 +12,16 @@ a {
   color: #007BED
 }
 
+label {
+  margin-bottom: 0;
+}
+
+.input-file {
+  .btn {
+    cursor: pointer;
+  }
+}
+
 .page {
   padding: 20px;
 }
