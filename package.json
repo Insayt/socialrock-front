@@ -13,6 +13,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.4",
     "core-js": "^3.3.2",
+    "emoji-mart-vue-fast": "^7.0.0",
     "fabric": "^3.6.2",
     "intrinsic-scale": "^3.0.4",
     "lodash": "^4.17.15",

@@ -1,11 +1,12 @@
 <template>
-  <b-modal ref="post-modal" size="lg" no-close-on-esc no-close-on-backdrop>
+  <b-modal ref="post-modal" size="lg">
+<!--    no-close-on-esc no-close-on-backdrop-->
     <template v-slot:modal-header-close>
       <img src="@/assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
       Создание поста
-      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>
+<!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal">
       <b-tabs>
@@ -44,9 +45,14 @@
               wrap
             ></b-form-textarea>
             <div class="post-editor__emoji">
-              <b-button variant="link" v-b-tooltip.hover title="Emoji">
-                <i class="far fa-smile"></i>
-              </b-button>
+              <b-dropdown class="clean-dropdown" variant="link" v-b-tooltip.hover title="Emoji" no-caret ref="emojidropdown">
+                <template v-slot:button-content>
+                  <i class="far fa-smile"></i>
+                </template>
+                <b-dropdown-group>
+                  <picker :data="emojiIndex" :native="true" :show-search="false" @select="selectEmoji"/>
+                </b-dropdown-group>
+              </b-dropdown>
             </div>
             <b-button variant="link" v-b-tooltip.hover title="Ссылка">
               <i class="fas fa-link"></i>
@@ -57,16 +63,16 @@
             <b-button variant="link" v-b-tooltip.hover title="Фото из редактора">
               <i class="fas fa-paint-brush"></i>
             </b-button>
-            <b-button variant="link" v-b-tooltip.hover title="Геолокация">
-              <i class="fas fa-map-marker-alt"></i>
-            </b-button>
-            <b-button variant="link" v-b-tooltip.hover title="Опрос">
-              <i class="fas fa-list-ul"></i>
-            </b-button>
+<!--            <b-button variant="link" v-b-tooltip.hover title="Геолокация">-->
+<!--              <i class="fas fa-map-marker-alt"></i>-->
+<!--            </b-button>-->
+<!--            <b-button variant="link" v-b-tooltip.hover title="Опрос">-->
+<!--              <i class="fas fa-list-ul"></i>-->
+<!--            </b-button>-->
           </div>
-          <b-button variant="black" block class="mt-3">
-            Добавить версию для некоторых страниц
-          </b-button>
+<!--          <b-button variant="black" block class="mt-3">-->
+<!--            Добавить версию для некоторых страниц-->
+<!--          </b-button>-->
           <div class="post-editor__date">
             <div class="post-editor__date-text">Дата публикации</div>
             <div>
@@ -159,9 +165,17 @@
 </template>
 
 <script>
+  import data from './emoji';
+  import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
+  import 'emoji-mart-vue-fast/css/emoji-mart.css'
   import { DateTime } from 'luxon';
+
   export default {
+    components: {
+      picker: Picker,
+    },
     data: () => ({
+      emojiIndex: new EmojiIndex(data),
       text: '',
       accounts: [],
       isAutoDelete: false,
@@ -188,7 +202,7 @@
           this.$refs['post-modal'].show();
           let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
           this.accounts = copyAccounts.map(a => {
-            a.checked = false;
+            a.checked = true;
             return a;
           });
           this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
@@ -199,6 +213,10 @@
       this.$bus.$off('modal:post')
     },
     methods: {
+      selectEmoji (emoji) {
+        this.text += emoji.native;
+        this.$refs['emojidropdown'].hide(true)
+      },
       checkAccount (account, index) {
         let acc = this.accounts[index];
         acc.checked = !acc.checked;

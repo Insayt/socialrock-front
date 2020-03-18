@@ -13,7 +13,7 @@
       ></s-header>
       <router-view/>
     </div>
-    <!--<modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>-->
+    <modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>
     <div class="loader" v-show="loaderWrap">
       <i class="fas fa-cog fa-spin"></i>
     </div>

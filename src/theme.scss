@@ -748,6 +748,12 @@ body.swal2-toast-shown .swal2-container.swal2-top-end, body.swal2-toast-shown .s
     color: rgba(255, 255, 255, 0.8);
   }
 }
+
+.clean-dropdown {
+  .dropdown-menu {
+    padding: 0;
+  }
+}
 //
 //.svg-button {
 //  svg {

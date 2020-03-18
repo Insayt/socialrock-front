@@ -120,19 +120,19 @@
           </div>
         </div>
       </div>
-      <div class="settings-item">
-        <div class="settings-item__left" style="background-color: #EF6C00">
-          <i class="fas fa-rss"></i>
-        </div>
-        <div class="settings-item__right">
-          <div class="settings-item__title">
-            Кроспостинг
-          </div>
-          <div class="settings-item__subtitle">
-            Настройте публикацию из RSS
-          </div>
-        </div>
-      </div>
+<!--      <div class="settings-item">-->
+<!--        <div class="settings-item__left" style="background-color: #EF6C00">-->
+<!--          <i class="fas fa-rss"></i>-->
+<!--        </div>-->
+<!--        <div class="settings-item__right">-->
+<!--          <div class="settings-item__title">-->
+<!--            Кроспостинг-->
+<!--          </div>-->
+<!--          <div class="settings-item__subtitle">-->
+<!--            Настройте публикацию из RSS-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
       <modal-add-account></modal-add-account>
       <modal-select-account></modal-select-account>
       <modal-accounts-list></modal-accounts-list>
