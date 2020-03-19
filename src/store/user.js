@@ -338,6 +338,12 @@ export default {
           return res.data;
         })
     },
+    savePostImage ({ state, commit }, { project_id, file }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/upload/photo`, file)
+        .then(res => {
+          return res.data.photo;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

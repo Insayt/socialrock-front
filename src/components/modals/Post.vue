@@ -62,22 +62,18 @@
 <!--                <b-input placeholder="Вставьте ссылку" v-model="link"></b-input>-->
 <!--              </b-dropdown-group>-->
 <!--            </b-dropdown>-->
-            <label class="input-file" for="pattern-file">
+            <label class="input-file" for="file">
               <div class="btn btn-link"
-                   :disabled="patternLoading"
-                   :class="{ disabled: patternLoading }"
                    v-b-tooltip.hover title="Фото или видео"
               >
-                <i class="fas fa-photo-video" v-show="!patternLoading"></i>
-                <i class="fas fa-spinner fa-spin" v-show="patternLoading"></i>
+                <i class="fas fa-photo-video"></i>
               </div>
-              <input id="pattern-file"
+              <input id="file"
                      type="file"
                      accept=".jpg,.jpeg,.png"
                      hidden
-                     ref="pattern"
-                     @change="handlePatternUpload"
-                     :disabled="patternLoading"
+                     ref="file"
+                     @change="handleFileUpload"
               />
             </label>
             <b-button variant="link" v-b-tooltip.hover title="Фото из редактора">
@@ -234,6 +230,62 @@
       this.$bus.$off('modal:post')
     },
     methods: {
+      handleFileUpload () {
+        let file = this.$refs.file.files[0];
+        if (file.size > 15728640) {
+          this.$swal({
+            title: `Ошибка`,
+            html: `Максимальный размер файла 15 мегабайт`,
+            type: 'error'
+          });
+          return;
+        }
+
+        if (file.type.indexOf('video') !== -1) {
+          // this.createVideo(files[0]);
+        } else {
+          this.createImage(file);
+        }
+        // let fd = new FormData();
+        // fd.append('file', file);
+        // this.$store.dispatch('user/uploadPattern', {
+        //   project_id: this.currentProject._id,
+        //   form_data: fd
+        // }).then(() => {
+        //   this.$swal({
+        //     title: `Текстура загружена`,
+        //     type: 'success',
+        //     toast: true,
+        //     position: 'top-end',
+        //     showConfirmButton: false,
+        //     timer: 5000
+        //   });
+        // }).catch(() => {
+        //   this.$swal({
+        //     title: `Ошибка загрузки`,
+        //     type: 'error',
+        //     toast: true,
+        //     position: 'top-end',
+        //     showConfirmButton: false,
+        //     timer: 5000
+        //   });
+        // }).finally(() => {
+        //   this.patternLoading = false;
+        // })
+      },
+      createImage (file) {
+        // if (this.stories) {
+        //   this.aspectRatio = 9 / 16;
+        // }
+
+        const reader = new FileReader();
+
+        reader.readAsDataURL(file);
+
+        reader.onload = (e) => {
+          this.$bus.$emit('modal:crop', e.target.result);
+        };
+      },
       selectEmoji (emoji) {
         this.text += emoji.native;
         this.$refs['emojidropdown'].hide(true)
