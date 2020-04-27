@@ -198,9 +198,7 @@
       isAutoDelete: false,
       runDt: '',
       deleteDt: '',
-      calendarOptions: [
-
-      ],
+      calendarOptions: [],
     }),
     computed: {
       currentProject () {
@@ -309,6 +307,26 @@
         }
         this.$store.dispatch('user/savePost', postData)
           .then((res) => {
+            this.$swal({
+              title: `Пост сохранен`,
+              type: 'success',
+              toast: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              timer: 5000
+            });
+            this.$refs['post-modal'].hide();
+            this.$bus.$emit('calendar:reload');
+
+            // Сбрасываем данные на дефолт, т.к. окно не пересоздается
+            this.text = '';
+            this.link = '';
+            let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
+            this.accounts = copyAccounts.map(a => {
+              a.checked = true;
+              return a;
+            });
+            this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
             // this.$router.push({ name: 'calendar', params: { projectId: res.project_id } });
           })
           // .catch(e => {

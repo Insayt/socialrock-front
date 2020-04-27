@@ -68,61 +68,68 @@
       },
     },
     mounted () {
-      let start = DateTime.local().set({seconds: 0, milliseconds: 0});
-      let end = DateTime.local().set({seconds: 0, milliseconds: 0}).plus({ days: 7 });
-      this.$store.dispatch('user/getPosts', {
-        start: start.toString(),
-        end: end.toString(),
-        project_id: this.currentProject._id
-      })
-        .then(async (data) => {
-          let daysCount = end.diff(start, ['days']).toObject().days; // Берем кол-во дней между датами
-
-          let results = [];
-
-          for (let index of new Array(Math.round(daysCount)).keys()) { // Цикл на кол-во дней
-            let dt = start.plus({ days: index }); // Получаем день
-            let day = {
-              dt: dt.toISO(),
-              posts: []
-            };
-            let dayOfWeek = dt.toFormat('E'); // Номер дня недели
-            if (this.currentProject.slots[dayOfWeek]) {
-              Object.keys(this.currentProject.slots[dayOfWeek]).forEach(time => {
-                let times = time.split('_');
-                day.posts.push({
-                  time: `${times[0]}:${times[1]}`,
-                  hours: times[0],
-                  minutes: times[1],
-                  category: null
-                })
-              });
-            } else {
-
-            }
-
-            data.forEach(post => { // Проходим по постам и сохраняем те что выходят в этот день
-              let postRunDay = DateTime.fromISO(post.run_dt);
-              if (postRunDay.hasSame(dt, 'days')) {
-                // Если есть слот на такое время - заменяем на пост, если нет - просто добавим в масив
-                let postTime = postRunDay.toFormat('HH:mm');
-                // post.time = postTime;
-                let slotForThisTime = day.posts.findIndex(el => el.time === postTime);
-                if (slotForThisTime !== -1) {
-                  day.posts.splice(slotForThisTime, 1, post);
-                } else {
-                  day.posts.push(post);
-                }
-              }
-            });
-            day.posts = sortBy(day.posts, 'run_dt');
-            // console.log(day.posts);
-            results.push(day)
-          }
-          this.days = results;
-        })
+      this.$bus.$on('calendar:reload', this.loadPosts);
+      this.loadPosts();
+    },
+    beforeDestroy () {
+      this.$bus.$off('calendar:reload');
     },
     methods: {
+      loadPosts () {
+        let start = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+        let end = DateTime.local().set({hours: 24, minutes: 0, seconds: 0, milliseconds: 0}).plus({ days: 7 });
+        this.$store.dispatch('user/getPosts', {
+          start: start.toString(),
+          end: end.toString(),
+          project_id: this.currentProject._id
+        })
+          .then(async (data) => {
+            let daysCount = end.diff(start, ['days']).toObject().days; // Берем кол-во дней между датами
+
+            let results = [];
+
+            for (let index of new Array(Math.round(daysCount)).keys()) { // Цикл на кол-во дней
+              let dt = start.plus({ days: index }); // Получаем день
+              let day = {
+                dt: dt.toISO(),
+                posts: []
+              };
+              let dayOfWeek = dt.toFormat('E'); // Номер дня недели
+              if (this.currentProject.slots[dayOfWeek]) {
+                Object.keys(this.currentProject.slots[dayOfWeek]).forEach(time => {
+                  let times = time.split('_');
+                  day.posts.push({
+                    time: `${times[0]}:${times[1]}`,
+                    hours: times[0],
+                    minutes: times[1],
+                    category: null
+                  })
+                });
+              } else {
+
+              }
+
+              data.forEach(post => { // Проходим по постам и сохраняем те что выходят в этот день
+                let postRunDay = DateTime.fromISO(post.run_dt);
+                if (postRunDay.hasSame(dt, 'days')) {
+                  // Если есть слот на такое время - заменяем на пост, если нет - просто добавим в масив
+                  let postTime = postRunDay.toFormat('HH:mm');
+                  // post.time = postTime;
+                  let slotForThisTime = day.posts.findIndex(el => el.time === postTime);
+                  if (slotForThisTime !== -1) {
+                    day.posts.splice(slotForThisTime, 1, post);
+                  } else {
+                    day.posts.push(post);
+                  }
+                }
+              });
+              day.posts = sortBy(day.posts, 'run_dt');
+              // console.log(day.posts);
+              results.push(day)
+            }
+            this.days = results;
+          })
+      },
       dayName (dt) {
         return DateTime.fromISO(dt).setLocale('ru').toFormat('EEEE');
       },

@@ -18,27 +18,28 @@
         <div class="post__time-small">
           <img src="../assets/img/icons/clock.svg">
           {{ postTime(post.run_dt) }}
-          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>
+<!--          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>-->
         </div>
         <div class="post__tags">
-          <div class="tag" v-b-tooltip.hover title="Моя рубрика">М</div>
-          <div class="tag" v-b-tooltip.hover title="Следующая рубрика">С</div>
+<!--          <div class="tag" v-b-tooltip.hover title="Моя рубрика">М</div>-->
+<!--          <div class="tag" v-b-tooltip.hover title="Следующая рубрика">С</div>-->
         </div>
       </div>
       <div class="post__content">
         <div class="post__text">{{ post.text }}</div>
         <div class="post__images">
-          <img class="post-image" src="/test1.jpg">
-          <img class="post-image" src="/test1.jpg">
-          <img class="post-image" src="/test1.jpg">
-          <img class="post-image" src="/test1.jpg">
-          <img class="post-image" src="/test1.jpg">
+<!--          <img class="post-image" src="/test1.jpg">-->
+<!--          <img class="post-image" src="/test1.jpg">-->
+<!--          <img class="post-image" src="/test1.jpg">-->
+<!--          <img class="post-image" src="/test1.jpg">-->
+<!--          <img class="post-image" src="/test1.jpg">-->
         </div>
       </div>
       <div class="post__footer">
         <div class="post-social"
              v-for="account in post.social_accounts"
              :style="{ backgroundImage: `url(${account.picture})` }"
+             v-b-tooltip.hover :title="account.name"
         >
           <i v-if="account.social_type === 'vk'" class="fab fa-vk"></i>
         </div>
