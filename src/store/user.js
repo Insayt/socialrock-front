@@ -20,6 +20,11 @@ const deafaultUserData = {
   },
   calendarDateStart: '',
   calendarDateEnd: '',
+  newPost: {
+    text: '',
+    media: [],
+    checked_accounts: []
+  },
 };
 
 export default {
@@ -40,6 +45,10 @@ export default {
       let pIndex = state.user.projects.findIndex(p => p._id === project._id );
       Vue.set(state.user.projects, pIndex, project);
     },
+    setNewPostParam (state, { param, value }) {
+      Vue.set(state.newPost,  param, value);
+      localStorage.setItem('new_post', JSON.stringify(state.newPost));
+    }
   },
   actions: {
     current ({state, commit}, force) {
@@ -341,7 +350,7 @@ export default {
     savePostImage ({ state, commit }, { project_id, file }) {
       return axios.post(`${config.apiUrl}/project/${project_id}/upload/photo`, file)
         .then(res => {
-          return res.data.photo;
+          return res.data;
         })
     },
   },

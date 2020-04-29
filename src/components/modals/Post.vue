@@ -54,6 +54,15 @@
                 </b-dropdown-group>
               </b-dropdown>
             </div>
+            <div class="media">
+              <div class="media-item" v-for="(item, index) in media"
+                  :style="{ backgroundImage: 'url(' + item.src + ')' }"
+              >
+                <div class="media-item__close" @click="deleteMedia(index)">
+                  <i class="fas fa-times"></i>
+                </div>
+              </div>
+            </div>
 <!--            <b-dropdown class="clean-dropdown" variant="link" v-b-tooltip.hover title="Ссылка" no-caret>-->
 <!--              <template v-slot:button-content>-->
 <!--                <i class="fas fa-link"></i>-->
@@ -64,6 +73,7 @@
 <!--            </b-dropdown>-->
             <label class="input-file" for="file">
               <div class="btn btn-link"
+                   :class="{ disabled: media.length === 10 }"
                    v-b-tooltip.hover title="Фото или видео"
               >
                 <i class="fas fa-photo-video"></i>
@@ -74,9 +84,12 @@
                      hidden
                      ref="file"
                      @change="handleFileUpload"
+                     :disabled="media.length === 10"
               />
             </label>
-            <b-button variant="link" v-b-tooltip.hover title="Фото из редактора">
+            <b-button variant="link"
+                      :disabled="media.length === 10"
+                      v-b-tooltip.hover title="Фото из редактора">
               <i class="fas fa-paint-brush"></i>
             </b-button>
 <!--            <b-button variant="link" v-b-tooltip.hover title="Геолокация">-->
@@ -199,6 +212,7 @@
       runDt: '',
       deleteDt: '',
       calendarOptions: [],
+      media: [],
     }),
     computed: {
       currentProject () {
@@ -222,11 +236,37 @@
           });
           this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
         });
+      });
+      this.$bus.$on('image:upload', (data) => {
+        this.media.push({
+          type: 'image',
+          size: {
+            width: data.meta.width,
+            height: data.meta.height,
+          },
+          ratio: data.ratio,
+          src: data.image_url
+        })
       })
     },
     beforeDestroy () {
-      this.$bus.$off('modal:post')
+      this.$bus.$off('modal:post');
+      this.$bus.$off('image:upload');
     },
+    // watch: {
+    //   text (newValue) {
+    //     this.$store.commit('user/setNewPostParam', {
+    //       param: 'text',
+    //       value: newValue
+    //     });
+    //   },
+    //   accounts (newValue) {
+    //     this.$store.commit('user/setNewPostParam', {
+    //       param: 'checked_accounts',
+    //       value: newValue.filter((v) => v.checked).map(v => v._id)
+    //     });
+    //   }
+    // },
     methods: {
       handleFileUpload () {
         let file = this.$refs.file.files[0];
@@ -281,7 +321,7 @@
         reader.readAsDataURL(file);
 
         reader.onload = (e) => {
-          this.$bus.$emit('modal:crop', e.target.result);
+          this.$bus.$emit('modal:crop', { file: e.target.result, firstMedia: this.media[0] });
         };
       },
       selectEmoji (emoji) {
@@ -292,6 +332,9 @@
         let acc = this.accounts[index];
         acc.checked = !acc.checked;
         this.$set(this.accounts, index, acc);
+      },
+      deleteMedia (index) {
+        this.media.splice(index, 1);
       },
       savePost () {
         let postData = {
@@ -405,6 +448,47 @@
 
     &__info-title {
       font-size: 24px;
+    }
+  }
+
+  .media {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .media-item {
+    width: 141px;
+    height: 141px;
+    background-position: center;
+    background-size: cover;
+    background-color: $color-bg-0;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    border: 5px solid $color-bg-9;
+    border-radius: 3px;
+
+    &:nth-child(5n) {
+      margin-right: 0;
+    }
+
+    &__close {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      width: 15px;
+      height: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $color-danger;
+      color: white;
+      padding: 15px;
+      cursor: pointer;
+      border-radius: 3px;
+
+      &:hover {
+        background-color: $color-danger-hover;
+      }
     }
   }
 </style>

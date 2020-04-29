@@ -12,7 +12,7 @@
     <div class="crop">
       <img class="crop__image" ref="cropimage">
     </div>
-    <div class="modal-info aspectratio">
+    <div class="modal-info aspectratio" v-show="!hideRatio">
       Соотношение сторон:
       <b-button-group>
         <b-button type="submit" @click="setAspectRatio(1, '1:1')" :variant="aspectRatioTxt === '1:1' ? 'success' : 'black'">1:1</b-button>
@@ -38,7 +38,8 @@
       loading: false,
       cropper: {},
       aspectRatio: 1,
-      aspectRatioTxt: '1:1'
+      aspectRatioTxt: '1:1',
+      hideRatio: false
     }),
     computed: {
       currentProject () {
@@ -46,7 +47,7 @@
       },
     },
     mounted () {
-      this.$bus.$on('modal:crop', (base64) => {
+      this.$bus.$on('modal:crop', ({ file, firstMedia }) => {
         if (this.$refs['crop']) {
           this.$refs['crop'].show();
           setTimeout(() => {
@@ -55,7 +56,11 @@
               viewMode: 1,
               aspectRatio: this.aspectRatio
             };
-            image.src = base64;
+            if (firstMedia && firstMedia.ratio) {
+              settings.aspectRatio = firstMedia.ratio;
+              this.hideRatio = true;
+            }
+            image.src = file;
             this.cropper = new Cropper(image, settings);
           }, 500);
         }
@@ -81,18 +86,19 @@
             this.$store.dispatch('user/savePostImage', {
               project_id: this.currentProject._id,
               file: fd
-            }).then((photoUrl) => {
+            }).then((data) => {
               this.loading = false;
-              console.log(photoUrl);
+              data.ratio = this.aspectRatio;
+              this.$bus.$emit('image:upload', data);
               this.$refs['crop'].hide();
-              // this.$swal({
-              //   title: `Дизайн сохранен`,
-              //   type: 'success',
-              //   toast: true,
-              //   position: 'top-end',
-              //   showConfirmButton: false,
-              //   timer: 5000
-              // });
+            }).catch((e) => {
+              this.loading = false;
+              console.log('Ошибка загрузки фото ', e);
+              this.$swal({
+                title: `Ошибка`,
+                html: `Не удалось загрузить изображение`,
+                type: 'error'
+              });
             })
           })
       }
