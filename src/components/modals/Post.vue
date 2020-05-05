@@ -180,7 +180,12 @@
           class="float-right"
           @click="savePost"
         >
-          Запланировать
+          <template v-if="!postId">
+            Запланировать
+          </template>
+          <template>
+            Сохранить
+          </template>
         </b-button>
 <!--        <b-button-->
 <!--          variant="black"-->
@@ -213,6 +218,7 @@
       deleteDt: '',
       calendarOptions: [],
       media: [],
+      postId: null
     }),
     computed: {
       currentProject () {
@@ -226,15 +232,33 @@
       },
     },
     mounted () {
-      this.$bus.$on('modal:post', (data) => {
+      this.$bus.$on('modal:post', (post) => {
         this.$nextTick(() => {
+          if (!post._id) {
+            let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
+            this.accounts = copyAccounts.map(a => {
+              a.checked = true;
+              return a;
+            });
+            this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
+            this.media = [];
+            this.text = '';
+          } else {
+            console.log(post);
+            this.text = post.text;
+            this.media = post.media || [];
+            this.postId = post._id;
+            let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
+            this.accounts = copyAccounts.map(a => {
+              let isCheck = false;
+              post.social_accounts.forEach(acc => {
+                if (acc._id === a._id) isCheck = true;
+              });
+              a.checked = isCheck;
+              return a;
+            });
+          }
           this.$refs['post-modal'].show();
-          let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
-          this.accounts = copyAccounts.map(a => {
-            a.checked = true;
-            return a;
-          });
-          this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
         });
       });
       this.$bus.$on('image:upload', (data) => {
@@ -253,20 +277,6 @@
       this.$bus.$off('modal:post');
       this.$bus.$off('image:upload');
     },
-    // watch: {
-    //   text (newValue) {
-    //     this.$store.commit('user/setNewPostParam', {
-    //       param: 'text',
-    //       value: newValue
-    //     });
-    //   },
-    //   accounts (newValue) {
-    //     this.$store.commit('user/setNewPostParam', {
-    //       param: 'checked_accounts',
-    //       value: newValue.filter((v) => v.checked).map(v => v._id)
-    //     });
-    //   }
-    // },
     methods: {
       handleFileUpload () {
         let file = this.$refs.file.files[0];
@@ -345,6 +355,9 @@
           project_id: this.currentProject._id,
           run_dt: this.runDt
         };
+        if (this.media.length) {
+          postData.media = this.media;
+        }
         if (this.deleteDt) {
           postData.delete_dt = this.deleteDt;
         }

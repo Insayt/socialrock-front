@@ -27,12 +27,9 @@
       </div>
       <div class="post__content">
         <div class="post__text">{{ post.text }}</div>
-        <div class="post__images">
-<!--          <img class="post-image" src="/test1.jpg">-->
-<!--          <img class="post-image" src="/test1.jpg">-->
-<!--          <img class="post-image" src="/test1.jpg">-->
-<!--          <img class="post-image" src="/test1.jpg">-->
-<!--          <img class="post-image" src="/test1.jpg">-->
+        <div class="post__images" v-if="post.media && post.media.length">
+          <img class="post-image" v-for="media in post.media"
+               :src="media.src">
         </div>
       </div>
       <div class="post__footer">

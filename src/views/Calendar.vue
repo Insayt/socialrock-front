@@ -30,7 +30,7 @@
               <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
             </div>
             <div class="calendar-rows__posts">
-              <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal"></post>
+              <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal(post)"></post>
               <div class="empty-post" @click="showPostModal">
                 <div class="empty-post__icon">
                   <img src="../assets/img/icons/plus-round.svg">
@@ -136,8 +136,8 @@
       dayDate (dt) {
         return DateTime.fromISO(dt).setLocale('ru').toFormat('dd MMMM');
       },
-      showPostModal () {
-        this.$bus.$emit('modal:post');
+      showPostModal (post) {
+        this.$bus.$emit('modal:post', post);
       }
     }
   }
