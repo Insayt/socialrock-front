@@ -232,6 +232,15 @@ export default {
           // commit('setProjectData', res.data);
         })
     },
+    deletePost ({ state, commit }, { post_id, project_id }) {
+      return axios.post(`${config.apiUrl}/post/delete`, {
+        post_id,
+        project_id
+      })
+        .then(res => {
+          commit('setProjectData', res.data);
+        })
+    },
     getPosts ({ state, commit }, { start, end, project_id }) {
       return axios.get(`${config.apiUrl}/post/list`, {
         params: { start, end, project_id }

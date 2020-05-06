@@ -31,7 +31,7 @@
             </div>
             <div class="calendar-rows__posts">
               <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal(post)"></post>
-              <div class="empty-post" @click="showPostModal">
+              <div class="empty-post" @click="showPostModal({})">
                 <div class="empty-post__icon">
                   <img src="../assets/img/icons/plus-round.svg">
                   <div>Запланировать пост</div>
@@ -77,7 +77,7 @@
     methods: {
       loadPosts () {
         let start = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
-        let end = DateTime.local().set({hours: 24, minutes: 0, seconds: 0, milliseconds: 0}).plus({ days: 7 });
+        let end = DateTime.local().set({hours: 24, minutes: 0, seconds: 0, milliseconds: 0}).plus({ days: 6 });
         this.$store.dispatch('user/getPosts', {
           start: start.toString(),
           end: end.toString(),
@@ -98,15 +98,15 @@
               if (this.currentProject.slots[dayOfWeek]) {
                 Object.keys(this.currentProject.slots[dayOfWeek]).forEach(time => {
                   let times = time.split('_');
+                  let run_dt = dt.set({ hours: times[0], minutes: times[1] }).toISO();
                   day.posts.push({
                     time: `${times[0]}:${times[1]}`,
                     hours: times[0],
                     minutes: times[1],
-                    category: null
+                    category: null,
+                    run_dt: run_dt
                   })
                 });
-              } else {
-
               }
 
               data.forEach(post => { // Проходим по постам и сохраняем те что выходят в этот день

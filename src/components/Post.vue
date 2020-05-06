@@ -15,10 +15,19 @@
     </div>
     <div v-else class="post _full">
       <div class="post__header">
-        <div class="post__time-small">
+        <div class="post__time-small" v-if="post.status === 'new'">
           <img src="../assets/img/icons/clock.svg">
           {{ postTime(post.run_dt) }}
 <!--          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>-->
+        </div>
+        <div class="post__time-small _done"
+             v-if="post.status === 'finish'"
+             v-b-popover.top.hover="{ variant: 'success',  content: 'Пост опубликован' }"
+        >
+          <div class="post__time-small-done">
+            <i class="fas fa-check"></i>
+          </div>
+          {{ postTime(post.run_dt) }}
         </div>
         <div class="post__tags">
 <!--          <div class="tag" v-b-tooltip.hover title="Моя рубрика">М</div>-->
@@ -114,15 +123,34 @@
     }
 
     &__time-small {
+      display: flex;
       font-size: 14px;
+      font-weight: bold;
       //color: lighten($color-primary, 50%);
       img {
         width: 20px;
         margin-right: 5px;
       }
-      i {
-        margin-left: 5px;
+      /*i {*/
+      /*  margin-left: 5px;*/
+      /*}*/
+
+      &._done {
+        color: $color-success;
       }
+    }
+
+    &__time-small-done {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: $color-success;
+      margin-right: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: white;
     }
 
     &__tags {

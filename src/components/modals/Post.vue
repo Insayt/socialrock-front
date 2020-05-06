@@ -1,6 +1,5 @@
 <template>
-  <b-modal ref="post-modal" size="lg">
-<!--    no-close-on-esc no-close-on-backdrop-->
+  <b-modal ref="post-modal" size="lg" no-close-on-esc no-close-on-backdrop>
     <template v-slot:modal-header-close>
       <img src="@/assets/img/icons/times.svg">
     </template>
@@ -17,6 +16,7 @@
                  :style="{ backgroundImage: `url(${account.picture})` }"
                  :class="{ _active: account.checked }"
                  @click="checkAccount(account, index)"
+                 v-b-tooltip.hover :title="account.name"
             >
               <div class="network__bg">
                 <div class="network__check">
@@ -125,27 +125,27 @@
               ></i>
             </div>
           </div>
-          <div class="post-editor__date">
-            <div class="post-editor__date-text">
-              <b-form-checkbox
-                v-model="isAutoDelete"
-              >
-                Автоудаление
-              </b-form-checkbox>
-            </div>
-            <div v-if="isAutoDelete">
-              <datetime type="datetime"
-                        class="theme-dark"
-                        title="Дата и время автоудаления:"
-                        placeholder="Дата и время"
-                        v-model="deleteDt"
-                        :value-zone="currentProject.timezone"
-                        :zone="currentProject.timezone"
-                        :phrases="{ok: 'Ок', cancel: 'Отмена'}"
-                        :min-datetime="runDt"
-              ></datetime>
-            </div>
-          </div>
+<!--          <div class="post-editor__date">-->
+<!--            <div class="post-editor__date-text">-->
+<!--              <b-form-checkbox-->
+<!--                v-model="isAutoDelete"-->
+<!--              >-->
+<!--                Автоудаление-->
+<!--              </b-form-checkbox>-->
+<!--            </div>-->
+<!--            <div v-if="isAutoDelete">-->
+<!--              <datetime type="datetime"-->
+<!--                        class="theme-dark"-->
+<!--                        title="Дата и время автоудаления:"-->
+<!--                        placeholder="Дата и время"-->
+<!--                        v-model="deleteDt"-->
+<!--                        :value-zone="currentProject.timezone"-->
+<!--                        :zone="currentProject.timezone"-->
+<!--                        :phrases="{ok: 'Ок', cancel: 'Отмена'}"-->
+<!--                        :min-datetime="runDt"-->
+<!--              ></datetime>-->
+<!--            </div>-->
+<!--          </div>-->
           <!--<div class="post-editor__info">-->
           <!--<div class="post-editor__info-emoji">❓</div>-->
           <!--<div>-->
@@ -165,28 +165,40 @@
     </div>
     <template v-slot:modal-footer>
       <div class="w-100">
-        <div class="float-left">
-          <b-dropdown class="dropdown-calendar" variant="black" toggle-class="text-decoration-none" no-caret>
-            <template v-slot:button-content>
-              Рубрика <i class="fas fa-chevron-down ml-2"></i>
-            </template>
-            <b-dropdown-text>
-              123
-            </b-dropdown-text>
-          </b-dropdown>
-        </div>
-        <b-button
-          variant="primary"
-          class="float-right"
-          @click="savePost"
-        >
-          <template v-if="!postId">
+<!--        <div class="float-left">-->
+<!--          <b-dropdown class="dropdown-calendar" variant="black" toggle-class="text-decoration-none" no-caret>-->
+<!--            <template v-slot:button-content>-->
+<!--              Рубрика <i class="fas fa-chevron-down ml-2"></i>-->
+<!--            </template>-->
+<!--            <b-dropdown-text>-->
+<!--              123-->
+<!--            </b-dropdown-text>-->
+<!--          </b-dropdown>-->
+<!--        </div>-->
+        <div class="float-right">
+          <b-button
+            class="post-editor-delete"
+            variant="danger"
+            @click="deletePost"
+            v-if="postId"
+          >
+            Удалить пост
+          </b-button>
+          <b-button
+            variant="primary"
+            @click="savePost"
+            v-if="!postId"
+          >
             Запланировать
-          </template>
-          <template>
+          </b-button>
+          <b-button
+            variant="primary"
+            @click="savePost"
+            v-if="postId && status === 'new'"
+          >
             Сохранить
-          </template>
-        </b-button>
+          </b-button>
+        </div>
 <!--        <b-button-->
 <!--          variant="black"-->
 <!--          class="float-right mr-3"-->
@@ -218,7 +230,8 @@
       deleteDt: '',
       calendarOptions: [],
       media: [],
-      postId: null
+      postId: null,
+      status: 'new'
     }),
     computed: {
       currentProject () {
@@ -235,20 +248,27 @@
       this.$bus.$on('modal:post', (post) => {
         this.$nextTick(() => {
           if (!post._id) {
+            this.status = 'new';
+            this.postId = null;
             let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
             this.accounts = copyAccounts.map(a => {
               a.checked = true;
               return a;
             });
-            this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
+            if (post.run_dt) {
+              this.runDt = DateTime.fromISO(post.run_dt).toString();
+            } else {
+              this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
+            }
             this.media = [];
             this.text = '';
           } else {
-            console.log(post);
+            this.status = post.status;
             this.text = post.text;
             this.media = post.media || [];
             this.postId = post._id;
             let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
+            this.runDt = DateTime.fromISO(post.run_dt).toString();
             this.accounts = copyAccounts.map(a => {
               let isCheck = false;
               post.social_accounts.forEach(acc => {
@@ -353,10 +373,11 @@
           }),
           text: this.text,
           project_id: this.currentProject._id,
-          run_dt: this.runDt
+          run_dt: this.runDt,
+          media: this.media
         };
-        if (this.media.length) {
-          postData.media = this.media;
+        if (this.postId) {
+          postData.post_id = this.postId;
         }
         if (this.deleteDt) {
           postData.delete_dt = this.deleteDt;
@@ -391,6 +412,36 @@
           // .finally(() => {
           //   this.loading = false;
           // })
+      },
+
+      deletePost () {
+        this.$swal({
+          title: `Удалить пост?`,
+          html: `Пост будет удален навсегда. Собранная по нему аналитика сохранится`,
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Удалить',
+          cancelButtonText: 'Отмена',
+        }).then(res => {
+          if (res.value) {
+            this.$store.dispatch('user/deletePost', {
+              post_id: this.postId,
+              project_id: this.currentProject._id
+            })
+            .then(res => {
+              this.$swal({
+                title: `Пост удален`,
+                type: 'success',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 5000
+              });
+              this.$bus.$emit('calendar:reload');
+              this.$refs['post-modal'].hide();
+            });
+          }
+        });
       }
     }
   }
@@ -503,5 +554,9 @@
         background-color: $color-danger-hover;
       }
     }
+  }
+
+  .post-editor-delete {
+    margin-right: 10px;
   }
 </style>
