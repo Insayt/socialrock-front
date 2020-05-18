@@ -362,6 +362,12 @@ export default {
           return res.data;
         })
     },
+    savePostVideo ({ state, commit }, { project_id, file }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/upload/video`, file)
+        .then(res => {
+          return res.data;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

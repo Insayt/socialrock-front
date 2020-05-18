@@ -80,7 +80,7 @@
               </div>
               <input id="file"
                      type="file"
-                     accept=".jpg,.jpeg,.png"
+                     accept=".jpg,.jpeg,.png, video/*"
                      hidden
                      ref="file"
                      @change="handleFileUpload"
@@ -309,37 +309,12 @@
           return;
         }
 
+        console.log(file);
         if (file.type.indexOf('video') !== -1) {
-          // this.createVideo(files[0]);
+          this.createVideo(file);
         } else {
           this.createImage(file);
         }
-        // let fd = new FormData();
-        // fd.append('file', file);
-        // this.$store.dispatch('user/uploadPattern', {
-        //   project_id: this.currentProject._id,
-        //   form_data: fd
-        // }).then(() => {
-        //   this.$swal({
-        //     title: `Текстура загружена`,
-        //     type: 'success',
-        //     toast: true,
-        //     position: 'top-end',
-        //     showConfirmButton: false,
-        //     timer: 5000
-        //   });
-        // }).catch(() => {
-        //   this.$swal({
-        //     title: `Ошибка загрузки`,
-        //     type: 'error',
-        //     toast: true,
-        //     position: 'top-end',
-        //     showConfirmButton: false,
-        //     timer: 5000
-        //   });
-        // }).finally(() => {
-        //   this.patternLoading = false;
-        // })
       },
       createImage (file) {
         // if (this.stories) {
@@ -353,6 +328,18 @@
         reader.onload = (e) => {
           this.$bus.$emit('modal:crop', { file: e.target.result, firstMedia: this.media[0] });
         };
+      },
+      createVideo (video) {
+        let fd = new FormData();
+        fd.append('file', video);
+        this.$store.dispatch('user/savePostVideo', {
+          project_id: this.currentProject._id,
+          file: fd
+        })
+          .then((res) => {
+            this.$bus.$emit('modal:crop', { file: res.preview, firstMedia: this.media[0] });
+            console.log(res);
+          })
       },
       selectEmoji (emoji) {
         this.text += emoji.native;
@@ -406,12 +393,6 @@
             this.runDt = DateTime.local().setZone(this.currentProject.timezone).set({seconds: 0, milliseconds: 0}).toString();
             // this.$router.push({ name: 'calendar', params: { projectId: res.project_id } });
           })
-          // .catch(e => {
-          //   if (e.response && e.response.data.errors) this.errors = e.response.data.errors;
-          // })
-          // .finally(() => {
-          //   this.loading = false;
-          // })
       },
 
       deletePost () {
