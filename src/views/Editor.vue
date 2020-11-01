@@ -80,6 +80,32 @@
       <div class="editor__title">
         🔥 Или выберите из готовых шаблонов
       </div>
+      <div class="editor__tabs">
+        <div class="tabs">
+          <div class="">
+            <ul role="tablist" class="nav nav-tabs">
+              <li role="presentation" class="nav-item">
+                <a href="#" class="nav-link" :class="{ active: designType === 'square' }" @click.prevent="designType = 'square'">Квадратный</a>
+              </li>
+              <li>
+                <a href="#" class="nav-link" :class="{ active: designType === 'horizontal' }" @click.prevent="designType = 'horizontal'">Горизонтальный</a>
+              </li>
+              <li>
+                <a href="#" class="nav-link" :class="{ active: designType === 'vertical' }" @click.prevent="designType = 'vertical'">Вертикальный</a>
+              </li>
+              <li>
+                <a href="#" class="nav-link" :class="{ active: designType === 'stories' }" @click.prevent="designType = 'stories'">Stories</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+<!--        <b-tabs>-->
+<!--          <b-tab title="Квадратный" :active="designType === 'square'"></b-tab>-->
+<!--          <b-tab title="Горизонтальный"></b-tab>-->
+<!--          <b-tab title="Вертикальный"></b-tab>-->
+<!--          <b-tab title="Stories"></b-tab>-->
+<!--        </b-tabs>-->
+      </div>
       <div class="editor__items">
         <div class="editor-item"
              v-for="d in showDesigns"
@@ -97,24 +123,6 @@
             ></div>
           </div>
         </div>
-<!--        <div class="editor-item">-->
-<!--          <div class="editor-item__img"></div>-->
-<!--          <div class="editor-item__title">-->
-<!--            Горизонтальный-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="editor-item">-->
-<!--          <div class="editor-item__img"></div>-->
-<!--          <div class="editor-item__title">-->
-<!--            Stories-->
-<!--          </div>-->
-<!--        </div>-->
-<!--        <div class="editor-item">-->
-<!--          <div class="editor-item__img"></div>-->
-<!--          <div class="editor-item__title">-->
-<!--            Stories-->
-<!--          </div>-->
-<!--        </div>-->
       </div>
     </div>
   </div>
@@ -127,31 +135,31 @@
       designType: 'square'
     }),
     computed: {
-      currentProject () {
+      currentProject() {
         return this.$store.getters['user/currentProject'];
       },
-      showDesigns () {
+      showDesigns() {
         return this.designs[this.designType];
       }
     },
     methods: {
-      redirectToEditor (id) {
-        this.$router.push({ name: 'editor-create', params: { id: id } });
+      redirectToEditor(id) {
+        this.$router.push({name: 'editor-create', params: {id: id}});
       },
-      createDesign (type) {
+      createDesign(type) {
         this.$bus.$emit('fixedloader:start');
         this.$store.dispatch('user/createDesign', {
           project_id: this.currentProject._id,
           format: type
         })
-        .then(res => {
-          this.$router.push({ name: 'editor-create', params: { id: res.design._id } });
-        })
-        .finally(() => {
-          this.$bus.$emit('fixedloader:stop');
-        })
+          .then(res => {
+            this.$router.push({name: 'editor-create', params: {id: res.design._id}});
+          })
+          .finally(() => {
+            this.$bus.$emit('fixedloader:stop');
+          })
       },
-      createDesignFromTemplate (design) {
+      createDesignFromTemplate(design) {
         this.$bus.$emit('fixedloader:start');
         this.$store.dispatch('user/createDesign', {
           project_id: this.currentProject._id,
@@ -159,14 +167,14 @@
           object: design.object,
           image_url: design.image_url
         })
-        .then(res => {
-          this.$router.push({ name: 'editor-create', params: { id: res.design._id } });
-        })
-        .finally(() => {
-          this.$bus.$emit('fixedloader:stop');
-        })
+          .then(res => {
+            this.$router.push({name: 'editor-create', params: {id: res.design._id}});
+          })
+          .finally(() => {
+            this.$bus.$emit('fixedloader:stop');
+          })
       },
-      deleteDesign (id) {
+      deleteDesign(id) {
         this.$swal({
           title: `Удалить дизайн?`,
           type: 'warning',
@@ -205,6 +213,7 @@
 
 <style scoped lang="scss">
   @import '../variables';
+
   .editor {
     padding: 20px;
 
@@ -221,12 +230,22 @@
       color: $color-font-gray;
       margin-bottom: 20px;
     }
+
     &__items {
       display: flex;
       flex-wrap: wrap;
       margin-bottom: 15px;
     }
+
+    &__tabs {
+      margin-bottom: 20px;
+
+      .tabs .nav-tabs {
+        padding-left: 0;
+      }
+    }
   }
+
   .editor-item {
     margin-right: 15px;
     text-align: center;
@@ -238,6 +257,7 @@
       .editor-item__img {
         box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
       }
+
       .editor-item__delete {
         display: block;
       }
@@ -266,6 +286,7 @@
       justify-content: center;
       align-items: center;
     }
+
     &__title {
       font-weight: normal;
       font-size: 16px;
@@ -274,19 +295,23 @@
     &__type {
       background-color: white;
       background-size: cover;
+      background-position: center;
 
       &._square {
         width: 250px;
         height: 250px;
       }
+
       &._horizontal {
         width: 250px;
-        height: 150px;
+        height: 140px;
       }
+
       &._vertical {
         width: 140px;
         height: 200px;
       }
+
       &._stories {
         width: 130px;
         height: 250px;

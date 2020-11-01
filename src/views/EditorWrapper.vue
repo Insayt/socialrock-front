@@ -75,6 +75,12 @@
 <!--          <i class="fas fa-redo"></i>-->
 <!--        </b-button>-->
         <b-button variant="black"
+                  v-b-tooltip.hove
+                  @click="exportJSON"
+        >
+          <i class="fas fa-file-export"></i>
+        </b-button>
+        <b-button variant="black"
                   :disabled="!selection.type"
                   v-b-tooltip.hove
                   title="Удалить объект"
@@ -169,9 +175,6 @@
         </div>
       </div>
     </div>
-    <!--<div class="editor-resize">-->
-    <!--Resize-->
-    <!--</div>-->
   </div>
 </template>
 
@@ -201,7 +204,8 @@
       canvas: null,
       canvasParams: {},
       canvasBgImage: null,
-      selection: {} // Текущее выделение
+      selection: {}, // Текущее выделение
+      canvasJSON: ''
     }),
     computed: {
       currentProject () {
@@ -461,7 +465,7 @@
           this.canvas.backgroundColor = grad.toLive(this.canvas.contextContainer);
           this.canvas.backgroundGradient = grad.toObject();
         } else {
-          this.canvas.backgroundColor = 'white';
+          this.canvas.backgroundColor = ds.object.background || 'white';
         }
         this.canvas.renderAll();
       });
@@ -578,6 +582,16 @@
               })
             })
         })
+      },
+      exportJSON () {
+        console.log(this.canvas.toJSON());
+        this.$swal({
+          title: `Экспорт содержимого`,
+          html: `<textarea>${JSON.stringify(this.canvas.toJSON())}</textarea>`,
+          type: 'warning',
+          showCancelButton: true,
+          cancelButtonText: 'Закрыть',
+        });
       },
       exportCanvas () {
         let url = this.canvas.toDataURL({
