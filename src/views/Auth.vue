@@ -65,6 +65,11 @@
       password: '',
       repeatPassword: ''
     }),
+    computed: {
+      currentProject () {
+        return this.$store.getters['user/currentProject'];
+      },
+    },
     methods: {
       login () {
         this.loading = true;
@@ -104,7 +109,7 @@
             this.loading = false;
           })
       },
-    }
+    },
   }
 </script>
 

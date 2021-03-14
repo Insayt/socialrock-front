@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="calendar-loading" v-if="loading">
+      <i class="fas fa-cog fa-spin"></i>
+    </div>
     <div class="access-denied" v-if="!currentProject.access.posts">
       <img src="../assets/img/access_denied.svg">
       <div class="access-denied__header">
@@ -12,19 +15,6 @@
     <div class="calendar" v-else>
       <div class="calendar-content">
         <div class="calendar-rows">
-          <!--<div class="calendar-rows__item">-->
-          <!--<div class="calendar-rows__day">-->
-          <!--<span>Понедельник,</span> 23 октября-->
-          <!--</div>-->
-          <!--<div class="calendar-rows__posts">-->
-          <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
-          <!--<post :post="{}"></post>-->
-          <!--<post :post="{}"></post>-->
-          <!--<post :post="{ id: 1 }" @click="showPostModal"></post>-->
-          <!--<post :post="{}"></post>-->
-          <!--</div>-->
-          <!--</div>-->
-
           <div class="calendar-rows__item" v-for="day in days">
             <div class="calendar-rows__day">
               <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
@@ -37,13 +27,8 @@
                   <div>Запланировать пост</div>
                 </div>
               </div>
-              <!--<post :post="{}"></post>-->
-              <!--<post :post="{}"></post>-->
-              <!--<post :post="{}"></post>-->
-              <!--<post :post="{}"></post>-->
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -60,7 +45,8 @@
       Post,
     },
     data: () => ({
-      days: []
+      days: [],
+      loading: false,
     }),
     computed: {
       currentProject () {
@@ -69,15 +55,16 @@
     },
     mounted () {
       this.$bus.$on('calendar:reload', this.loadPosts);
-      this.loadPosts();
+      this.loadPosts({});
     },
     beforeDestroy () {
       this.$bus.$off('calendar:reload');
     },
     methods: {
-      loadPosts () {
-        let start = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
-        let end = DateTime.local().set({hours: 24, minutes: 0, seconds: 0, milliseconds: 0}).plus({ days: 6 });
+      loadPosts ({ startDt, endDt }) {
+        this.loading = true;
+        let start = startDt || DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+        let end = endDt ? endDt.plus({ days: 1 }) : DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 });
         this.$store.dispatch('user/getPosts', {
           start: start.toString(),
           end: end.toString(),
@@ -124,20 +111,26 @@
                 }
               });
               day.posts = sortBy(day.posts, 'run_dt');
-              // console.log(day.posts);
               results.push(day)
             }
             this.days = results;
+          })
+          .finally(() => {
+            this.loading = false;
           })
       },
       dayName (dt) {
         return DateTime.fromISO(dt).setLocale('ru').toFormat('EEEE');
       },
       dayDate (dt) {
-        return DateTime.fromISO(dt).setLocale('ru').toFormat('dd MMMM');
+        return DateTime.fromISO(dt).setLocale('ru').toFormat('d MMMM');
       },
       showPostModal (post) {
-        this.$bus.$emit('modal:post', post);
+        if (post.status === 'error' || post.status === 'finish') {
+          this.$bus.$emit('modal:post-status', post);
+        } else {
+          this.$bus.$emit('modal:post', post);
+        }
       }
     }
   }
@@ -148,6 +141,24 @@
 
   .calendar {
     display: flex;
+    position: relative;
+  }
+
+  .calendar-loading {
+    position: absolute;
+    background: $color-bg-0;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    color: white;
+    padding-left: 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    opacity: 0.7;
   }
 
   .calendar-sidebar {

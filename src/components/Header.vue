@@ -2,14 +2,26 @@
   <div class="calendar-header">
     <div class="calendar-header__dates">
       <template v-if="currentRoute === 'calendar'">
-        <b-button class="calendar-header__today" variant="black" size="sm">Сегодня</b-button>
-        <b-button class="calendar-header__arrow" variant="black" size="sm">
+        <b-button class="calendar-header__today" variant="black" size="sm" @click="today">Сегодня</b-button>
+        <b-button class="calendar-header__arrow"
+                  variant="black"
+                  size="sm"
+                  v-b-tooltip.hover
+                  title="Предыдущая неделя"
+                  @click="prevWeek"
+        >
           <i class="fas fa-chevron-left"></i>
         </b-button>
-        <b-button class="calendar-header__arrow" variant="black" size="sm">
+        <b-button class="calendar-header__arrow"
+                  variant="black"
+                  size="sm"
+                  @click="nextWeek"
+                  v-b-tooltip.hover
+                  title="Следующая неделя"
+        >
           <i class="fas fa-chevron-right"></i>
         </b-button>
-        <span class="calendar-header__current">23 октября - 30 октября 2019</span>
+        <span class="calendar-header__current" v-if="startDt">{{ formatedStartDate }} - {{ formatedEndDate }}</span>
         <!--<b-dropdown class="dropdown-calendar" size="sm" variant="black" toggle-class="text-decoration-none" no-caret>-->
           <!--<template v-slot:button-content>-->
             <!--Выбрать период <i class="fas fa-calendar-alt ml-1"></i>-->
@@ -72,6 +84,8 @@
 </template>
 
 <script>
+  import { DateTime } from "luxon";
+
   export default {
     props: {
       currentRoute: {
@@ -79,6 +93,10 @@
         required: true,
       }
     },
+    data: () => ({
+      startDt: null,
+      endDt: null,
+    }),
     computed: {
       currentProject () {
         return this.$store.getters['user/currentProject'];
@@ -86,6 +104,12 @@
       user () {
         return this.$store.getters['user/user'];
       },
+      formatedStartDate () {
+        return this.startDt.toLocaleString({ month: 'long', day: 'numeric' });
+      },
+      formatedEndDate () {
+        return this.endDt.toLocaleString(DateTime.DATE_FULL);
+      }
     },
     methods: {
       logout () {
@@ -94,6 +118,34 @@
             this.$router.push({ name: 'auth' });
           })
       },
+      prevWeek () {
+        this.startDt = this.startDt.minus({ weeks: 1 });
+        this.endDt = this.endDt.minus({ weeks: 1 });
+        this.$bus.$emit('calendar:reload', {
+          startDt: this.startDt,
+          endDt: this.endDt,
+        });
+      },
+      nextWeek () {
+        this.startDt = this.startDt.plus({ weeks: 1 });
+        this.endDt = this.endDt.plus({ weeks: 1 });
+        this.$bus.$emit('calendar:reload', {
+          startDt: this.startDt,
+          endDt: this.endDt,
+        });
+      },
+      today () {
+        this.startDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+        this.endDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
+        this.$bus.$emit('calendar:reload', {
+          startDt: this.startDt,
+          endDt: this.endDt,
+        });
+      },
+    },
+    mounted () {
+      this.startDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+      this.endDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
     }
   }
 </script>

@@ -15,6 +15,7 @@
     </div>
     <modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>
     <modal-crop v-if="$router.currentRoute.name !== 'auth'"></modal-crop>
+    <modal-post-status v-if="$router.currentRoute.name !== 'auth'"></modal-post-status>
     <div class="loader" v-show="loaderWrap">
       <i class="fas fa-cog fa-spin"></i>
     </div>
@@ -27,6 +28,7 @@
   import Sidebar from '@/components/Sidebar';
   import ModalPost from '@/components/modals/Post';
   import ModalCrop from '@/components/modals/CropFile';
+  import ModalPostStatus from '@/components/modals/PostStatus';
 
   export default {
     components: {
@@ -34,6 +36,7 @@
       sHeader,
       ModalPost,
       ModalCrop,
+      ModalPostStatus,
     },
     data: () => ({
       isSidebarCollapse: false,
@@ -46,6 +49,16 @@
       },
     },
     mounted () {
+      if (this.$route.query && this.$route.query.email && this.$route.query.token) {
+        let data = {
+          email: this.$route.query.email,
+          password: this.$route.query.token,
+        };
+        this.$store.dispatch('user/login', data)
+            .then(() => {
+              this.$router.push({ name: 'calendar', params: { projectId: this.$store.getters['user/currentProject'].short_id } });
+            })
+      }
       this.$bus.$on('loading:start', () => {
         this.$refs.topProgress.start();
       });

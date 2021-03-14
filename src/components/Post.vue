@@ -13,24 +13,32 @@
         <!--</div>-->
       </div>
     </div>
-    <div v-else class="post _full">
+    <div v-else class="post _full" :class="{ _success: post.status === 'finish', _error: post.status === 'error' }">
       <div class="post__header">
         <div class="post__time-small" v-if="post.status === 'new'">
           <img src="../assets/img/icons/clock.svg">
           {{ postTime(post.run_dt) }}
 <!--          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>-->
         </div>
-        <div class="post__time-small _done"
+        <div class="post__time-small"
              v-if="post.status === 'finish'"
-             v-b-popover.top.hover="{ variant: 'success',  content: 'Пост опубликован' }"
+             v-b-popover.top.hover="{ variant: 'success',  content: 'Пост опубликован успешно' }"
         >
           <div class="post__time-small-done">
             <i class="fas fa-check"></i>
           </div>
           {{ postTime(post.run_dt) }}
         </div>
+        <div class="post__time-small"
+             v-if="post.status === 'error'"
+             v-b-popover.top.hover="{ variant: 'danger',  content: 'Пост опубликован с ошибками' }"
+        >
+          <div class="post__time-small-done _error">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          {{ postTime(post.run_dt) }}
+        </div>
         <div class="post__tags">
-<!--          <div class="tag" v-b-tooltip.hover title="Моя рубрика">М</div>-->
 <!--          <div class="tag" v-b-tooltip.hover title="Следующая рубрика">С</div>-->
         </div>
       </div>
@@ -114,6 +122,14 @@
       }
     }
 
+    &._success {
+      background-color: darken($color-success, 25%);
+    }
+
+    &._error {
+      background-color: darken($color-danger, 25%);
+    }
+
     &__header {
       display: flex;
       padding: 10px 10px 0 10px;
@@ -151,6 +167,10 @@
       justify-content: center;
       font-size: 12px;
       color: white;
+
+      &._error {
+        background-color: $color-danger;
+      }
     }
 
     &__tags {
@@ -171,6 +191,14 @@
 
       &:last-child {
         margin-right: 0;
+      }
+
+      &.error {
+        background-color: $color-danger;
+      }
+
+      &.success {
+        background-color: $color-success;
       }
     }
 
