@@ -39,7 +39,7 @@
       </div>
     </div>
     <div class="sidebar-action">
-      <b-button class="sidebar-button" variant="warning" block>
+      <b-button class="sidebar-button" variant="warning" block @click="$bus.$emit('modal:post', {});">
         <i class="fas fa-plus"></i>
         <span>Написать пост</span>
       </b-button>

@@ -4,7 +4,7 @@
       <img src="@/assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
-      Создание поста
+      Создание поста {{ isOld }}
 <!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal">
@@ -231,7 +231,8 @@
       calendarOptions: [],
       media: [],
       postId: null,
-      status: 'new'
+      status: 'new',
+      isOld: false, // Дата поста уже прошла значит нельзя редактировать
     }),
     computed: {
       currentProject () {
@@ -246,6 +247,7 @@
     },
     mounted () {
       this.$bus.$on('modal:post', (post) => {
+        this.isOld = false;
         this.$nextTick(() => {
           if (!post._id) {
             this.status = 'new';
@@ -263,12 +265,16 @@
             this.media = [];
             this.text = '';
           } else {
+            // this.$router.push({ name: this.$route.name, params: { postId: post._id } });
             this.status = post.status;
             this.text = post.text;
             this.media = post.media || [];
             this.postId = post._id;
             let copyAccounts = Array.from(this.$store.getters['user/currentProject'].social_accounts);
             this.runDt = DateTime.fromISO(post.run_dt).toString();
+            if (DateTime.local().toMillis() > DateTime.fromISO(post.run_dt).toMillis()) {
+              this.isOld = true;
+            }
             this.accounts = copyAccounts.map(a => {
               let isCheck = false;
               post.social_accounts.forEach(acc => {

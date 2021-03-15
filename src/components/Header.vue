@@ -2,7 +2,10 @@
   <div class="calendar-header">
     <div class="calendar-header__dates">
       <template v-if="currentRoute === 'calendar'">
-        <b-button class="calendar-header__today" variant="black" size="sm" @click="today">Сегодня</b-button>
+        <b-button class="calendar-header__today" variant="black" size="sm" @click="today">
+          <div class="calendar-header__today-icon"></div>
+          Сегодня
+        </b-button>
         <b-button class="calendar-header__arrow"
                   variant="black"
                   size="sm"
@@ -59,9 +62,9 @@
         {{ user.email }} <i class="fas fa-chevron-down"></i>
       </template>
       <b-dropdown-item href="#">
-        <i class="fas fa-bell"></i>
-        Уведомления
-        <b-badge class="ml-2" variant="warning">4</b-badge>
+        <i class="fas fa-exclamation-triangle"></i>
+        Ошибки
+        <b-badge class="ml-2" variant="danger">4</b-badge>
       </b-dropdown-item>
       <b-dropdown-item href="#">
         <i class="fas fa-user"></i>
@@ -135,8 +138,8 @@
         });
       },
       today () {
-        this.startDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
-        this.endDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
+        this.startDt = DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+        this.endDt = DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
         this.$bus.$emit('calendar:reload', {
           startDt: this.startDt,
           endDt: this.endDt,
@@ -144,8 +147,8 @@
       },
     },
     mounted () {
-      this.startDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
-      this.endDt = DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
+      this.startDt = DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+      this.endDt = DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 }).minus({ days: 1 });
     }
   }
 </script>
@@ -183,7 +186,17 @@
     }
 
     &__today {
+      display: flex;
+      align-items: center;
       margin-right: 20px;
+    }
+
+    &__today-icon {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: $color-success;
+      margin-right: 8px;
     }
 
     &__arrow {

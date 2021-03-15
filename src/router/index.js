@@ -26,7 +26,7 @@ const router = new VueRouter({
       component: ProjectWrapper,
       children: [
         {
-          path: 'calendar',
+          path: 'calendar/:postId?',
           name: 'calendar',
           component: Calendar,
           meta: {

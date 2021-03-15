@@ -18,6 +18,7 @@
           <div class="calendar-rows__item" v-for="day in days">
             <div class="calendar-rows__day">
               <span>{{ dayName(day.dt) }},</span> {{ dayDate(day.dt) }}
+              <span class="calendar-rows__today" v-if="isToday(day.dt)"></span>
             </div>
             <div class="calendar-rows__posts">
               <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal(post)"></post>
@@ -61,10 +62,10 @@
       this.$bus.$off('calendar:reload');
     },
     methods: {
-      loadPosts ({ startDt, endDt }) {
+      loadPosts (params = {}) {
         this.loading = true;
-        let start = startDt || DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
-        let end = endDt ? endDt.plus({ days: 1 }) : DateTime.local().set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 });
+        let start = params.startDt || DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
+        let end = params.endDt ? params.endDt.plus({ days: 1 }) : DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0}).plus({ weeks: 1 });
         this.$store.dispatch('user/getPosts', {
           start: start.toString(),
           end: end.toString(),
@@ -125,10 +126,14 @@
       dayDate (dt) {
         return DateTime.fromISO(dt).setLocale('ru').toFormat('d MMMM');
       },
+      isToday (dt) {
+        return DateTime.fromISO(dt).hasSame(DateTime.local(), 'day');
+      },
       showPostModal (post) {
         if (post.status === 'error' || post.status === 'finish') {
           this.$bus.$emit('modal:post-status', post);
         } else {
+          // this.$router.push({ name: 'calendar', params: { postId: post._id } });
           this.$bus.$emit('modal:post', post);
         }
       }
@@ -184,6 +189,17 @@
       span {
         color: #A2A2A2;
       }
+    }
+
+    &__today {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: $color-success;
+      margin-left: 8px;
+      position: relative;
+      top: -1px;
     }
 
     &__posts {
