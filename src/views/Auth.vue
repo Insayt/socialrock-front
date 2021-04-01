@@ -9,7 +9,7 @@
       </div>
       <div class="box">
         <b-tabs class="auth-tabs">
-          <b-tab title="Вход" active>
+          <b-tab title="Вход" active @click="changedTab">
             <b-form class="form-auth__form" @submit.prevent="login">
               <div class="auth__form-group">
                 <b-input placeholder="Email" :class="{ 'is-invalid': errors.email }" v-model="email"></b-input>
@@ -26,7 +26,7 @@
               <b-button size="lg" type="submit" variant="primary" block>Войти</b-button>
             </b-form>
           </b-tab>
-          <b-tab title="Регистрация">
+          <b-tab title="Регистрация" @click="changedTab">
             <b-form class="form-auth__form" @submit.prevent="register">
               <div class="auth__form-group">
                 <b-input placeholder="Email" v-model="email" :class="{ 'is-invalid': errors.email }"></b-input>
@@ -71,6 +71,9 @@
       },
     },
     methods: {
+      changedTab () {
+        this.errors = {};
+      },
       login () {
         this.loading = true;
         this.errors = {};

@@ -41,7 +41,6 @@
 <script>
   export default {
     data: () => ({
-      testToken: 'e09725369ada0bc39ccd57281f8430e9fd75bb4df36fa725e9586d25234d17a67ec3c9c5d7080aba1fb2f',
       popup: {},
       checkInterval: null
     }),
@@ -95,61 +94,51 @@
           })
       },
       addAccount (type) {
-        if (type === 'vk') {
-          this.$store.dispatch('user/createTestToken', { token: this.testToken })
-            .then((res) => {
-              return this.$store.dispatch('user/getVkGroups')
-            })
-            .then((res) => {
-              this.$bus.$emit('modal:select-account', res);
-            })
-            .catch(e => {
-              this.$swal({
-                title: `Ошибка получения страниц`,
-                type: 'error',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 5000
-              })
-            })
-        }
-        // const payload = JSON.stringify({
-        //   user_id: this.$store.getters['user/user']._id,
-        //   state: 'auth'
-        // });
-        // this.popup = this.PopupCenter(
-        //   `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=https://oauth.vk.com/blank.html&scope=groups,offline,wall,stats&response_type=token&state=${payload}&v=5.37&revoke=1`,
-        //   'authvk',
-        //   700,
-        //   500
-        // );
-        // if (this.checkInterval) {
-        //   clearInterval(this.checkInterval);
-        //   this.checkInterval = null;
+        // if (type === 'vk') {
+        //   this.$store.dispatch('user/createTestToken', { token: this.testToken })
+        //     .then((res) => {
+        //       return this.$store.dispatch('user/getVkGroups')
+        //     })
+        //     .then((res) => {
+        //       this.$bus.$emit('modal:select-account', res);
+        //     })
+        //     .catch(e => {
+        //       this.$swal({
+        //         title: `Ошибка получения страниц`,
+        //         type: 'error',
+        //         toast: true,
+        //         position: 'top-end',
+        //         showConfirmButton: false,
+        //         timer: 5000
+        //       })
+        //     })
         // }
-        // this.checkInterval = setInterval(() => {
-        //   if (this.popup.closed) {
-        //     this.popup = {};
-        //     this.$store.dispatch('user/getVkGroups')
-        //       .then((res) => {
-        //         console.log(res);
-        //         // res.forEach((r) => {
-        //         //   if (this.vk.groups && this.vk.groups.length) {
-        //         //     const ids = this.vk.groups.map(g => {
-        //         //       if (g.access_token) return g.id;
-        //         //     });
-        //         //     if (ids.includes(r.id)) r.selected = true;
-        //         //   }
-        //         // });
-        //         // this.localGroups = res;
-        //         // this.$refs['vk-group-modal'].show();
-        //         // https://www.facebook.com/v5.0/dialog/oauth?response_type=token&display=popup&client_id=545910552866235&redirect_uri=https%3A%2F%2Fdevelopers.facebook.com%2Ftools%2Fexplorer%2Fcallback&scope=
-        //       });
-        //     clearInterval(this.checkInterval);
-        //     this.checkInterval = null;
-        //   }
-        // }, 1000);
+        const payload = JSON.stringify({
+          user_id: this.$store.getters['user/user']._id,
+          state: 'auth'
+        });
+        this.popup = this.PopupCenter(
+          `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=https://oauth.vk.com/blank.html&scope=groups,offline,wall,stats,photos&response_type=token&state=${payload}&v=5.37&revoke=1`,
+          // `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=${process.env.VUE_APP_VK_ID_APP_REDIRECT}&scope=groups,offline,wall,stats&response_type=code&state=${payload}&v=5.37&revoke=1`,
+          'authvk',
+          700,
+          500
+        );
+        if (this.checkInterval) {
+          clearInterval(this.checkInterval);
+          this.checkInterval = null;
+        }
+        this.checkInterval = setInterval(() => {
+          if (this.popup.closed) {
+            this.popup = {};
+            this.$store.dispatch('user/getVkGroups')
+              .then((res) => {
+                this.$bus.$emit('modal:select-account', res);
+              });
+            clearInterval(this.checkInterval);
+            this.checkInterval = null;
+          }
+        }, 1000);
       }
     }
   }
