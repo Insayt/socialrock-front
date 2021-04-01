@@ -19,7 +19,34 @@
           <div>
             <b>Ошибка выкладки поста!</b>
           </div>
-          {{ e.error_msg }}
+          <div>
+            <template v-if="e.type === 'vk'">
+              <template v-if="e.code === 5">
+                Авторизация пользователя не удалась
+              </template>
+              <template v-else>
+                Код ошибки - {{ e.code }}
+              </template>
+            </template>
+          </div>
+        </div>
+      </div>
+      <div class="status _success" v-for="s in success">
+        <div class="post-social"
+             :style="{ backgroundImage: `url(${s.social_account.picture})` }"
+             v-b-tooltip.hover :title="s.social_account.name"
+        >
+          <i v-if="s.social_account.social_type === 'vk'" class="fab fa-vk"></i>
+        </div>
+        <div>
+          <div>
+            <b>Пост опубликован! 🤘</b>
+          </div>
+          <div>
+            <template v-if="s.type === 'vk'">
+              Ссылка: <a :href="vkUrl(s)" target="_blank">{{ vkUrl(s) }}</a>
+            </template>
+          </div>
         </div>
       </div>
     </div>
@@ -43,6 +70,7 @@ export default {
   },
   data: () => ({
     errors: [],
+    success: []
   }),
   computed: {
     currentProject () {
@@ -59,6 +87,7 @@ export default {
     this.$bus.$on('modal:post-status', (post) => {
       this.$nextTick(() => {
         this.errors = post.social_errors;
+        this.success = post.social_success;
         this.$refs['post-modal-status'].show();
       });
     });
@@ -67,8 +96,8 @@ export default {
     this.$bus.$off('modal:post-status');
   },
   methods: {
-    handleFileUpload () {
-
+    vkUrl (data) {
+      return `https://vk.com/wall-${data.social_account.social_id}_${data.post_id}`;
     },
   }
 }
@@ -115,6 +144,20 @@ export default {
     color: #842029;
     background-color: #f8d7da;
     border-color: #f5c2c7;
+
+    .post-social {
+      border: 1px solid #842029;
+    }
+  }
+
+  &._success{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+
+    .post-social {
+      border: 1px solid #155724;
+    }
   }
 }
 </style>
