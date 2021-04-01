@@ -89,7 +89,9 @@
             </label>
             <b-button variant="link"
                       :disabled="media.length === 10"
-                      v-b-tooltip.hover title="Фото из редактора">
+                      v-b-tooltip.hover title="Фото из редактора"
+                      @click="showEditorPhoto"
+            >
               <i class="fas fa-paint-brush"></i>
             </b-button>
 <!--            <b-button variant="link" v-b-tooltip.hover title="Геолокация">-->
@@ -207,6 +209,41 @@
 <!--        </b-button>-->
       </div>
     </template>
+
+    <b-modal ref="photo-editor" size="lg">
+      <template v-slot:modal-header-close>
+        <img src="../../assets/img/icons/times.svg">
+      </template>
+      <template v-slot:modal-title>
+        🤘 Ваши дизайны
+      </template>
+      <div class="editor">
+        <div class="editor__empty" v-if="!currentProject.designs.length">
+          Вы еще не создали ни одного дизайна
+        </div>
+        <div class="editor__items" v-if="currentProject.designs.length">
+          <div class="editor-item"
+               v-for="d in currentProject.designs"
+               @click="selectDesign(d)"
+          >
+            <div class="editor-item__img">
+              <div class="editor-item__type"
+                   :class="{
+                  _square: d.format === 'square',
+                  _horizontal: d.format === 'horizontal',
+                  _vertical: d.format === 'vertical',
+                  _stories: d.format === 'stories',
+                 }"
+                   :style="{ backgroundImage: `url(${d.image_url})` }"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <template v-slot:modal-footer>
+        <div class="w-100"></div>
+      </template>
+    </b-modal>
   </b-modal>
 </template>
 
@@ -304,6 +341,30 @@
       this.$bus.$off('image:upload');
     },
     methods: {
+      selectDesign (design) {
+        const size = {};
+        let ratio = 0;
+
+        if (!design.image_url.includes('http')) {
+          design.image_url = `http://localhost:8080${design.image_url}`;
+        }
+
+        if (design.format === 'square') {
+          size.width = 1080;
+          size.height = 1080;
+          ratio = 1;
+        }
+        this.media.push({
+          type: 'image',
+          size: size,
+          ratio: ratio,
+          src: design.image_url
+        });
+        this.$refs['photo-editor'].hide();
+      },
+      showEditorPhoto () {
+        this.$refs['photo-editor'].show();
+      },
       handleFileUpload () {
         let file = this.$refs.file.files[0];
         if (file.size > 15728640) {
@@ -436,6 +497,94 @@
 
 <style lang="scss" scoped>
   @import "../../variables";
+  .editor {
+    padding: 20px;
+
+    &__empty {
+      padding: 20px;
+      border-radius: 10px;
+      background-color: $color-bg-3;
+      color: $color-font-gray;
+      margin-bottom: 20px;
+    }
+
+    &__items {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+  }
+
+  .editor-item {
+    margin-right: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    cursor: pointer;
+    position: relative;
+
+    &:hover {
+      .editor-item__img {
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+      }
+    }
+
+    &__delete {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 0;
+      color: $color-danger;
+      padding: 10px;
+      background-color: $color-bg-0;
+      font-size: 14px;
+      border-radius: 0 0 0 5px;
+    }
+
+    &__img {
+      width: 230px;
+      height: 230px;
+      background-color: $color-bg-4;
+      margin-bottom: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &__title {
+      font-weight: normal;
+      font-size: 16px;
+    }
+
+    &__type {
+      background-color: white;
+      background-size: cover;
+      background-position: center;
+
+      &._square {
+        width: 230px;
+        height: 230px;
+      }
+
+      &._horizontal {
+        width: 250px;
+        height: 140px;
+      }
+
+      &._vertical {
+        width: 140px;
+        height: 200px;
+      }
+
+      &._stories {
+        width: 130px;
+        height: 250px;
+      }
+    }
+  }
+
   .post-editor {
     background-color: $color-bg-4;
     padding: 10px;
