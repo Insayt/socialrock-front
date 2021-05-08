@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="post-modal-status" size="lg" no-close-on-esc no-close-on-backdrop>
+  <b-modal ref="post-modal-status" size="lg">
     <template v-slot:modal-header-close>
       <img src="@/assets/img/icons/times.svg">
     </template>
@@ -24,10 +24,18 @@
               <template v-if="e.code === 5">
                 Авторизация пользователя не удалась
               </template>
+              <template v-if="e.code === 15">
+                Ошибка доступа. Перейдите в настройки, удалите эту страницу и заведите её заново
+              </template>
               <template v-else>
                 Код ошибки - {{ e.code }}
               </template>
             </template>
+            <div class="post-modal-status__reboot">
+              <b-button size="sm" variant="info">
+                Выложить еще раз
+              </b-button>
+            </div>
           </div>
         </div>
       </div>
@@ -46,6 +54,35 @@
             <template v-if="s.type === 'vk'">
               Ссылка: <a :href="vkUrl(s)" target="_blank">{{ vkUrl(s) }}</a>
             </template>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="post">
+        <div v-if="post.text" class="status-section">
+          <div class="status-subtitle">
+            Текст поста:
+          </div>
+          <b-form-textarea
+              v-model="post.text"
+              placeholder="Нет текста"
+              rows="7"
+              no-resize
+              wrap
+              :disabled="true"
+          ></b-form-textarea>
+        </div>
+        <div v-if="post.media && post.media.length" class="status-section">
+          <div class="status-subtitle">
+            Медиа:
+          </div>
+          <div class="media">
+            <div
+                class="media-item"
+                v-for="(item, index) in post.media"
+                :style="{ backgroundImage: 'url(' + item.src + ')' }"
+            >
+            </div>
           </div>
         </div>
       </div>
@@ -70,7 +107,9 @@ export default {
   },
   data: () => ({
     errors: [],
-    success: []
+    success: [],
+    post: null,
+
   }),
   computed: {
     currentProject () {
@@ -88,6 +127,7 @@ export default {
       this.$nextTick(() => {
         this.errors = post.social_errors;
         this.success = post.social_success;
+        this.post = post;
         this.$refs['post-modal-status'].show();
       });
     });
@@ -108,6 +148,17 @@ export default {
 .post-modal-status {
   width: 100%;
   padding: 20px;
+
+  &__reboot {
+    margin-top: 5px;
+  }
+}
+.status-subtitle {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.status-section {
+  margin-bottom: 10px;
 }
 .post-social {
   width: 50px;
@@ -157,6 +208,48 @@ export default {
 
     .post-social {
       border: 1px solid #155724;
+    }
+  }
+}
+.media {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.media-item {
+  display: block;
+  width: 141px;
+  height: 141px;
+  background-position: center;
+  background-size: cover;
+  background-color: $color-bg-0;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  position: relative;
+  border: 5px solid $color-bg-9;
+  border-radius: 3px;
+
+  &:nth-child(5n) {
+    margin-right: 0;
+  }
+
+  &__close {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: $color-danger;
+    color: white;
+    padding: 15px;
+    cursor: pointer;
+    border-radius: 3px;
+
+    &:hover {
+      background-color: $color-danger-hover;
     }
   }
 }

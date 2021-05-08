@@ -57,8 +57,9 @@
             <div class="media">
               <div class="media-item" v-for="(item, index) in media"
                   :style="{ backgroundImage: 'url(' + item.src + ')' }"
+                   @click="showPreviewMedia(item)"
               >
-                <div class="media-item__close" @click="deleteMedia(index)">
+                <div class="media-item__close" @click.stop="deleteMedia(index)">
                   <i class="fas fa-times"></i>
                 </div>
               </div>
@@ -244,6 +245,8 @@
         <div class="w-100"></div>
       </template>
     </b-modal>
+
+    <preview-media v-if="previewMedia" :media="previewMedia" @close="previewClose"></preview-media>
   </b-modal>
 </template>
 
@@ -252,10 +255,12 @@
   import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
   import 'emoji-mart-vue-fast/css/emoji-mart.css'
   import { DateTime } from 'luxon';
+  import PreviewMedia from '@/components/PreviewMedia';
 
   export default {
     components: {
       picker: Picker,
+      PreviewMedia
     },
     data: () => ({
       emojiIndex: new EmojiIndex(data),
@@ -270,6 +275,7 @@
       postId: null,
       status: 'new',
       isOld: false, // Дата поста уже прошла значит нельзя редактировать
+      previewMedia: null,
     }),
     computed: {
       currentProject () {
@@ -341,6 +347,12 @@
       this.$bus.$off('image:upload');
     },
     methods: {
+      previewClose () {
+        this.previewMedia = null;
+      },
+      showPreviewMedia (media) {
+        this.previewMedia = media;
+      },
       selectDesign (design) {
         const size = {};
         let ratio = 0;
