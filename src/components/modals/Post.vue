@@ -59,7 +59,7 @@
                   :style="{ backgroundImage: getMediaPreview(item) }"
                    @click="showPreviewMedia(item)"
               >
-                <div class="media-item__close" @click.stop="deleteMedia(index)">
+                <div class="media-item__close" v-b-tooltip.hover title="Удалить" @click.stop="deleteMedia(index)">
                   <i class="fas fa-times"></i>
                 </div>
               </div>
@@ -344,6 +344,7 @@
         this.previewMedia = null;
       },
       showPreviewMedia (media) {
+        console.log(media);
         this.previewMedia = media;
       },
       selectDesign (design) {
@@ -690,16 +691,16 @@
       position: absolute;
       top: 5px;
       right: 5px;
-      width: 15px;
-      height: 15px;
+      width: 20px;
+      height: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       background-color: $color-danger;
       color: white;
-      padding: 15px;
       cursor: pointer;
       border-radius: 3px;
+      font-size: 14px;
 
       &:hover {
         background-color: $color-danger-hover;

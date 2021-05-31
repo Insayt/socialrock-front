@@ -25,8 +25,8 @@ Vue.use(BootstrapVue);
 Vue.use(VCalendar);
 Vue.use(VueSweetalert2);
 Vue.use(vueTopprogress);
-Vue.component('multiselect', Multiselect);
 
+Vue.component('multiselect', Multiselect);
 Vue.component('VueSlider', VueSlider);
 Vue.component('datetime', Datetime);
 Vue.component('colorPicker', colorPicker);
