@@ -80,7 +80,7 @@
             <div
                 class="media-item"
                 v-for="(item, index) in post.media"
-                :style="{ backgroundImage: 'url(' + item.src + ')' }"
+                :style="{ backgroundImage: getMediaPreview(item) }"
             >
             </div>
           </div>
@@ -136,6 +136,10 @@ export default {
     this.$bus.$off('modal:post-status');
   },
   methods: {
+    getMediaPreview (media) {
+      if (media.type === 'video') return 'url(' + media.preview + ')';
+      return 'url(' + media.src + ')';
+    },
     vkUrl (data) {
       return `https://vk.com/wall-${data.social_account.social_id}_${data.post_id}`;
     },

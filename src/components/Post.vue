@@ -46,7 +46,7 @@
         <div class="post__text">{{ post.text }}</div>
         <div class="post__images" v-if="post.media && post.media.length">
           <img class="post-image" v-for="media in post.media"
-               :src="media.src">
+               :src="getMediaPreview(media)">
         </div>
       </div>
       <div class="post__footer">
@@ -74,6 +74,10 @@
     },
     data: () => ({}),
     methods: {
+      getMediaPreview (media) {
+        if (media.type === 'video') return media.preview;
+        return media.src;
+      },
       postTime (dt) {
         return DateTime.fromISO(dt).toFormat('HH:mm');
       }
