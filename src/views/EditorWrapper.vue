@@ -179,7 +179,7 @@
 </template>
 
 <script>
-  import { fabric } from '../fabric';
+  import { fabric, initCenteringGuidelines, initAligningGuidelines } from '../fabric';
   import { cover } from 'intrinsic-scale';
   import bg from '../components/editor/toolBg';
   import txt from '../components/editor/toolTxt';
@@ -456,6 +456,9 @@
         width: this.canvasParams.width,
         height: this.canvasParams.height
       });
+
+      // initCenteringGuidelines(this.canvas);
+      // initAligningGuidelines(this.canvas);
 
       this.canvas.loadFromJSON(ds.object, () => {
         // Градиент на фоне по дефолту не экспортится, храним костылем

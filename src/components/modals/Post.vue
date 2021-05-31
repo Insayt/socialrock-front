@@ -4,7 +4,7 @@
       <img src="@/assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
-      Создание поста {{ isOld }}
+      Создание поста
 <!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal">
@@ -56,7 +56,7 @@
             </div>
             <div class="media">
               <div class="media-item" v-for="(item, index) in media"
-                  :style="{ backgroundImage: 'url(' + item.src + ')' }"
+                  :style="{ backgroundImage: getMediaPreview(item) }"
                    @click="showPreviewMedia(item)"
               >
                 <div class="media-item__close" @click.stop="deleteMedia(index)">
@@ -330,23 +330,16 @@
           this.$refs['post-modal'].show();
         });
       });
-      this.$bus.$on('image:upload', (data) => {
-        this.media.push({
-          type: 'image',
-          size: {
-            width: data.meta.width,
-            height: data.meta.height,
-          },
-          ratio: data.ratio,
-          src: data.image_url
-        })
-      })
     },
     beforeDestroy () {
       this.$bus.$off('modal:post');
-      this.$bus.$off('image:upload');
+      this.$bus.$off('video:cropped');
     },
     methods: {
+      getMediaPreview (media) {
+        if (media.type === 'video') return 'url(' + media.preview + ')';
+        return 'url(' + media.src + ')';
+      },
       previewClose () {
         this.previewMedia = null;
       },
@@ -379,16 +372,14 @@
       },
       handleFileUpload () {
         let file = this.$refs.file.files[0];
-        if (file.size > 15728640) {
+        if (file.size > 52428800) {
           this.$swal({
             title: `Ошибка`,
-            html: `Максимальный размер файла 15 мегабайт`,
+            html: `Максимальный размер файла 50 мегабайт`,
             type: 'error'
           });
           return;
         }
-
-        console.log(file);
         if (file.type.indexOf('video') !== -1) {
           this.createVideo(file);
         } else {
@@ -399,14 +390,23 @@
         // if (this.stories) {
         //   this.aspectRatio = 9 / 16;
         // }
-
-        const reader = new FileReader();
-
-        reader.readAsDataURL(file);
-
-        reader.onload = (e) => {
-          this.$bus.$emit('modal:crop', { file: e.target.result, firstMedia: this.media[0] });
-        };
+        let fd = new FormData();
+        fd.append('file', file);
+        this.$store.dispatch('user/savePostImage', {
+          project_id: this.currentProject._id,
+          file: fd
+        })
+        .then(data => {
+          this.media.push({
+            type: 'image',
+            size: {
+              width: data.meta.width,
+              height: data.meta.height,
+            },
+            ratio: data.ratio,
+            src: data.image_url
+          })
+        })
       },
       createVideo (video) {
         let fd = new FormData();
@@ -415,9 +415,12 @@
           project_id: this.currentProject._id,
           file: fd
         })
-          .then((res) => {
-            this.$bus.$emit('modal:crop', { file: res.preview, firstMedia: this.media[0] });
-            console.log(res);
+          .then((data) => {
+            this.media.push({
+              type: 'video',
+              src: data.file_url,
+              preview: data.preview_url
+            })
           })
       },
       selectEmoji (emoji) {

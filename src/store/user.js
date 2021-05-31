@@ -368,6 +368,12 @@ export default {
           return res.data;
         })
     },
+    cropPostVideo ({ state, commit }, { project_id, ...data }) {
+      return axios.post(`${config.apiUrl}/project/${project_id}/crop-video`, data)
+        .then(res => {
+          return res.data;
+        })
+    },
   },
   getters: {
     loading: state => state.loading,

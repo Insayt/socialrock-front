@@ -14,7 +14,6 @@
       <router-view/>
     </div>
     <modal-post v-if="$router.currentRoute.name !== 'auth'"></modal-post>
-    <modal-crop v-if="$router.currentRoute.name !== 'auth'"></modal-crop>
     <modal-post-status v-if="$router.currentRoute.name !== 'auth'"></modal-post-status>
     <div class="loader" v-show="loaderWrap">
       <i class="fas fa-cog fa-spin"></i>
@@ -27,7 +26,6 @@
   import sHeader from '@/components/Header';
   import Sidebar from '@/components/Sidebar';
   import ModalPost from '@/components/modals/Post';
-  import ModalCrop from '@/components/modals/CropFile';
   import ModalPostStatus from '@/components/modals/PostStatus';
 
   export default {
@@ -35,7 +33,6 @@
       Sidebar,
       sHeader,
       ModalPost,
-      ModalCrop,
       ModalPostStatus,
     },
     data: () => ({
