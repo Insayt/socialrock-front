@@ -63,6 +63,9 @@
                   <i class="fas fa-times"></i>
                 </div>
               </div>
+              <div class="media-item _load" v-show="loadMedia">
+                <i class="fas fa-spinner fa-spin"></i>
+              </div>
             </div>
 <!--            <b-dropdown class="clean-dropdown" variant="link" v-b-tooltip.hover title="Ссылка" no-caret>-->
 <!--              <template v-slot:button-content>-->
@@ -276,6 +279,7 @@
       status: 'new',
       isOld: false, // Дата поста уже прошла значит нельзя редактировать
       previewMedia: null,
+      loadMedia: false
     }),
     computed: {
       currentProject () {
@@ -391,6 +395,7 @@
         // if (this.stories) {
         //   this.aspectRatio = 9 / 16;
         // }
+        this.loadMedia = true;
         let fd = new FormData();
         fd.append('file', file);
         this.$store.dispatch('user/savePostImage', {
@@ -408,21 +413,28 @@
             src: data.image_url
           })
         })
+        .finally(() => {
+          this.loadMedia = false;
+        })
       },
       createVideo (video) {
+        this.loadMedia = true;
         let fd = new FormData();
         fd.append('file', video);
         this.$store.dispatch('user/savePostVideo', {
           project_id: this.currentProject._id,
           file: fd
         })
-          .then((data) => {
-            this.media.push({
-              type: 'video',
-              src: data.file_url,
-              preview: data.preview_url
-            })
+        .then((data) => {
+          this.media.push({
+            type: 'video',
+            src: data.file_url,
+            preview: data.preview_url
           })
+        })
+        .finally(() => {
+          this.loadMedia = false;
+        })
       },
       selectEmoji (emoji) {
         this.text += emoji.native;
@@ -705,6 +717,14 @@
       &:hover {
         background-color: $color-danger-hover;
       }
+    }
+
+    &._load {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      background-color: $color-bg-9;
     }
   }
 
