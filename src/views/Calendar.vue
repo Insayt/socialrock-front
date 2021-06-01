@@ -21,8 +21,13 @@
               <span class="calendar-rows__today" v-if="isToday(day.dt)"></span>
             </div>
             <div class="calendar-rows__posts">
-              <post :post="post" v-for="post in day.posts" :key="post._id" @click="showPostModal(post)"></post>
-              <div class="empty-post" @click="showPostModal({})">
+              <post
+                  v-for="post in day.posts"
+                  :key="post._id"
+                  :post="post"
+                  @click="showPostModal(post)"
+              ></post>
+              <div class="empty-post" @click="showPostModal({})" v-if="isShowDefaultSlot(day)">
                 <div class="empty-post__icon">
                   <img src="../assets/img/icons/plus-round.svg">
                   <div>Запланировать пост</div>
@@ -62,6 +67,11 @@
       this.$bus.$off('calendar:reload');
     },
     methods: {
+      isShowDefaultSlot(day) {
+        const currentDay = DateTime.local().startOf('day');
+        const dtDay = DateTime.fromISO(day.dt).startOf('day');
+        return dtDay.toMillis() >= currentDay.toMillis();
+      },
       loadPosts (params = {}) {
         this.loading = true;
         let start = params.startDt || DateTime.local().startOf('week').set({hours: 0, minutes: 0, seconds: 0, milliseconds: 0});
@@ -87,13 +97,17 @@
                 Object.keys(this.currentProject.slots[dayOfWeek]).forEach(time => {
                   let times = time.split('_');
                   let run_dt = dt.set({ hours: times[0], minutes: times[1] }).toISO();
-                  day.posts.push({
-                    time: `${times[0]}:${times[1]}`,
-                    hours: times[0],
-                    minutes: times[1],
-                    category: null,
-                    run_dt: run_dt
-                  })
+                  let currentDay = DateTime.local().startOf('day');
+                  let runDtDay = DateTime.fromISO(run_dt).startOf('day');
+                  if (runDtDay.toMillis() >= currentDay.toMillis()) {
+                    day.posts.push({
+                      time: `${times[0]}:${times[1]}`,
+                      hours: times[0],
+                      minutes: times[1],
+                      category: null,
+                      run_dt: run_dt
+                    })
+                  }
                 });
               }
 

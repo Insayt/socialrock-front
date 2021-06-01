@@ -348,7 +348,6 @@
         this.previewMedia = null;
       },
       showPreviewMedia (media) {
-        console.log(media);
         this.previewMedia = media;
       },
       selectDesign (design) {

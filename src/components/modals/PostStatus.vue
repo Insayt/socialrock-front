@@ -81,6 +81,7 @@
                 class="media-item"
                 v-for="(item, index) in post.media"
                 :style="{ backgroundImage: getMediaPreview(item) }"
+                @click="showPreviewMedia(item)"
             >
             </div>
           </div>
@@ -92,6 +93,7 @@
 
       </div>
     </template>
+    <preview-media v-if="previewMedia" :media="previewMedia" @close="previewClose"></preview-media>
   </b-modal>
 </template>
 
@@ -100,16 +102,18 @@ import data from './emoji';
 import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
 import 'emoji-mart-vue-fast/css/emoji-mart.css'
 import { DateTime } from 'luxon';
+import PreviewMedia from '@/components/PreviewMedia';
 
 export default {
   components: {
     picker: Picker,
+    PreviewMedia,
   },
   data: () => ({
     errors: [],
     success: [],
     post: null,
-
+    previewMedia: null,
   }),
   computed: {
     currentProject () {
@@ -136,6 +140,12 @@ export default {
     this.$bus.$off('modal:post-status');
   },
   methods: {
+    showPreviewMedia (media) {
+      this.previewMedia = media;
+    },
+    previewClose () {
+      this.previewMedia = null;
+    },
     getMediaPreview (media) {
       if (media.type === 'video') return 'url(' + media.preview + ')';
       return 'url(' + media.src + ')';
@@ -232,6 +242,7 @@ export default {
   position: relative;
   border: 5px solid $color-bg-9;
   border-radius: 3px;
+  cursor: pointer;
 
   &:nth-child(5n) {
     margin-right: 0;
