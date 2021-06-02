@@ -5,55 +5,54 @@
     </template>
     <template v-slot:modal-title>
       Статус поста
-      <!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal-status">
-      <div class="status _error" v-for="e in errors">
+      <div class="status"
+           v-for="tsk in tasks"
+           :class="{
+             _error: tsk.status === 'error',
+             _success: tsk.status === 'success',
+             _pending: tsk.status === 'pending',
+           }"
+      >
         <div class="post-social"
-             :style="{ backgroundImage: `url(${e.social_account.picture})` }"
-             v-b-tooltip.hover :title="e.social_account.name"
+             :style="{ backgroundImage: `url(${tsk.social_account.picture})` }"
+             v-b-tooltip.hover :title="tsk.social_account.name"
         >
-          <i v-if="e.social_account.social_type === 'vk'" class="fab fa-vk"></i>
+          <i v-if="tsk.social_account.social_type === 'vk'" class="fab fa-vk"></i>
         </div>
         <div>
           <div>
-            <b>Ошибка выкладки поста!</b>
+            <b v-if="tsk.status === 'error'">Ошибка выкладки поста!</b>
+            <b v-if="tsk.status === 'success'">Пост опубликован! 🤘</b>
+            <b v-if="tsk.status === 'pending'">Пост публикуется...</b>
           </div>
           <div>
-            <template v-if="e.type === 'vk'">
-              <template v-if="e.code === 5">
-                Авторизация пользователя не удалась
+            <div v-if="tsk.status === 'success'">
+              <template v-if="s.type === 'vk'">
+                Ссылка: <a :href="vkUrl(s)" target="_blank">{{ vkUrl(s) }}</a>
               </template>
-              <template v-if="e.code === 15">
-                Ошибка доступа. Перейдите в настройки, удалите эту страницу и заведите её заново
+            </div>
+            <div v-if="tsk.status === 'error'">
+              <template v-if="tsk.type === 'vk'">
+                <template v-if="tsk.error && tsk.error.code ">
+                  <template v-if="tsk.error.code === 5">
+                    Авторизация пользователя не удалась
+                  </template>
+                  <template v-if="tsk.error.code  === 15">
+                    Ошибка доступа. Перейдите в настройки, удалите эту страницу и заведите её заново
+                  </template>
+                  <template v-else>
+                    Код ошибки - {{ tsk.code }}
+                  </template>
+                </template>
               </template>
-              <template v-else>
-                Код ошибки - {{ e.code }}
-              </template>
-            </template>
-            <div class="post-modal-status__reboot">
+            </div>
+            <div class="post-modal-status__reboot" v-if="tsk.status === 'error'"  >
               <b-button size="sm" variant="info">
                 Выложить еще раз
               </b-button>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="status _success" v-for="s in success">
-        <div class="post-social"
-             :style="{ backgroundImage: `url(${s.social_account.picture})` }"
-             v-b-tooltip.hover :title="s.social_account.name"
-        >
-          <i v-if="s.social_account.social_type === 'vk'" class="fab fa-vk"></i>
-        </div>
-        <div>
-          <div>
-            <b>Пост опубликован! 🤘</b>
-          </div>
-          <div>
-            <template v-if="s.type === 'vk'">
-              Ссылка: <a :href="vkUrl(s)" target="_blank">{{ vkUrl(s) }}</a>
-            </template>
           </div>
         </div>
       </div>
@@ -102,7 +101,7 @@ import data from './emoji';
 import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
 import 'emoji-mart-vue-fast/css/emoji-mart.css'
 import { DateTime } from 'luxon';
-import PreviewMedia from '@/components/PreviewMedia';
+import PreviewMedia from '@/components/modals/PreviewMedia';
 
 export default {
   components: {
@@ -110,10 +109,9 @@ export default {
     PreviewMedia,
   },
   data: () => ({
-    errors: [],
-    success: [],
     post: null,
     previewMedia: null,
+    tasks: [],
   }),
   computed: {
     currentProject () {
@@ -129,8 +127,11 @@ export default {
   mounted () {
     this.$bus.$on('modal:post-status', (post) => {
       this.$nextTick(() => {
-        this.errors = post.social_errors;
-        this.success = post.social_success;
+        const tasksKeys = Object.keys(post.tasks);
+        for (let key of tasksKeys) {
+          post.tasks[key].social_account = post.social_accounts.find(acc => acc._id === key);
+        }
+        this.tasks = Object.values(post.tasks);
         this.post = post;
         this.$refs['post-modal-status'].show();
       });
@@ -219,6 +220,16 @@ export default {
     color: #155724;
     background-color: #d4edda;
     border-color: #c3e6cb;
+
+    .post-social {
+      border: 1px solid #155724;
+    }
+  }
+
+  &._pending{
+    color: #084298;
+    background-color: #cfe2ff;
+    border-color: #b6d4fe;
 
     .post-social {
       border: 1px solid #155724;

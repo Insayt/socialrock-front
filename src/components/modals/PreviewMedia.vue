@@ -1,5 +1,8 @@
 <template>
   <b-modal ref="preview-modal" size="md" @hide="$emit('close')">
+    <template v-slot:modal-header-close>
+      <img src="@/assets/img/icons/times.svg">
+    </template>
     <template v-slot:modal-title>
       Предпросмотр
     </template>

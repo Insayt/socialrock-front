@@ -118,8 +118,8 @@
           state: 'auth'
         });
         this.popup = this.PopupCenter(
-          `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=https://oauth.vk.com/blank.html&scope=groups,offline,wall,stats,photos&response_type=token&state=${payload}&v=5.131`,
-          // `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=${process.env.VUE_APP_VK_ID_APP_REDIRECT}&scope=groups,offline,photo&response_type=code&state=${payload}&v=5.131`,
+          // `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=https://oauth.vk.com/blank.html&scope=groups,offline,wall,stats,photos&response_type=token&state=${payload}&v=5.131`,
+          `https://oauth.vk.com/authorize?client_id=${process.env.VUE_APP_VK_ID_APP}&redirect_uri=${process.env.VUE_APP_VK_ID_APP_REDIRECT}&scope=groups,offline,photo&response_type=code&state=${payload}&v=5.131`,
           'authvk',
           700,
           500

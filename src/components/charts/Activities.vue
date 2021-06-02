@@ -12,6 +12,9 @@
       chartOptions: {
         colors: ['#5388EA', '#5AA75F', '#D84F42', '#F1BF4F', '#EA80FC', '#78909C'],
         chart: {
+          zoom: {
+            enabled: false,
+          },
           fontFamily: 'Roboto',
           foreColor: '#A2A2A2',
           animations: {

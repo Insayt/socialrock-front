@@ -4,7 +4,12 @@
       <img src="@/assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
-      Создание поста
+      <template v-if="postId">
+        Редактирование поста
+      </template>
+      <template v-else>
+        Создание поста
+      </template>
 <!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal">
@@ -258,7 +263,7 @@
   import { Picker, EmojiIndex } from 'emoji-mart-vue-fast';
   import 'emoji-mart-vue-fast/css/emoji-mart.css'
   import { DateTime } from 'luxon';
-  import PreviewMedia from '@/components/PreviewMedia';
+  import PreviewMedia from '@/components/modals/PreviewMedia';
 
   export default {
     components: {

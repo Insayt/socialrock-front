@@ -11,8 +11,11 @@
     },
     data: () => ({
       chartOptions: {
-        colors: ['#8C9EFF', '#536DFE', '#E1306C'],
+        colors: ['#8C9EFF', '#536DFE'],
         chart: {
+          zoom: {
+            enabled: false,
+          },
           locales: [ru],
           defaultLocale: 'ru',
           fontFamily: 'Roboto',
@@ -64,11 +67,8 @@
           },
         }
       },
-      series: [{
-        name: 'Общий охват',
-        data: [44, 55, 41, 67, 22, 43]
-      }, {
-        name: 'Охват подписчиков',
+      series: [ {
+        name: 'Просмотры постов',
         data: [13, 23, 20, 8, 13, 27]
       }, {
         name: 'Просмотры сторис',

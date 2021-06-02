@@ -15,8 +15,12 @@
     </div>
     <div v-else class="post _full" :class="{ _success: post.status === 'finish', _error: post.status === 'error' }">
       <div class="post__header">
-        <div class="post__time-small" v-if="post.status === 'new'">
-          <img src="../assets/img/icons/clock.svg">
+        <div class="post__time-small" v-if="post.status === 'new' || 'pending'">
+          <img src="../assets/img/icons/clock.svg" v-if="post.status === 'new'">
+          <i class="fas fa-circle-notch fa-spin"
+             v-if="post.status === 'pending'"
+             v-b-tooltip.hover title="Пост выкладывается"
+          ></i>
           {{ postTime(post.run_dt) }}
 <!--          <i class="fa fa-trash" v-b-tooltip.hover title="Удалить 13.01.2019 в 22:00"></i>-->
         </div>
@@ -144,6 +148,7 @@
 
     &__time-small {
       display: flex;
+      align-items: center;
       font-size: 14px;
       font-weight: bold;
       //color: lighten($color-primary, 50%);
@@ -151,9 +156,12 @@
         width: 20px;
         margin-right: 5px;
       }
-      /*i {*/
-      /*  margin-left: 5px;*/
-      /*}*/
+
+      i {
+        font-size: 21px;
+        margin-right: 5px;
+        color: $color-primary;
+      }
 
       &._done {
         color: $color-success;
