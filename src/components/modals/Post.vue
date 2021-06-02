@@ -38,9 +38,6 @@
               <i class="fas fa-plus"></i>
             </div>
           </div>
-          <!--<b-button variant="black" v-b-tooltip.hover>-->
-          <!--Выбрать все-->
-          <!--</b-button>-->
           <div class="post-editor">
             <b-form-textarea
               v-model="text"
@@ -110,9 +107,6 @@
 <!--              <i class="fas fa-list-ul"></i>-->
 <!--            </b-button>-->
           </div>
-<!--          <b-button variant="black" block class="mt-3">-->
-<!--            Добавить версию для некоторых страниц-->
-<!--          </b-button>-->
           <div class="post-editor__date">
             <div class="post-editor__date-text">Дата публикации</div>
             <div>

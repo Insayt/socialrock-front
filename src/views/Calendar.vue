@@ -147,7 +147,6 @@
         if (post.status === 'error' || post.status === 'finish' || post.status === 'pending') {
           this.$bus.$emit('modal:post-status', post);
         } else {
-          // this.$router.push({ name: 'calendar', params: { postId: post._id } });
           this.$bus.$emit('modal:post', post);
         }
       }

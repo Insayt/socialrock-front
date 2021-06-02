@@ -9,11 +9,13 @@ import { Datetime } from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 import VueSlider from 'vue-slider-component';
 import 'vue-slider-component/theme/default.css';
-// import Sketch from 'vue-color/src/components/Sketch';
 import colorPicker from '@caohenghu/vue-colorpicker';
 import vueTopprogress from 'vue-top-progress';
 import Multiselect from 'vue-multiselect'
 import 'vue-multiselect/dist/vue-multiselect.min.css';
+import VueSocketIOExt from 'vue-socket.io-extended';
+import { io } from 'socket.io-client';
+const socket = io('http://localhost:1932', { transports: ["websocket"] });
 
 import App from './App.vue';
 import router from './router';
@@ -25,6 +27,9 @@ Vue.use(BootstrapVue);
 Vue.use(VCalendar);
 Vue.use(VueSweetalert2);
 Vue.use(vueTopprogress);
+Vue.use(VueSocketIOExt, socket);
+
+
 
 Vue.component('multiselect', Multiselect);
 Vue.component('VueSlider', VueSlider);
@@ -38,6 +43,14 @@ Object.defineProperty(Vue.prototype,"$bus",{
 });
 
 new Vue({
+  sockets: {
+    connect() {
+      console.log('socket connected')
+    },
+    customEmit(val) {
+      console.log('this method was fired by the socket server. eg: io.emit("customEmit", data)')
+    }
+  },
   data: {
     bus: new Vue({})
   },
