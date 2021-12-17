@@ -4,16 +4,21 @@
       <img src="@/assets/img/icons/times.svg">
     </template>
     <template v-slot:modal-title>
-      <template v-if="postId">
-        Редактирование поста
+      <template  v-if="status !== 'new'">
+        Статус поста
       </template>
       <template v-else>
-        Создание поста
+        <template v-if="postId">
+          Редактирование поста
+        </template>
+        <template v-else>
+          Создание поста
+        </template>
       </template>
 <!--      <i class="fa fa-trash post-modal-trash" v-b-tooltip.hover title="Очистить форму"></i>-->
     </template>
     <div class="post-modal">
-      <b-tabs>
+      <b-tabs v-if="status === 'new'">
         <b-tab title="Пост" active>
           <div class="post-modal__networks" v-if="accounts.length">
             <div class="network"
@@ -130,27 +135,6 @@
               ></i>
             </div>
           </div>
-<!--          <div class="post-editor__date">-->
-<!--            <div class="post-editor__date-text">-->
-<!--              <b-form-checkbox-->
-<!--                v-model="isAutoDelete"-->
-<!--              >-->
-<!--                Автоудаление-->
-<!--              </b-form-checkbox>-->
-<!--            </div>-->
-<!--            <div v-if="isAutoDelete">-->
-<!--              <datetime type="datetime"-->
-<!--                        class="theme-dark"-->
-<!--                        title="Дата и время автоудаления:"-->
-<!--                        placeholder="Дата и время"-->
-<!--                        v-model="deleteDt"-->
-<!--                        :value-zone="currentProject.timezone"-->
-<!--                        :zone="currentProject.timezone"-->
-<!--                        :phrases="{ok: 'Ок', cancel: 'Отмена'}"-->
-<!--                        :min-datetime="runDt"-->
-<!--              ></datetime>-->
-<!--            </div>-->
-<!--          </div>-->
           <!--<div class="post-editor__info">-->
           <!--<div class="post-editor__info-emoji">❓</div>-->
           <!--<div>-->
@@ -167,20 +151,103 @@
           Tab Contents 1
         </b-tab>
       </b-tabs>
+
+      <div class="post-modal-status" v-if="status !== 'new'">
+        <div class="status"
+             v-for="tsk in tasks"
+             :class="{
+             _error: tsk.status === 'error',
+             _success: tsk.status === 'success',
+             _pending: tsk.status === 'pending',
+           }"
+        >
+          <div class="post-social"
+               :style="{ backgroundImage: `url(${tsk.social_account.picture})` }"
+               v-b-tooltip.hover :title="tsk.social_account.name"
+          >
+            <i v-if="tsk.social_account.social_type === 'vk'" class="fab fa-vk"></i>
+          </div>
+          <div>
+            <div>
+              <b v-if="tsk.status === 'error'">Ошибка выкладки поста!</b>
+              <b v-if="tsk.status === 'success'">Пост опубликован! 🤘</b>
+              <b v-if="tsk.status === 'pending'">Пост публикуется...</b>
+            </div>
+            <div>
+              <div v-if="tsk.status === 'success'">
+                <template v-if="s.type === 'vk'">
+                  Ссылка: <a :href="vkUrl(s)" target="_blank">{{ vkUrl(s) }}</a>
+                </template>
+              </div>
+              <div v-if="tsk.status === 'error'">
+                <template v-if="tsk.type === 'vk'">
+                  <template v-if="tsk.error && tsk.error.code ">
+                    <template v-if="tsk.error.code === 5">
+                      Авторизация пользователя не удалась
+                    </template>
+                    <template v-if="tsk.error.code  === 15">
+                      Ошибка доступа. Перейдите в настройки, удалите эту страницу и заведите её заново
+                    </template>
+                    <template v-else>
+                      Код ошибки - {{ tsk.code }}
+                    </template>
+                  </template>
+                </template>
+              </div>
+              <div class="post-modal-status__reboot" v-if="tsk.status === 'error'"  >
+                <b-button size="sm" variant="info">
+                  Выложить еще раз
+                </b-button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--      <div v-if="post">-->
+        <!--        <div v-if="post.text" class="status-section">-->
+        <!--          <div class="status-subtitle">-->
+        <!--            Текст поста:-->
+        <!--          </div>-->
+        <!--          <b-form-textarea-->
+        <!--              v-model="post.text"-->
+        <!--              placeholder="Нет текста"-->
+        <!--              rows="7"-->
+        <!--              no-resize-->
+        <!--              wrap-->
+        <!--              :disabled="true"-->
+        <!--          ></b-form-textarea>-->
+        <!--        </div>-->
+        <!--        <div v-if="post.media && post.media.length" class="status-section">-->
+        <!--          <div class="status-subtitle">-->
+        <!--            Медиа:-->
+        <!--          </div>-->
+        <!--          <div class="media">-->
+        <!--            <div-->
+        <!--                class="media-item"-->
+        <!--                v-for="(item, index) in post.media"-->
+        <!--                :style="{ backgroundImage: getMediaPreview(item) }"-->
+        <!--                @click="showPreviewMedia(item)"-->
+        <!--            >-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--      </div>-->
+      </div>
     </div>
+
     <template v-slot:modal-footer>
       <div class="w-100">
-<!--        <div class="float-left">-->
-<!--          <b-dropdown class="dropdown-calendar" variant="black" toggle-class="text-decoration-none" no-caret>-->
-<!--            <template v-slot:button-content>-->
-<!--              Рубрика <i class="fas fa-chevron-down ml-2"></i>-->
-<!--            </template>-->
-<!--            <b-dropdown-text>-->
-<!--              123-->
-<!--            </b-dropdown-text>-->
-<!--          </b-dropdown>-->
-<!--        </div>-->
-        <div class="float-right">
+        <div class="float-left" v-if="status === 'new'">
+          <b-dropdown class="dropdown-calendar" variant="black" toggle-class="text-decoration-none" no-caret>
+            <template v-slot:button-content>
+              Рубрика <i class="fas fa-chevron-down ml-2"></i>
+            </template>
+            <b-dropdown-text>
+              123
+            </b-dropdown-text>
+          </b-dropdown>
+        </div>
+        <div class="float-right" v-if="status === 'new'">
           <b-button
             class="post-editor-delete"
             variant="danger"
@@ -204,12 +271,6 @@
             Сохранить
           </b-button>
         </div>
-<!--        <b-button-->
-<!--          variant="black"-->
-<!--          class="float-right mr-3"-->
-<!--        >-->
-<!--          Отмена-->
-<!--        </b-button>-->
       </div>
     </template>
 
@@ -278,7 +339,8 @@
       status: 'new',
       isOld: false, // Дата поста уже прошла значит нельзя редактировать
       previewMedia: null,
-      loadMedia: false
+      loadMedia: false,
+      tasks: [], // Задачи на выкладку внутри поста
     }),
     computed: {
       currentProject () {
@@ -291,8 +353,18 @@
         return DateTime.local().toString();
       },
     },
+    sockets: {
+      updatePost(data) {
+        console.log(111, data);
+      }
+    },
     mounted () {
       this.$bus.$on('modal:post', (post) => {
+        const tasksKeys = Object.keys(post.tasks);
+        for (let key of tasksKeys) {
+          post.tasks[key].social_account = post.social_accounts.find(acc => acc._id === key);
+        }
+        this.tasks = Object.values(post.tasks);
         this.isOld = false;
         this.$nextTick(() => {
           if (!post._id) {
@@ -726,7 +798,122 @@
     }
   }
 
+  .post-social {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+    margin-right: 15px;
+    position: relative;
+    border-radius: 4px;
+
+    i {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      font-size: 15px;
+      background-color: #4680C2;
+      color: white;
+      padding: 2px;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
   .post-editor-delete {
     margin-right: 10px;
+  }
+  .status {
+    position: relative;
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    display: flex;
+    align-items: center;
+
+    &._error {
+      color: #842029;
+      background-color: #f8d7da;
+      border-color: #f5c2c7;
+
+      .post-social {
+        border: 1px solid #842029;
+      }
+    }
+
+    &._success{
+      color: #155724;
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+
+      .post-social {
+        border: 1px solid #155724;
+      }
+    }
+
+    &._pending{
+      color: #084298;
+      background-color: #cfe2ff;
+      border-color: #b6d4fe;
+
+      .post-social {
+        border: 1px solid #155724;
+      }
+    }
+  }
+
+  .post-modal-status {
+    width: 100%;
+    padding: 20px;
+
+    &__reboot {
+      margin-top: 5px;
+    }
+
+    .media {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .media-item {
+      display: block;
+      width: 141px;
+      height: 141px;
+      background-position: center;
+      background-size: cover;
+      background-color: $color-bg-0;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      position: relative;
+      border: 5px solid $color-bg-9;
+      border-radius: 3px;
+      cursor: pointer;
+
+      &:nth-child(5n) {
+        margin-right: 0;
+      }
+
+      &__close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 15px;
+        height: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: $color-danger;
+        color: white;
+        padding: 15px;
+        cursor: pointer;
+        border-radius: 3px;
+
+        &:hover {
+          background-color: $color-danger-hover;
+        }
+      }
+    }
   }
 </style>

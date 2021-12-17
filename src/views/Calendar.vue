@@ -144,11 +144,12 @@
         return DateTime.fromISO(dt).hasSame(DateTime.local(), 'day');
       },
       showPostModal (post) {
-        if (post.status === 'error' || post.status === 'finish' || post.status === 'pending') {
-          this.$bus.$emit('modal:post-status', post);
-        } else {
-          this.$bus.$emit('modal:post', post);
-        }
+        this.$bus.$emit('modal:post', post);
+        // if (post.status === 'error' || post.status === 'finish' || post.status === 'pending') {
+        //   this.$bus.$emit('modal:post-status', post);
+        // } else {
+        //   this.$bus.$emit('modal:post', post);
+        // }
       }
     }
   }
